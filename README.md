@@ -1,4 +1,9 @@
-Team members: Just me this time
+
+## TASK TITAN Full stack application Part A
+
+
+
+### R1: Website descriprion
 
 Purpose:
 The electrical contractor Wolf Electrical Enterprises Pty.Ltd
@@ -51,19 +56,20 @@ Or I want to see all reviews for the work of a specific tradie.
 
 ### Tech Stack
 
-```js
-import React, { useState } from 'react';
-import axios from 'axios';
-const express = require('express');
-const mongoose = require('mongoose');
-const multer = require('multer');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-```
+
+react, axios, expres.js, mongoose, multer, bcryptjs, jsonwebtoken 
 
 
 
-### User Stories
+
+
+
+### R2: Dataflow diagram
+
+### R3: Application Architecture Diagram
+
+
+### R4: User Stories
 
 Title: User Profile Creation
 
@@ -81,3 +87,12 @@ Acceptance Criteria:
     I should be able to save my profile and view it.
     I should receive a confirmation email once my profile is successfully created.
     I should be able to edit my profile information at any time.
+
+
+### R5: Wireframes
+
+### R6: Screenshots Of Trello board
+
+### [Trello board](https://trello.com/b/95B4bXrR/tasktitan)
+
+![ImplementationPlan](./docs/Screenshot_trello.jpg)

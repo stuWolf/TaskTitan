@@ -80,9 +80,24 @@ react, axios, expres.js, mongoose, multer, bcryptjs, jsonwebtoken
 
 
 ### R2: Dataflow diagram
+This diagram represents the following flows:
 
+* User signs up and signs in through the Authentication Controller, which interacts with the Mongoose Model to create or authenticate the user in the MongoDB database.
+* User creates a job, requests a quote, and accepts a quote through the Job Controller, which interacts with the Mongoose Model to create or update the job in the MongoDB database.
+* User leaves a review through the Review Controller, which interacts with the Mongoose Model to create the review in the MongoDB database.
+* User performs a search through the Search Controller, which interacts with the Mongoose Model to perform the search in the MongoDB database.
+
+![Dataflow diagram](./docs/screenshots/DataflowDiagram.jpg)
 ### R3: Application Architecture Diagram
+This diagram represents the following architecture:
 
+* The User Interface communicates with the Express.js Server.
+* The Express.js Server communicates with various controllers: Authentication Controller, Job Controller, Review Controller, and Search Controller.
+* Each of these controllers communicates with their respective Mongoose Models: User Model, Job Model, Review Model, and Search Model.
+* All of these models interact with the MongoDB database.
+
+
+![Application Architecture Diagram](./docs/screenshots/ApplicationArchitectureDiagram.jpg)
 
 ### R4: User Stories for each of the core features
 
@@ -100,7 +115,6 @@ react, axios, expres.js, mongoose, multer, bcryptjs, jsonwebtoken
 
 - When I open the app for the first time, I should be prompted to create a new profile.
 - I should be able to enter my name, email address, and create a password.
-- I should have the option to add a profile picture.
 - I should be able to save my profile and view it.
 - I should receive a confirmation email once my profile is successfully created.
 - I should be able to edit my profile information at any time.
@@ -167,5 +181,5 @@ react, axios, expres.js, mongoose, multer, bcryptjs, jsonwebtoken
 ### [Trello board](https://trello.com/b/95B4bXrR/tasktitan)
 
 ![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)
-![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)
+![ImplementationPlan](./docs/screenshots/Trello20230713.jpg)
 ![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)

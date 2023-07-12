@@ -74,10 +74,13 @@ Or I want to see all reviews for the work of a specific tradie.
 
 react, axios, expres.js, mongoose, multer, bcryptjs, jsonwebtoken 
 
+### Workflow diagram
+
+This diagram represents the flow of the process from the customer raising a new job and requesting a quote, through the manager and worker steps, and finally to the job being reviewed and closed. It also includes decision points where the customer or worker can reject a quote or decline a job, respectively, and the process loops back to an earlier step.
 
 
 
-
+![Workflow diagram](./docs/screenshots/WorkflowDiagram.jpg)
 
 ### R2: Dataflow diagram
 This diagram represents the following flows:
@@ -179,7 +182,13 @@ This diagram represents the following architecture:
 ### R6: Screenshots Of Trello board
 
 ### [Trello board](https://trello.com/b/95B4bXrR/tasktitan)
-
+01/07/23
 ![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)
+13/07/23
 ![ImplementationPlan](./docs/screenshots/Trello20230713.jpg)
+14/07/23
+![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)
+15/07/23
+![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)
+16/07/23
 ![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)

@@ -10,7 +10,7 @@ The bedrocks of any good workout routine should be:
 - Tracking progress, helps to stay motivated and see tesults
 - Variating the exercises: It is important to variate the exercise and sequence to keep the body guessing, avoid boredom and increase motivation.
 - Having an adequate workout plan
-- Correct posture: An exercise done with the wrong posture and body possition can lead to injuries. Having at least a photo as reminder would be helpful.
+- Correct posture: An exercise done with the wrong posture and body possition can lead to injuries. Having at least a photo as reminder would be helpful. 
 
 Therefore instead of runing around with a sheet of paper it would be very helpful to create an app that shows a sequence of exercises, time interval or reps for every exercise, tips about the exercise (posture), show a picture or video, something like an electronic personal trainer. At the end of the workout the user can monitor his progres, with data such as rounds completed, body weight, time taken to complete the workout or mody meashurements. The program could also make suggestions about increasing level of difficulties.
 My idea is to create an app that can give the user a randomized sequence of HIT (High intensity training) exercises, stored in the entity "workouts". it draws 4 randomm exercises from a list of exercises. The program applies a filter based on the criterias "level" and "body region" defined in the workout.

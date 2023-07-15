@@ -1,6 +1,6 @@
 
-# TaskTitan
-To provide a platform for customers and trades people to initiate trade jobs, assign them to workers and track their progress. Also give customers an option to leave a review.
+# TASK TITAN
+The purpose of this app is to provide a platform for customers and trades people to initiate trade jobs, assign them to workers and track their progress. Also give customers an option to leave a review.
 ## TASK TITAN Full stack application Part A
 
 ### Main links of the project:
@@ -47,12 +47,12 @@ The app has the following core features:
 
 * Review System: The ability for customers to sign off on jobs and leave reviews. This feature is important for quality control and for providing feedback to workers.
 
-* Search and Filter: The ability to search and filter jobs, tradespeople, or reviews. This feature is necessary for users to easily navigate and find specific information on the platform.
+* Search and Filter: The ability to search and filter jobs, tradespeople, or reviews. 
 
 ### In Detail: 
 User sign up with email verification
 User sign in with JWT authentication and Encrypted password (bcrypt + salted) stored in database
-The app has a seperate view for Manager, tradies and customers
+The app has a seperate view for Manager, tradies and customers.
 ### Functions for Business owner/ manager: 
 * Gets notification when new job and quote requested by customer
 * see all open jobs
@@ -197,6 +197,10 @@ This diagram represents the following architecture:
 
 
 ### R5: Wireframes
+
+
+The wireframes show the views of the 3 different roles (Customer, manager, worker) and the job forms according to the process step of a job (left to right, top to bottom) 
+Please see [Workflow diagram](#workflow-diagram)
 
 [Figma profile Desktop](https://www.figma.com/file/Qc9RsG9uiw8wHdraibVZ3r/TASK-TITAN-Desktop?type=design&mode=design&t=aUQgCNr24lFKXHUB-0)
 ![Desktop Overview PDF ](./docs/screenshots/TASK%20TITAN%20Desktop.jpg)

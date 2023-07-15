@@ -1,13 +1,32 @@
 
 ## TASK TITAN Full stack application Part A
 
+### Main links of the project:
+
+[GIT Hub](https://github.com/stuWolf/TaskTitan)
+
+[Figma profile](https://www.figma.com/file/qX4jzRthi9lIYAqwHgjYf8/Task-Titan-Hero?type=design&node-id=0-1&mode=design&t=8PGbexuF1cPnLRi6-0)
 
 
-### R1: Website descriprion
+[Trello board](https://trello.com/b/95B4bXrR/tasktitan)
+
+
+
+### R1: Website descriprion Purpose and Goals
 
 Purpose:
 The electrical contractor Wolf Electrical Enterprises Pty.Ltd
 asked me to develop a platform for customers to initiate and track electrical trade jobs, the management than can provide a quote and after customer acceptance assign the job to the right workers and track their progress.  After the customer is satisfied with the work and signes off the job there is an option to leave a review.
+
+### Desktop view:
+![Workflow diagram](./docs/screenshots/Landing.jpg)
+![Workflow diagram](./docs/screenshots/Create%20Job.jpg)
+
+
+### Mobile view: 
+![Workflow diagram](./docs/screenshots/Landing%20Phone.jpg)
+![Workflow diagram](./docs/screenshots/Job%20creation%20phone.jpg)
+![Workflow diagram](./docs/screenshots/Manager%20Phone.jpg)
 
 Target Audience:
 Trade  enterprises, customers, workers
@@ -20,7 +39,7 @@ The app has the following core features:
 
 * User Roles and Views: Different views for the business owner/manager, workers, and customers. This feature is crucial for providing a customized user experience based on the role of the user.
 
-* Job Management: This includes the ability for customers to initiate new jobs and request quotes, for managers to quote on jobs and assign workers, and for workers to accept jobs and mark them as completed. This is the primary functionality of your platform.
+* Job Management: This includes the ability for customers to initiate new jobs and request quotes, for managers to quote on jobs and assign workers, and for workers to accept jobs and mark them as completed. This is the primary functionality of the platform.
 
 * Notification System: Notifications for new jobs, job assignments, changes in job status, and new reviews. This feature is important for keeping all parties informed about the progress of jobs.
 
@@ -30,9 +49,7 @@ The app has the following core features:
 
 ### In Detail: 
 User sign up with email verification
-User sign in
-JWT authentication
-Encrypted password (bcrypt + salted) stored in database
+User sign in with JWT authentication and Encrypted password (bcrypt + salted) stored in database
 The app has a seperate view for Manager, tradies and customers
 ### Functions for Business owner/ manager: 
 * Gets notification when new job and quote requested by customer
@@ -59,7 +76,7 @@ The app has a seperate view for Manager, tradies and customers
 For example as the manager I want to see all jobs done for a specific customer or by a specific tradie.
 Or I want to see all reviews for the work of a specific tradie.
 
-* Users must log in to lodge a job or add a new Job or review. Jobs can be canceled by the user who posted them or admin.
+* Users must log in to lodge a job or add a new Job or review. Jobs can be canceled by the user who posted them or the admin.
 
 * Admin can view all users.
 
@@ -72,7 +89,7 @@ Or I want to see all reviews for the work of a specific tradie.
 ### Tech Stack
 
 
-react, axios, expres.js, mongoose, multer, bcryptjs, jsonwebtoken 
+react, axios, expres.js, mongoose, multer, bcryptjs, jsonwebtoken, tailwind
 
 ### Workflow diagram
 
@@ -108,7 +125,7 @@ This diagram represents the following architecture:
 
 #### 1. User Profile Creation and Authentication
 
-**Persona**: As a new user (Alice, a 40-year-old homeowner who needs electrical work done)
+**Persona**: As a new user ( homeowner who needs electrical work done)
 
 **What**: I want to be able to create a personal profile, sign up with email verification, and then sign in securely.
 
@@ -125,7 +142,7 @@ This diagram represents the following architecture:
 
 #### 2. User Roles and Views
 
-   **Persona**: As a business owner (Bob, a 50-year-old electrical contractor)
+   **Persona**: As a business owner (electrical contractor)
 
    **What**: I want to have a different view and capabilities in the app compared to workers and customers.
 
@@ -135,7 +152,7 @@ This diagram represents the following architecture:
 
 #### 3. Job Management
 
-   **Persona**: As a customer (Alice, a 40-year-old homeowner)
+   **Persona**: As a customer (homeowner)
 
    **What**: I want to be able to initiate new jobs and request quotes.
 
@@ -145,7 +162,7 @@ This diagram represents the following architecture:
 
 #### 4. Notification System
 
-   **Persona**: As a worker (Charlie, a 30-year-old electrician)
+   **Persona**: As a worker (electrician)
 
    **What**: I want to receive notifications when new jobs are assigned to me and when their status changes.
 
@@ -155,7 +172,7 @@ This diagram represents the following architecture:
 
 #### 5. Review System
 
-   **Persona**: As a customer (Alice, a 40-year-old homeowner)
+   **Persona**: As a customer (homeowner)
 
    **What**: I want to be able to sign off on completed jobs and leave reviews.
 
@@ -165,7 +182,7 @@ This diagram represents the following architecture:
 
 #### 6. Search and Filter
 
-   **Persona**: As a business owner (Bob, a 50-year-old electrical contractor)
+   **Persona**: As a business owner ( electrical contractor)
 
    **What**: I want to be able to search and filter jobs, tradespeople, or reviews.
 
@@ -179,6 +196,12 @@ This diagram represents the following architecture:
 
 ### R5: Wireframes
 
+[Figma profile Desktop](https://www.figma.com/file/Qc9RsG9uiw8wHdraibVZ3r/TASK-TITAN-Desktop?type=design&mode=design&t=aUQgCNr24lFKXHUB-0)
+![Desktop Overview PDF ](./docs/screenshots/TASK%20TITAN%20Desktop.jpg)
+
+[Figma profile Mobile](https://www.figma.com/file/NWs8T35YOfVAsmh0kb2b2c/Task-Titan-iPhone?type=design&mode=design&t=slEHRmwWZw6L0kR5-0)
+![Desktop Overview PDF ](./docs/screenshots/Task%20Titan%20iPhone(1).jpg)
+
 ### R6: Screenshots Of Trello board
 
 ### [Trello board](https://trello.com/b/95B4bXrR/tasktitan)
@@ -187,8 +210,8 @@ This diagram represents the following architecture:
 13/07/23
 ![ImplementationPlan](./docs/screenshots/Trello20230713.jpg)
 14/07/23
-![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)
+![ImplementationPlan](./docs/screenshots/Trello14_07.jpg)
 15/07/23
-![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)
+![ImplementationPlan](./docs/screenshots/Trello15_07.jpg)
 16/07/23
-![ImplementationPlan](./docs/screenshots/Trello12_07.jpg)
+![ImplementationPlan](./docs/screenshots/Trello16_07.jpg)

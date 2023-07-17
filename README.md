@@ -91,7 +91,7 @@ Or I want to see all reviews for the work of a specific tradie.
 ### Tech Stack
 
 
-react, axios, expres.js, mongoose, multer, bcryptjs, jsonwebtoken, tailwind
+react, node, axios, expres.js, mongoose, MongoDB, multer, bcryptjs, jsonwebtoken, tailwind
 
 ### Workflow diagram
 

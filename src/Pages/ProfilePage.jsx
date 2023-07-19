@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 // import React, { useState, useEffect } from "react";
 import '../App.css';
-import {  useNavigate } from 'react-router-dom';
+import {  useNavigate} from 'react-router-dom';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -10,7 +10,7 @@ import Footer from '../components/footer';
 
 
 
-export const Profile = () => {
+const Profile = () => {
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,7 +18,9 @@ export const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [status, setStatus] = useState("");
+  // const [status, setStatus] = useState("");
+//   let location = useLocation();
+// let status = location.state.status;
 
   // Get a reference to the history object
   let navigate = useNavigate();
@@ -53,11 +55,7 @@ export const Profile = () => {
           <input type="address" value={address} onChange={e => setAddress(e.target.value)} placeholder="Address" />
           <input type="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone" />
           {/* <input type="status" value={status} onChange={e => setStatus(e.target.value)} placeholder="Status" /> */}
-          <select value={status} onChange={e => setStatus(e.target.value)}>
-              <option value="">Status</option>
-              <option value="Manager">Manager</option>
-              <option value="Customer">Customer</option>
-          </select>
+          {/* <p>User status: {props.status}</p> */}
           <button onClick={handleUpdate}>Update</button>
           <button onClick={handleCancel}>Cancel</button>
         

@@ -18,6 +18,8 @@ import Home from './Pages/home';
 //import LandingPage from './pages/LandingPage';
 
 function App() {
+
+
   return (
     <div className="App">
        {/* <LandingPage /> */}
@@ -27,7 +29,7 @@ function App() {
        <Route path="/landing" element={<Landing />} />
        <Route path="/login" element={<Login />} />
        <Route path="/register" element={<Register/>} />
-       <Route path="/profile" element={<Profile/>} />
+       <Route path="/profile" element={<Profile />} />
        <Route path="/addWorker" element={<AddWorker/>} />
        <Route path="/managerHome" element={<h1>TODO</h1>} />
        <Route path="/home" element={<Home />} />

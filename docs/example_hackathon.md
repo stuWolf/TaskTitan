@@ -42,6 +42,9 @@ export default function SearchBar() {
 ```
 ## API clock JS
 
+
+
+
 ```js
 import React, { useState, useEffect } from "react";
 import '../App.css'

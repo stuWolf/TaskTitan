@@ -1,5 +1,6 @@
 .App {
   font-family: Arial, sans-serif;
+  text-align: left;
 }
 
 /* Manager view */
@@ -35,32 +36,50 @@
   color: white;
 }
 
-.login-form {
-  margin: 20px;
+/* end landing page */
+
+/* login form */
+.App {
+  
+  text-align: left;
 }
 
-.login-form input {
+.login-form {
+  margin-top: 40px;
+  margin-left: 20px;
+
+}
+
+.login-form input, 
+.login-form button {
   display: block;
-  margin: 10px auto;
-  padding: 10px;
+  margin-bottom: 20px;
+  border-radius:5%;
 }
 
 .login-form button {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
+  margin-top: 10px;
+  display: inline-block;
+  background-color: green; /* Green background */
+  color: black; /* Black text */
+  padding: 10px 20px; /* Add some padding */
+  font-family: Arial, sans-serif; /* Change the font */
+  margin-right: 15px; /* Add some space between buttons */
+  border-radius:10%;
 }
-/* .login-form label {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
-} */
 
-.terms {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.login-form a {
+  color: black;
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+  text-decoration: none; /* Remove the underline */
 }
+
+/* end login form */
+
+/* Footer */
+
 footer {
   position: fixed;
   left: 0;

@@ -6,7 +6,7 @@ import Footer from '../components/footer';
 
 
 
-export default function LandingPage(){
+export default function Landing(){
   return (
 
     

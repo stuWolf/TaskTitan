@@ -15,7 +15,7 @@ function Navbar() {
       <Link to="/reviews">Reviews</Link>
       <Link to="/search">Search</Link>
       <Link to="/profile">Profile</Link>
-      <Link to="/logout">Logout</Link>
+      <Link to="/landing">Logout</Link>
       
       
       

@@ -3,14 +3,20 @@
 The purpose of this app is to provide a platform for customers and trades people to initiate trade jobs, assign them to workers and track their progress. Also give customers an option to leave a review.
 ## TASK TITAN Full stack application Part A
 
+
+
 ### Main links of the project:
+
+[TASK TITAN Full stack application Part B](#task-titan-full-stack-application-part-b)
 
 [GIT Hub](https://github.com/stuWolf/TaskTitan)
 
 [Figma profile](https://www.figma.com/file/qX4jzRthi9lIYAqwHgjYf8/Task-Titan-Hero?type=design&node-id=0-1&mode=design&t=8PGbexuF1cPnLRi6-0)
 
 
-[Trello board](https://trello.com/b/95B4bXrR/tasktitan)
+[Trello board Part A](https://trello.com/b/95B4bXrR/tasktitan)
+
+[Trello board Part B](https://trello.com/b/PkppCmaY/taks-titan-phase-2)
 
 
 
@@ -221,3 +227,5 @@ Please see [Workflow diagram](#workflow-diagram)
 ![ImplementationPlan](./docs/screenshots/Trello15_07.jpg)
 16/07/23
 ![ImplementationPlan](./docs/screenshots/Trello16_07.jpg)
+
+## TASK TITAN Full stack application Part B

@@ -10,6 +10,8 @@
   overflow: hidden;
   display: flex;
   justify-content: space-between;
+  margin-left: 20px;
+  margin-right: 20px;
   /* margin-right: 50px; adjust as needed */
 
   
@@ -126,6 +128,46 @@
 }
 
 /* end login form */
+
+
+/* Job Form */
+.job-form {
+  max-height: 600px;  /* Adjust this as needed */
+  overflow-y: auto;
+  max-width: 600px;
+  margin-left: 20px;
+}
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.form-row input, .form-row textarea {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.form-row textarea {
+  height: 100px;
+}
+
+/* Removing margin from the last input of each row */
+.form-row input:last-child, .form-row textarea:last-child {
+  margin-right: 10;
+}
+
+.job-form button {
+  margin-top: 10px;
+  display: inline-block;
+  background-color: green; /* Green background */
+  color: black; /* Black text */
+  padding: 10px 20px; /* Add some padding */
+  font-family: Arial, sans-serif; /* Change the font */
+  margin-right: 15px; /* Add some space between buttons */
+  border-radius:10%;
+}
+/* end Job Form */
 
 /* Footer */
 

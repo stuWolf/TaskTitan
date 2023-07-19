@@ -81,9 +81,10 @@ function JobFormCustomer({jobStatus}) {
         <div className="form-row">
             <textarea value={jobdescription} onChange={e => setJobdescription(e.target.value)} placeholder="Scope of Work" disabled={jobStatus !== "Draft"} />
             </div>
+            <div className="form-row">
             <p>Prefered completion date:</p> 
             <input type="date" value={completion} onChange={e => setCompletion(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} />
-        
+            </div>
         </div>
 
       {/***************************  Job Status Quoting ******************************888*/}

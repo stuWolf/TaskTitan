@@ -32,7 +32,7 @@ function Home() {
       <div className="form-row">
         <h2>My Jobs</h2>
         
-        {status === "Manager" &&
+        {(status === "Manager"||status === "Customer" )&&
         <div>
         <button onClick={handleNewJob}>Create New Job</button>
         </div>
@@ -47,9 +47,10 @@ function Home() {
 
         {status === "Worker" &&
         <p>Worker view: List jobs with status, assigned worker.</p> }
+
          {status === "Customer" &&
          <div>
-         <button onClick={handleNewJob}>Create New Job</button> 
+
         <p>Customer view: List jobs with status, specific to customer</p>
          
         </div>}

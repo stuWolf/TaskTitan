@@ -23,6 +23,7 @@ import Footer from '../components/footer';
   const handleLogin = () => {
     navigate('/home',{ state: { status } });
     // Handle login
+    console.log('loginpage' + {status})
   };
 
   const handleCancel = () => {

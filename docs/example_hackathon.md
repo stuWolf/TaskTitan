@@ -44,7 +44,6 @@ export default function SearchBar() {
 
 
 
-
 ```js
 import React, { useState, useEffect } from "react";
 import '../App.css'

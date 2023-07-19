@@ -32,7 +32,12 @@ export default function Landing(){
         <div className="quote-section">
       <button onClick={handleQuote}>Get a Quote</button>
       </div>
-      <h1>What customers say about Wolf Electrical</h1>
+      <h2>12 Years in operation and still going strong <strong></strong> !</h2>
+     <h1> We stand foor: Quality, Reliability and just great value</h1>
+      <h2>What customers say about Wolf Electrical</h2>
+      <div className="testimonial-section">
+ 
+      </div>
       </div>
       <Footer/>
     </div>

@@ -1,36 +1,31 @@
 import React from 'react';
 import '../App.css';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function Navbar({state}) {
+function Navbar({status}) {
+  const navigate = useNavigate();
+  console.log('navbar  ' + status)
+  const handleNavigation = (path) => {
+    
+    navigate(path, { state: { status } });
+  };
+
   return (
     <div className="App">
       <div className="navbar">
-       
-      
-      <Link to="/home">Home</Link> 
-      {/* all */}
-      <Link to="/quotes">Quotes</Link>
-      {/* customer only for logged in customer,  manager (all) */}
-      <Link to="/completed">Completed Jobs</Link>
-      {/* customer only for logged in customer, worker (only for loged in worker), manager (all) */}
-     {state === "Manager"  && <Link to="/managerWorkers">My Workers</Link>}
-     
-      
-      {/* <Link to="/assignments">Assignments</Link> */}
-      <Link to="/reviews">Reviews</Link>
-      <div className="navbar-right">
-        <Link to="/search">Search</Link>
-        <Link to="/profile">Profile</Link>
-        <Link to="/landing">Logout</Link>
+        <button onClick={() => handleNavigation('/home')}>Home</button>
+        <button onClick={() => handleNavigation('/quotes')}>Quotes</button>
+        <button onClick={() => handleNavigation('/completed')}>Completed Jobs</button>
+        {status === "Manager" && 
+          <button onClick={() => handleNavigation('/managerWorkers')}>My Workers</button>
+        }
+        <button onClick={() => handleNavigation('/reviews')}>Reviews</button>
+        <div className="navbar-right">
+          <button onClick={() => handleNavigation('/search')}>Search</button>
+          <button onClick={() => handleNavigation('/profile')}>Profile</button>
+          <button onClick={() => handleNavigation('/landing')}>Logout</button>
+        </div>
       </div>
-      
-      
-      </div>
-
-      
-
-      
     </div>
   );
 }

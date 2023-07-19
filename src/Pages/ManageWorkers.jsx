@@ -14,12 +14,12 @@ function ManageWorkers() {
  let navigate = useNavigate();
   const handleWorker = () => {
     // Handle login
-    navigate('/home');
+    navigate('/addWorker');
   };
   return (
     <div className="App">
       <Header />
-      <Navbar state = {status} />
+      <Navbar status = {status} />
 
       <div className="main-content">
         <h2>My Workers</h2>

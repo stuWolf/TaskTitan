@@ -4,21 +4,46 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import {  useLocation} from 'react-router-dom';
+// import JobForm from '../components/JobForm';
+import {  useLocation, useNavigate} from 'react-router-dom';
 
 function Home() {
 
   let location = useLocation();
   let status = location.state.status;
+  let navigate = useNavigate();
+
+  const handleNewJob = () => {
+    navigate('/jobForm',{ state: { status } });
+    // Handle login
+    console.log('loginpage' + {status})
+  };
+
+  console.log('home  ' + status)
   return (
     <div className="App">
       <Header />
-      <Navbar state = {status} />
+      <Navbar status = {status} />
 
       <div className="main-content">
-        <h2>Main Content</h2>
+        <h2>My Jobs</h2>
         <p>User status: {status}</p>
-        <p>List of jobs with status, assigned worker, quote, and customer details. Option to add new job or quote.</p>
+        {status === "Manager" &&
+        <div>
+        <button onClick={handleNewJob}>Create New Job</button>
+        <p>Manager view : List of all jobs with status, assigned worker, quote, and customer details. Option to add new job or quote.</p> 
+        
+        </div>
+        }
+        {status === "Worker" &&
+        <p>Worker view: List jobs with status, assigned worker.</p> }
+         {status === "Customer" &&
+         <div>
+         <button onClick={handleNewJob}>Create New Job</button> 
+        <p>Customer view: List jobs with status, specific to customer</p>
+         
+        </div>}
+      
       </div>
 
       {/* <div className="side-panel">

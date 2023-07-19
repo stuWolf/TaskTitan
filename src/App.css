@@ -3,19 +3,47 @@
   text-align: left;
 }
 
-/* Manager view */
+/**********************************Home view **********************************/
+.jobColumns {
+  background-color: #F4EB27;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 0px;
+  margin-right: 0px;
+  /* margin-right: 50px; adjust as needed */
+}
+
+.jobColumns a {
+  padding: 10px 16px;
+  text-decoration: none;
+  font-weight: bold;
+}
+/************************************ Main view*************************************88 */
+.main-content {
+  margin: 20px;
+}
 
 .navbar {
   background-color: #f8f8f8;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 0px;
+  margin-right: 0px;
   /* margin-right: 50px; adjust as needed */
+}
 
-  
-
+.navbar button {
+  margin-top: 10px;
+  display: inline-block;
+  background-color: #f8f8f8; /* Green background */
+  color: black; /* Black text */
+  padding: 10px 20px; /* Add some padding */
+  font-family: Arial, sans-serif; /* Change the font */
+  margin-right: 15px; /* Add some space between buttons */
+  margin-left: 15px;
+  border: none; /* This will remove the border from the buttons */
 }
 .navbar-right {
   margin-left: 10px; /* adjust as needed */
@@ -29,25 +57,38 @@
   padding: 14px 16px;
   text-decoration: none;
 }
-
-
-.main-content {
-  margin: 20px;
+.main-content button {
+  margin-top: 10px;
+  display: inline-block;
+  background-color: green; /* Green background */
+  color: black; /* Black text */
+  padding: 10px 20px; /* Add some padding */
+  font-family: Arial, sans-serif; /* Change the font */
+  margin-right: 15px; /* Add some space between buttons */
+  border-radius:10%;
+  margin-right: 10px;
+  margin-left: 30px;
 }
 
 .side-panel {
   float: right;
   width: 200px;
   margin: 20px;
+  border-left: 1px solid #ccc; /* This adds a border to the left side of the sidebar */
 }
 
 /* Landing page */
 .App-header {
-  background-color: #282c34;
+  background-color: #F4EB27;
   padding: 20px;
-  color: white;
+  /* color: white; */
 }
 
+.App-header h1 {
+  font-size: 56px;
+  font-weight: bold;
+  font-style: italic;
+}
 
 .landing-page {
   margin-top: 40px;
@@ -55,6 +96,46 @@
   width: 90%;
 
 
+}
+
+.landing-page a {
+  color: black;
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+  text-decoration: none; /* Remove the underline */
+}
+
+.landing-page h1 {
+  color: black;
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+  text-decoration: none; /* Remove the underline */
+  text-align: center;
+}
+.landing-page h2 {
+  color: black;
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+  text-decoration: none; /* Remove the underline */
+  /* text-align: center; */
+}
+
+.testimonial-section h2{
+
+  font-size: 26px;
+  font-weight: bold;
+  font-style: italic;
+  margin-top: 50px;
+  margin-left: 100px;
+  
+}
+.testimonial-section p{
+
+  max-width: 600px;
+  margin-left: 200px;
 }
 
 .top-section,
@@ -139,8 +220,10 @@
 }
 .form-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-bottom: 20px;
+  /* margin-left: 20px; */
+  /* margin-right: 20px; */
 }
 
 .form-row input, .form-row textarea {
@@ -166,6 +249,7 @@
   font-family: Arial, sans-serif; /* Change the font */
   margin-right: 15px; /* Add some space between buttons */
   border-radius:10%;
+  margin-left: 15px;
 }
 /* end Job Form */
 

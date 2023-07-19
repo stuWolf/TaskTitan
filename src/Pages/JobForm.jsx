@@ -4,28 +4,33 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
+import JobFormCustomer from '../components/JobFormCustomer';
 import {  useLocation, useNavigate} from 'react-router-dom';
 
 function JobForm() {
-  const [FirstName, setFirstName] = useState("");
-  const [LastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [licenseNr, setLicenseNr] = useState("");
+  const [workerName, setWorkerName] = useState("");
+  // const [phone, setPhone] = useState("");
+  // const [email, setEmail] = useState("");
 
-  const [address, setAddress] = useState("");
-  const [installationAddress, setInstallationAddress] = useState("");
-  const [jobdescription, setJobdescription] = useState("");
-  const [completion, setCompletion] = useState("");
-  const [jobStatus, setJobStatus] = useState("");
+  // const [address, setAddress] = useState("");
+  // const [installationAddress, setInstallationAddress] = useState("");
+  // const [jobdescription, setJobdescription] = useState("");
+  // const [completion, setCompletion] = useState("");
+  const [jobStatus, setJobStatus] = useState("Draft");
+    // This state determines whether the form is visible or not
+  const [isFormVisible, setIsFormVisible] = useState(true)
   let location = useLocation();
   let status = location.state.status;
   let navigate = useNavigate();
-
   const handleClose = () => {
     navigate('/home',{ state: { status } });
     // Handle login
 
     // console.log('loginpage' + {status})
+  };
+  const toggleForm = () => {
+    setIsFormVisible(!isFormVisible);
   };
 
   const handleAccept = () => {
@@ -45,26 +50,20 @@ function JobForm() {
     // console.log('loginpage' + {status})
   };
 
-  const handleProfile = () => {
-    alert("TODO");
-    // console.log('loginpage' + {status})
-  };
-
-  const handleCustomerData = () => {
-    alert("TODO");
-    // console.log('loginpage' + {status})
-  };
-
-  // const handleNewJob = () => {
-  //   alert("TODO");
-  //   // console.log('loginpage' + {status})
-  // };
+ 
 
   const handleSave = () => {
     alert("TODO");
     // console.log('loginpage' + {status})
   };
+  
 
+  const handleAssignWorker = () => {
+    navigate('/managerWorkers',{ state: { status } });
+    // console.log('loginpage' + {status})
+  };
+
+  
   console.log('home  ' + status)
   return (
     <div className="App">
@@ -72,7 +71,7 @@ function JobForm() {
       <Navbar status = {status} />
 
       <select value={jobStatus} onChange={e => setJobStatus(e.target.value)}>
-              <option value="">JobStatus</option>
+              {/* <option value="">JobStatus</option> */}
               <option value="Draft" >Draft</option>
               <option value="Quoting">Quoting</option>
               <option value="Customer Approval">Customer Approval</option>
@@ -85,60 +84,51 @@ function JobForm() {
 
     <div className="job-form">
         <h2>Job Profile</h2>
+        <div className="form-row">
         <p>User status: {status}</p>
+        <p>Job status: {jobStatus}</p>
+        </div>
+      </div>
 {/***************************  Job Status DRAFT ******************************888*/}
-        {jobStatus === "Draft" &&
-        <div>
-          <div className="form-row">
-          <p>Customer Details:</p> 
-          <button disabled={jobStatus !== "Draft"} onClick={handleProfile}>Copy from profile</button>
-          </div>
-        <div className="form-row">
-         
-            <input type="FirstName" value={FirstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" disabled={jobStatus !== "Draft"} />
-            <input type="LastName" value={LastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" disabled={jobStatus !== "Draft"} />
+<div className="job-form">
+<button onClick={toggleForm}>Toggle Customer data</button>
+      {isFormVisible && (
+        <div className="job-form">
+          <JobFormCustomer jobStatus = {jobStatus}/>
         </div>
-        <div className="form-row">
-            <input type="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone" disabled={jobStatus !== "Draft"} />
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" disabled={jobStatus !== "Draft"} />
-            </div>
-        <div className="form-row">
-            <input type="address" value={address} onChange={e => setAddress(e.target.value)} placeholder="Address" disabled={jobStatus !== "Draft"} />
-            </div>
-            
-            <div className="form-row">
-          
-            <input type="installationAddress" value={installationAddress} onChange={e => setInstallationAddress(e.target.value)} placeholder="InstallationAddress" disabled={jobStatus !== "Draft"} />
-            <button disabled={jobStatus !== "Draft"} onClick={handleCustomerData}>Copy from Customer</button>
-        </div>
+      )}
+
+
+
+{/* this form will always displayed but when Job status is not Draft, the fields will be grayed out */}
       
-        <p>Scope of Work:</p> 
-        <div className="form-row">
-            <textarea value={jobdescription} onChange={e => setJobdescription(e.target.value)} placeholder="Scope of Work" disabled={jobStatus !== "Draft"} />
-            </div>
-            <p>Prefered completion date:</p> 
-            <input type="date" value={completion} onChange={e => setCompletion(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} />
-        
-    </div>
+{/***************************  Job Status DRAFT ******************************888*/}
+
+
+
+
+
 
        
-      
-        }
-{/***************************  Job Status Quoting ******************************888*/}
-        {jobStatus === "Quoting" &&
-        <p>Quoting status</p> }
+        
+
    {/***************************  Job Status  Customer Approval ******************************888*/}     
          {jobStatus === "Customer Approval" &&
          <div>
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
-          <p>Customer approval</p>
+          <p>For approval please confirm Clicking ACCEPT</p>
         </div>}
 {/***************************  Job Status Worker Assignment******************************888*/}
         {jobStatus === "Worker Assignment" &&
-         <div>
-          {/* <button onClick={handleNewJob}>Create New Job</button>  */}
-          <p>Worker Assignment</p>
-        </div>}
+          <div className="job-form">
+            <p>Your Electrical Worker </p>
+          <div className="form-row">
+          
+          <input type="licenseNr" value={licenseNr} onChange={e => setLicenseNr(e.target.value)} placeholder="License Number" disabled={jobStatus !== "Worker Assignment"} />
+          <input type="workerName" value={workerName} onChange={e => setWorkerName(e.target.value)} placeholder="Worker Name" disabled={jobStatus !== "Worker Assignment"} />
+          <button disabled={jobStatus !== "Worker Assignment"} onClick={handleAssignWorker}>Assign Electrical Worker</button>
+          </div>
+          </div>}
 {/***************************  Job Status Job Implementation ******************************888*/}
         {jobStatus === "Job Implementation" &&
          <div>
@@ -169,7 +159,7 @@ function JobForm() {
         {/* end Job Status */}
            
       </div>  
-      {/* end div login form */}
+      {/* end div job form */}
 
       {/* Show side pannel */}
       <Side/>

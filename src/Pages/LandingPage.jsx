@@ -33,7 +33,7 @@ export default function Landing(){
       <button onClick={handleQuote}>Get a Quote</button>
       </div>
       <h2>12 Years in operation and still going strong <strong></strong> !</h2>
-     <h1> We stand foor: Quality, Reliability and just great value</h1>
+     <h1> We stand for: Quality, Reliability and just great value</h1>
       <h2>What customers say about Wolf Electrical</h2>
       <div className="testimonial-section">
  

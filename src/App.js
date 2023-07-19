@@ -5,7 +5,8 @@ import Landing from './Pages/LandingPage';
 import Login from './Pages/LoginPage'; // Assuming LandingPage is in the same directory
 import Register from './Pages/RegisterPage';
 import Profile from './Pages/ProfilePage';
-import AddWorker from './Pages/RegisterPage';
+import AddWorker from './Pages/AddWorker';
+import ManageWorkers from './Pages/ManageWorkers';
 
 import Home from './Pages/home';
 
@@ -34,8 +35,10 @@ function App() {
        <Route path="/managerHome" element={<h1>TODO</h1>} />
        <Route path="/home" element={<Home />} />
        <Route path="/workerHome" element={<h1>TODO</h1>} />
-       <Route path="/managerWorkers" element={<h1>TODO</h1>} />
-
+       <Route path="/managerWorkers" element={<ManageWorkers/>} />
+       
+       {/* search functions */}
+       <Route path="/completed" element={<h1>TODO</h1>} />
        <Route path="/openjobs" element={<h1>TODO</h1>} />
         <Route path="/quotes" element={<h1>TODO</h1>}/>  {/*displays list of all quotes*/}
         <Route path="/reviews" element={<h1>TODO</h1>}/>  {/*displays list of all reviews*/} 

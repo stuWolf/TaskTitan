@@ -4,21 +4,28 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import {  useLocation} from 'react-router-dom';
+import {  useLocation, useNavigate} from 'react-router-dom';
 
-function Home() {
+function ManageWorkers() {
 
   let location = useLocation();
   let status = location.state.status;
+ // Get a reference to the history object
+ let navigate = useNavigate();
+  const handleWorker = () => {
+    // Handle login
+    navigate('/home');
+  };
   return (
     <div className="App">
       <Header />
       <Navbar state = {status} />
 
       <div className="main-content">
-        <h2>Main Content</h2>
+        <h2>My Workers</h2>
         <p>User status: {status}</p>
-        <p>List of jobs with status, assigned worker, quote, and customer details. Option to add new job or quote.</p>
+        <button onClick={handleWorker}>Add New Worker</button>
+        <p>List of workers here.</p>
       </div>
 
       {/* <div className="side-panel">
@@ -32,4 +39,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default ManageWorkers;

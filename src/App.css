@@ -36,9 +36,46 @@
   color: white;
 }
 
+
+.landing-page {
+  margin-top: 40px;
+  margin-left: 20px;
+  width: 90%;
+
+
+}
+
+.top-section,
+.quote-section {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.landing-page button {
+  margin-top: 10px;
+  display: inline-block;
+  background-color: green;  /* Green background  */
+  color: black; /* Black text */
+  padding:  20px; /* Add some padding */
+  font-family: Arial, sans-serif;/*  Change the font */
+  margin-right: 15px;  /*Add some space between buttons */
+  border-radius:  10%;
+  margin-right: 200px;
+}
+.landing-page h1 {
+
+  justify-content: left;
+ 
+  margin-left: 200px;
+}
+
+.landing-page Link{
+  margin-right: 20px;
+}
+
 /* end landing page */
 
-/* login form */
+/* login, register, profile add worker form */
 .App {
   
   text-align: left;

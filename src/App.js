@@ -1,12 +1,16 @@
 // import logo from './logo.svg';
 import './App.css';
 import { Routes, Route } from "react-router-dom";
+import Landing from './Pages/LandingPage';
 import Login from './Pages/LoginPage'; // Assuming LandingPage is in the same directory
+import Register from './Pages/RegisterPage';
+import Profile from './Pages/RegisterPage';
+import AddWorker from './Pages/RegisterPage';
 
 import Home from './Pages/home';
-import Landing from './Pages/LandingPage';
 
-// import OpenJobs from './OpenJobs';
+
+
 // import Quotes from './Quotes';
 // import Reviews from './Reviews';
 // import Search from './Search';
@@ -22,9 +26,9 @@ function App() {
        
        <Route path="/landing" element={<Landing />} />
        <Route path="/login" element={<Login />} />
-       <Route path="/register" element={<h1>TODO</h1>} />
-       <Route path="/profile" element={<h1>TODO</h1>} />
-       <Route path="/addWorker" element={<h1>TODO</h1>} />
+       <Route path="/register" element={<Register/>} />
+       <Route path="/profile" element={<Profile/>} />
+       <Route path="/addWorker" element={<AddWorker/>} />
        <Route path="/managerHome" element={<h1>TODO</h1>} />
        <Route path="/home" element={<Home />} />
        <Route path="/workerHome" element={<h1>TODO</h1>} />

@@ -2,11 +2,19 @@ import React from 'react';
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
-
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
 export default function Landing(){
+
+  // Get a reference to the history object
+  let navigate = useNavigate();
+
+  const handleQuote = () => {
+    // Handle login
+    navigate('/login');
+  };
   return (
 
     
@@ -14,18 +22,18 @@ export default function Landing(){
       <Header/>
       
 
-
-      
-
-
-      <div className="main-content">
+      <div className="landing-page">
+      <div className="top-section">
+        <Link to="/login">SignIn</Link>
+      </div>
         <h2>The one stop shop</h2>
         <h2>for all electrical needs</h2>
         <p>All workers licensed and fully qualified</p>
+        <div className="quote-section">
+      <button onClick={handleQuote}>Get a Quote</button>
       </div>
-
       <h1>What customers say about Wolf Electrical</h1>
-
+      </div>
       <Footer/>
     </div>
   );

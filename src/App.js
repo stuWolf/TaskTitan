@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Landing from './Pages/LandingPage';
 import Login from './Pages/LoginPage'; // Assuming LandingPage is in the same directory
 import Register from './Pages/RegisterPage';
-import Profile from './Pages/RegisterPage';
+import Profile from './Pages/ProfilePage';
 import AddWorker from './Pages/RegisterPage';
 
 import Home from './Pages/home';

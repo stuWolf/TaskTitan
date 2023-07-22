@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useState} from 'react';
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -13,7 +13,7 @@ function Home() {
   let location = useLocation();
   let userStatus = location.state.userStatus;
   let navigate = useNavigate();
-
+  const userMessage = localStorage.getItem('userMessage');
   const handleNewJob = () => {
     navigate('/jobForm',{ state: { userStatus } });
     // Handle login
@@ -61,7 +61,7 @@ function Home() {
         <h2>Notifications</h2>
         <p>Notifications about new jobs, quotes, assignments, and reviews.</p>
       </div> */}
-      <Side/>
+      <Side userMessage = {userMessage} />
 
       <Footer/> 
     </div>

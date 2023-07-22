@@ -81,6 +81,7 @@
 .App-header {
   background-color: #F4EB27;
   padding: 20px;
+  height: 100px
   /* color: white; */
 }
 
@@ -209,17 +210,41 @@
 }
 
 /* end login form */
+/* Side panel*/
+.job-form-and-side-panel {
+  display: flex;
+
+  
+  
+}
 
 
+.side-panel {
+  flex: 1; /* this will take up 1/4 of the parent div's width */
+}
+
+.side-panel p{
+
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.side-panel h2{
+
+  margin-left: 20px;
+  margin-right: 20px;
+}
+/* Side panel*/
 /* Job Form */
 .job-form {
   max-height: 600px;  /* Adjust this as needed */
   overflow-y: auto;
   max-width: 600px;
-  margin-left: 20px;
+  margin-left: 0px;
   margin-top: 20px;
   background-color: #ccc;
   border-radius:2%;
+  flex: 3; /* this will take up 3/4 of the parent div's width */
 }
 
 .job-form button {
@@ -247,16 +272,28 @@
   margin-left: 20px; 
   margin-right: 20px;
   /* padding: 20px; */
+  align-items: center; /* this will vertically align the items in the center */
+
 }
 
-.form-row input, .form-row textarea {
-  flex: 1;
+.form-row input{
+  flex: 2;
   margin-right: 10px;
+  height: 20px;
+
+  
+}
+
+.date-input {
+  width: 10px; /* adjust the value as needed */
 }
 
 .form-row textarea {
   height: 100px;
+  flex: 2;
+  margin-right: 10px;
 }
+
 
 /* Removing margin from the last input of each row */
 .form-row input:last-child, .form-row textarea:last-child {

@@ -26,13 +26,13 @@ const AddWorker = () => {
 
   // Get a reference to the history object
   let navigate = useNavigate();
-   const status = 'Manager'
+   const userStatus = 'Manager'
   const handleAddWorker = () => {
     // Handle registration
     if (true) {
       alert("New Worker added Sucessfully");
         // Redirect to manager home page
-        navigate('/home',{ state: { status } });
+        navigate('/home',{ state: { userStatus } });
       return;
   };
 
@@ -43,7 +43,7 @@ const AddWorker = () => {
 
   const handleCancel = () => {
     // Handle login
-    navigate('/home',{ state: { status } });
+    navigate('/home',{ state: { userStatus } });
   };
 
   return (

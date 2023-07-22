@@ -92,12 +92,17 @@ function JobFormCustomer({jobStatus}) {
       {(jobStatus === "Quoting" || jobStatus === "Customer Approval")&& <div className="job-form">
       <div className="form-row">
         <p>Date Created by customer: </p>
-        <input type="date" value={completion} onChange={e => setCompletion(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} />
-        </div>
+    
+        <input className="date-input" type="date" value={completion} onChange={e => setCompletion(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} />
+    
+      </div>
         <div className="form-row">
+          
         <p>Date Quoted by manager: </p>
-        <input type="date" value={quoted} onChange={e => setQuoted(e.target.value)} placeholder="Date Quoted" disabled={jobStatus !== "Quoting"} />
+     
+        <input className="date-input" type="date" value={quoted} onChange={e => setQuoted(e.target.value)} placeholder="Date Quoted" disabled={jobStatus !== "Quoting"} />
         </div>
+      
         <div className="form-row">
         <p>Ammount Quoted AUD </p>
         <input type="quoteAmmount" value={quoteAmmount} onChange={e => setQuoteAmmount(e.target.value)} placeholder="Quote Ammount" disabled={jobStatus !== "Quoting"} />

@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -17,55 +17,83 @@ function JobForm() {
   const [ectricalRetailer, setEctricalRetailer] = useState("");
   const [ergyDistributor, setErgyDistributor] = useState("");
   const [phasesMains, setPhasesMains] = useState("");
-  const [jobStatus, setJobStatus] = useState("Draft");
+  // const [jobStatus, setJobStatus] = useState("Draft");
     // This state determines whether the form is visible or not
 
     const [startDate, setStartDate] = useState("");
     const [review, setReview] = useState("");
     const [reviewStars, setReviewStars] = useState(false);
     const [completionDate, setCompletionDate] = useState("");
-
-
+    // const [userMessage, setUserMessage] = useState(" No Messages");
+    
 
 
   const [isFormVisible, setIsFormVisible] = useState(true)
   let location = useLocation();
   let userStatus = location.state.userStatus;
   let navigate = useNavigate();
+  // let userMessage = location.state.userMessage;
 
 
 
-  const getJobStatusNumber = (status) => {
-    switch(status) {
-      case "Draft": return 1;
-      case "Quoting": return 2;
-      case "Customer Approval": return 3;
-      case "Worker Assignment": return 4;
-      case "Job Implementation": return 5;
-      case "Customer Review": return 6;
-      default: return -1;
-    }
-  }
+  const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
+  // const [jobStatus, setJobStatus] = useState(localStorage.getItem('jobStatus') || "Draft");
+
+  const jobStatuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review"];
+
+  const [jobStatus, setJobStatus] = useState(localStorage.getItem('jobStatus') || "Draft");
+
+
+
+  useEffect(() => {
+    localStorage.setItem('userMessage', userMessage);
+  }, [userMessage]);
+
+ 
+
+  
+
+
+
+
 
   const incrementJobStatus = () => {
-    const currentStatusNumber = getJobStatusNumber(jobStatus);
-    if (currentStatusNumber === -1 || currentStatusNumber === 6) return; // If status is not recognized or it's already the last status, do nothing
+    const currentIndex = jobStatuses.indexOf(jobStatus);
+    if (currentIndex < jobStatuses.length - 1) {
+      const newStatus = jobStatuses[currentIndex + 1];
+      setJobStatus(newStatus);
+      localStorage.setItem('jobStatus', newStatus);
+    } else {
 
-    const statusList = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review"];
-    setJobStatus(statusList[currentStatusNumber]); // Update the status to the next one
-  }
+      console.log("Job status is already at the final state");
+      // setJobStatus("Draft");
+     
+    }
+  };
+
+
+  
+  // alert('new job status' + {jobStatus});
+  // const decrementJobStatus = () => {
+  //   const currentStatusNumber = getJobStatusNumber(jobStatus);
+  //   if (currentStatusNumber <= 1) return;
+
+  //   const previousStatusNumber = currentStatusNumber - 2;
+  //   const statusList = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review"];
+
+  //   setJobStatus(statusList[previousStatusNumber -1]);
+  // }
 
   const decrementJobStatus = () => {
-    const currentStatusNumber = getJobStatusNumber(jobStatus);
-    if (currentStatusNumber <= 1) return;
-
-    const previousStatusNumber = currentStatusNumber - 2;
-    const statusList = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review"];
-
-    setJobStatus(statusList[previousStatusNumber]);
-  }
-
-
+    const currentIndex = jobStatuses.indexOf(jobStatus);
+    if (currentIndex > 0) {
+      const newStatus = jobStatuses[currentIndex - 1];
+      setJobStatus(newStatus);
+      localStorage.setItem('jobStatus', newStatus);
+    } else {
+      console.log("Job status is already at the initial state");
+    }
+  };
 
   const handleOnChange = () => {
     setChecked(!isChecked);
@@ -88,10 +116,12 @@ function JobForm() {
     // send email or message to manager: "your quote was accepted by sustomer"
     // forward status one step
     incrementJobStatus();
+    console.log('handle Accept next status' + jobStatus)
       // go back to home view of role who edited the form
       navigate('/home',{ state: { userStatus } });
-    alert("TODO");
+    // alert("TODO");
     // console.log('loginpage' + {status})
+    
   };
 
 // Reject quote from customer
@@ -108,18 +138,46 @@ function JobForm() {
 
   const handleSubmit = () => {
     // alert("TODO");
-    // if (Customer submits new job), (userStatus === "Customer")&&(JobStatus === "Draft")
-    // send email or message to manager: "a new quote request has arrived"
-    // if (Manager submit quote)
-    // send email or message to Customer: "rour quote has arrived"
-    // if (Manager submit worker assignment)
-    // send email or message to Worker: "you have a new job"
-    // if (Worker submits completed job: )
-    // send email or message to Manager: "your job has been completed"
-       // if (Customer submits new review)
-    // send email or message to manager: "a new review has arrived"
-    // forward status one step
+    // (Customer submits new job)
+    // if (userStatus === "Customer")&&(JobStatus === "Draft")
+    // send email to manager: "a new quote request has arrived"
+    // userMessage = "To Manager: a new quote request has arrived"
+
+//(Manager submit quote)
+    // if  (userStatus === "Manager")&&(JobStatus === "Quoting")
+    // send email to Customer: "rour quote has arrived"
+    // userMessage = "To Customer: your quote has arrived"
+    // incrementJobStatus();
+
+    // (Manager submit worker assignment)
+    // if  (userStatus === "Manager")&&(JobStatus === "Worker Assignment")
+    // send email  to Worker: "you have a new job"
+    // userMessage = "To Worker: you have a new job"
+     // incrementJobStatus();
+
+    // (Worker submits completed job: )
+    // if  (userStatus === "Worker")&&(JobStatus === "Job Implementation")
+// if (isChecked) {
+    // send email to Manager: "your job has been completed"
+    // userMessage = "To Manager: your job has been completed"
+
+     // incrementJobStatus();} 
+     // else{userMessage = "To Worker: Compliance box must be checked first"
+    // alert("Compliance box must be checked first");}
+
+    // (Customer submits new review)
+    // if  (userStatus === "Customer")&&(JobStatus === "Customer Review")
+    // send email to manager: "a new review has arrived"
+    // userMessage = "To Manager: a new review has arrived"
+    if (jobStatus === "Customer Review") {
+      localStorage.setItem('jobStatus', "Draft");
+      navigate('/home', { state: { userStatus } });
+   
+    }
+
     incrementJobStatus();
+    console.log('handle submit next' , jobStatus)
+    // alert('incrementJobStatus updated' + jobStatus)
        // save changes to document of Jobs collection,
     // worker can only submit if tickbox is set
     // go back to home view of role who edited the form
@@ -132,7 +190,7 @@ function JobForm() {
     } else {
       navigate('/home', { state: { userStatus } });
     }
-     console.log('handle submit' + {userStatus})
+    //  console.log('handle submit' + userStatus)
   };
 
  
@@ -172,25 +230,26 @@ function JobForm() {
       <Header />
       <Navbar userStatus = {userStatus} />
 
-      <select value={jobStatus} onChange={e => setJobStatus(e.target.value)}>
-              {/* <option value="">JobStatus</option> */}
+      {/* <select value={jobStatus} onChange={e => setJobStatus(e.target.value)}>
+              
               <option value="Draft" >Draft</option>
               <option value="Quoting">Quoting</option>
               <option value="Customer Approval">Customer Approval</option>
               <option value="Worker Assignment">Worker Assignment</option>
               <option value="Job Implementation">Job Implementation</option>
               <option value="Customer Review">Customer Review</option>
-          </select>
+          </select> */}
 
 
-
+<div className="job-form-and-side-panel">
+<div className="job-form">
     <div className="job-form">
         <h2>Job Profile</h2>
         <div className="form-row">
         <p>User status: {userStatus}</p>
         <p>Job status: {jobStatus}</p>
         </div>
-      </div>
+    </div>
 {/***************************  Job Status DRAFT ******************************888*/}
 <div className="job-form">
   <button onClick={toggleForm}>Toggle Customer data</button>
@@ -311,11 +370,11 @@ function JobForm() {
         {/* end Job Status */}
            
       </div>  
-      {/* end div job form */}
-
+      {/* end div sub job form */}
+      </div>
       {/* Show side pannel */}
-      <Side/>
-
+      <Side userMessage = {userMessage} />
+      </div>  {/* "job-form-and-side-panel" */}
       <Footer/> 
     </div>
   );

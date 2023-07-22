@@ -11,44 +11,44 @@ import {  useLocation, useNavigate} from 'react-router-dom';
 function Home() {
 
   let location = useLocation();
-  let userStatus = location.state.userStatus;
+  let status = location.state.status;
   let navigate = useNavigate();
 
   const handleNewJob = () => {
-    navigate('/jobForm',{ state: { userStatus } });
+    navigate('/jobForm',{ state: { status } });
     // Handle login
-    console.log('loginpage' + {userStatus})
+    console.log('loginpage' + {status})
   };
 
-  console.log('home  ' + userStatus)
+  console.log('home  ' + status)
   return (
     <div className="App">
       <Header />
-      <Navbar userStatus = {userStatus} />
+      <Navbar status = {status} />
 
       <div className="main-content">
-      <p>User Status: {userStatus}</p>
+      <p>User status: {status}</p>
 
       <div className="form-row">
         <h2>My Jobs</h2>
         
-        {(userStatus === "Manager"||userStatus === "Customer" )&&
+        {(status === "Manager"||status === "Customer" )&&
         <div>
         <button onClick={handleNewJob}>Create New Job</button>
         </div>
         }
       </div>
       <JobColumns />
-        {userStatus === "Manager" &&
+        {status === "Manager" &&
         <div>
-          <p>Manager view : List of all jobs with Status, assigned worker, quote, and customer details. Option to add new job or quote.</p> 
+          <p>Manager view : List of all jobs with status, assigned worker, quote, and customer details. Option to add new job or quote.</p> 
          </div>
         }
 
-        {userStatus === "Worker" &&
+        {status === "Worker" &&
         <p>Worker view: List jobs with status, assigned worker.</p> }
 
-         {userStatus === "Customer" &&
+         {status === "Customer" &&
          <div>
 
         <p>Customer view: List jobs with status, specific to customer</p>

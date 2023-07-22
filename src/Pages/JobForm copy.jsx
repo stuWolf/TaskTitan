@@ -30,7 +30,7 @@ function JobForm() {
 
   const [isFormVisible, setIsFormVisible] = useState(true)
   let location = useLocation();
-  let userStatus = location.state.userStatus;
+  let userStatus = location.state.status;
   let navigate = useNavigate();
 
 
@@ -72,11 +72,11 @@ function JobForm() {
     // for tickbox worker , job complies
   }
   const handleClose = () => {
-    navigate('/home',{ state: { userStatus } });
+    navigate('/home',{ state: { status } });
     // Close and save changes
     
 
-    // console.log('loginpage' + {userStatus})
+    // console.log('loginpage' + {status})
   };
   const toggleForm = () => {
     setIsFormVisible(!isFormVisible);
@@ -89,7 +89,7 @@ function JobForm() {
     // forward status one step
     incrementJobStatus();
       // go back to home view of role who edited the form
-      navigate('/home',{ state: { userStatus } });
+      navigate('/home',{ state: { status } });
     alert("TODO");
     // console.log('loginpage' + {status})
   };
@@ -102,13 +102,13 @@ function JobForm() {
     decrementJobStatus();
    
     // go back to home view of role who edited the form
-    navigate('/home',{ state: { userStatus } });
+    navigate('/home',{ state: { status } });
     // console.log('loginpage' + {status})
   };
 
   const handleSubmit = () => {
     // alert("TODO");
-    // if (Customer submits new job), (userStatus === "Customer")&&(JobStatus === "Draft")
+    // if (Customer submits new job), (status === "Customer")&&(JobStatus === "Draft")
     // send email or message to manager: "a new quote request has arrived"
     // if (Manager submit quote)
     // send email or message to Customer: "rour quote has arrived"
@@ -123,54 +123,54 @@ function JobForm() {
        // save changes to document of Jobs collection,
     // worker can only submit if tickbox is set
     // go back to home view of role who edited the form
-    if (userStatus === "Worker") {
+    if (status === "Worker") {
       if (isChecked) {
-        navigate('/home', { state: { userStatus } });
+        navigate('/home', { state: { status } });
       } else {
         alert("Compliance box must be checked first");
       }
     } else {
-      navigate('/home', { state: { userStatus } });
+      navigate('/home', { state: { status } });
     }
-     console.log('handle submit' + {userStatus})
+    // console.log('loginpage' + {status})
   };
 
  
 
   const handleSave = () => {
     alert("TODO");
-    // save changes to document of Jobs coolection, keep job status
+    // save changes to document of Jobs coolection, keep status
   
-    // console.log('loginpage' + {userStatus})
+    // console.log('loginpage' + {status})
   };
   
 
   const handleAssignWorker = () => {
-    navigate('/managerWorkers',{ state: { userStatus } });
-    // console.log('loginpage' + {userStatus})
+    navigate('/managerWorkers',{ state: { status } });
+    // console.log('loginpage' + {status})
   };
   const handleAcceptJob = () => {
     // worker accepts job
     // send email or message to manager: "assigned worker accepted the job"
-    navigate('/home',{ state: { userStatus } });
-    // console.log('loginpage' + {userStatus})
+    navigate('/home',{ state: { status } });
+    // console.log('loginpage' + {status})
   };
 
   const handleRejectJob = () => {
     // worker recects job
     // send email or message to manager: "assigned worker recected the job"
-    navigate('/home',{ state: { userStatus } });
+    navigate('/home',{ state: { status } });
     // Go back to previous process step
     decrementJobStatus();
     // go back to home view of worker
     // console.log('loginpage' + {status})
   };
   
-  console.log('home  ' + userStatus)
+  console.log('home  ' + status)
   return (
     <div className="App">
       <Header />
-      <Navbar userStatus = {userStatus} />
+      <Navbar status = {status} />
 
       <select value={jobStatus} onChange={e => setJobStatus(e.target.value)}>
               {/* <option value="">JobStatus</option> */}
@@ -187,7 +187,7 @@ function JobForm() {
     <div className="job-form">
         <h2>Job Profile</h2>
         <div className="form-row">
-        <p>User status: {userStatus}</p>
+        <p>User status: {status}</p>
         <p>Job status: {jobStatus}</p>
         </div>
       </div>

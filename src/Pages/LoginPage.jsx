@@ -14,16 +14,16 @@ import Footer from '../components/footer';
  const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("");
+  const [userStatus, setStatus] = useState("");
   // const [termsAgreed, setTermsAgreed] = useState(false);
  
   // Get a reference to the history object
   let navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate('/home',{ state: { status } });
+    navigate('/home',{ state: { userStatus } });
     // Handle login
-    console.log('loginpage' + {status})
+    console.log('loginpage' + {userStatus})
   };
 
   const handleCancel = () => {
@@ -37,7 +37,7 @@ import Footer from '../components/footer';
       <div className="login-form">
         <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
-        <select value={status} onChange={e => setStatus(e.target.value)}>
+        <select value={userStatus} onChange={e => setStatus(e.target.value)}>
               <option value="">Status</option>
               <option value="Manager">Manager</option>
               <option value="Customer">Customer</option>

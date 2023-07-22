@@ -2,12 +2,12 @@
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 
-function Navbar({status}) {
+function Navbar({userStatus}) {
   const navigate = useNavigate();
-  console.log('navbar  ' + status)
+  console.log('navbar  ' + userStatus)
   const handleNavigation = (path) => {
     
-    navigate(path, { state: { status } });
+    navigate(path, { state: { userStatus } });
   };
 
   return (
@@ -16,7 +16,7 @@ function Navbar({status}) {
         <button onClick={() => handleNavigation('/home')}>Home</button>
         <button onClick={() => handleNavigation('/quotes')}>Quotes</button>
         <button onClick={() => handleNavigation('/completed')}>Completed Jobs</button>
-        {status === "Manager" && 
+        {userStatus === "Manager" && 
           <button onClick={() => handleNavigation('/managerWorkers')}>My Workers</button>
         }
         <button onClick={() => handleNavigation('/reviews')}>Reviews</button>

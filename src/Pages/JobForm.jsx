@@ -22,7 +22,7 @@ function JobForm() {
 
     const [startDate, setStartDate] = useState("");
     const [review, setReview] = useState("");
-    const [reviewStars, setReviewStars] = useState(false);
+    const [reviewStars, setReviewStars] = useState("");
     const [completionDate, setCompletionDate] = useState("");
     // const [userMessage, setUserMessage] = useState(" No Messages");
     
@@ -50,7 +50,7 @@ function JobForm() {
   }, [userMessage]);
 
  
-
+  // localStorage.setItem('jobStatus', "Draft");
   
 
 
@@ -137,61 +137,61 @@ function JobForm() {
   };
 
   const handleSubmit = () => {
-    // alert("TODO");
-    // (Customer submits new job)
-    // if (userStatus === "Customer")&&(JobStatus === "Draft")
-    // send email to manager: "a new quote request has arrived"
-    // userMessage = "To Manager: a new quote request has arrived"
-
-//(Manager submit quote)
-    // if  (userStatus === "Manager")&&(JobStatus === "Quoting")
-    // send email to Customer: "rour quote has arrived"
-    // userMessage = "To Customer: your quote has arrived"
-    // incrementJobStatus();
-
-    // (Manager submit worker assignment)
-    // if  (userStatus === "Manager")&&(JobStatus === "Worker Assignment")
-    // send email  to Worker: "you have a new job"
-    // userMessage = "To Worker: you have a new job"
-     // incrementJobStatus();
-
-    // (Worker submits completed job: )
-    // if  (userStatus === "Worker")&&(JobStatus === "Job Implementation")
-// if (isChecked) {
-    // send email to Manager: "your job has been completed"
-    // userMessage = "To Manager: your job has been completed"
-
-     // incrementJobStatus();} 
-     // else{userMessage = "To Worker: Compliance box must be checked first"
-    // alert("Compliance box must be checked first");}
-
-    // (Customer submits new review)
-    // if  (userStatus === "Customer")&&(JobStatus === "Customer Review")
-    // send email to manager: "a new review has arrived"
-    // userMessage = "To Manager: a new review has arrived"
-    if (jobStatus === "Customer Review") {
-      localStorage.setItem('jobStatus', "Draft");
-      navigate('/home', { state: { userStatus } });
-   
-    }
-
-    incrementJobStatus();
-    console.log('handle submit next' , jobStatus)
-    // alert('incrementJobStatus updated' + jobStatus)
-       // save changes to document of Jobs collection,
-    // worker can only submit if tickbox is set
-    // go back to home view of role who edited the form
-    if (userStatus === "Worker") {
+    if (jobStatus === "Draft") {
+      //if (userStatus === "Customer" && jobStatus === "Draft") {
+      // sendEmail('manager@example.com', 'New Quote Request', 'A new quote request has arrived');
+      localStorage.setItem('userMessage', "To Manager: a new quote request has arrived");
+      // setUserMessage("To Manager: a new quote request has arrived");
+      // incrementJobStatus();
+    } else if (jobStatus === "Quoting") {
+      //} else if (userStatus === "Manager" && jobStatus === "Quoting") {
+      // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
+      localStorage.setItem('userMessage', "To Customer: your quote has arrived");
+      // setUserMessage("To Customer: your quote has arrived");
+      // incrementJobStatus();
+    } else if (jobStatus === "Customer Approval") {
+      //} else if (userStatus === "Manager" && jobStatus === "Quoting") {
+      // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
+      localStorage.setItem('userMessage', "To Manager: your quote was approved");
+      //setUserMessage("To Manager: your quote was approved");
+      // incrementJobStatus();
+    } else if (jobStatus === "Worker Assignment") {
+      //} else if (userStatus === "Manager" && jobStatus === "Worker Assignment") {
+      // sendEmail('worker@example.com', 'New Job Assignment', 'You have a new job');
+      localStorage.setItem('userMessage', "To Worker: you have a new job");
+      // setUserMessage("To Worker: you have a new job");
+      // incrementJobStatus();
+    } else if (jobStatus === "Job Implementation") {
+      //} else if (userStatus === "Worker" && jobStatus === "Job Implementation") {
       if (isChecked) {
-        navigate('/home', { state: { userStatus } });
+        // alert("isChecked = true");
+        // sendEmail('manager@example.com', 'Job Completed', 'Your job has been completed');
+        // localStorage.setItem('userMessage', "To Manager: your job has been completed");
+        localStorage.setItem('userMessage', "To Customer: your job has been completed, please leave a review");
+        // setUserMessage("To Manager: your job has been completed");
+        // setUserMessage("To Customer: your job has been completed, please leave a review");
+        // incrementJobStatus();
       } else {
+        localStorage.setItem('userMessage', "To Worker: Compliance box must be checked first");
+        // setUserMessage("To Worker: Compliance box must be checked first");
         alert("Compliance box must be checked first");
+        return;
       }
-    } else {
+    } else if (jobStatus === "Customer Review") {
+      //} else if (userStatus === "Customer" && jobStatus === "Customer Review") {
+      // sendEmail('manager@example.com', 'New Review', 'A new review has arrived');
+      // localStorage.setItem('userMessage', "To Manager: a new review has arrived");
+      // setUserMessage("To Manager: a new review has arrived");
+      localStorage.setItem('jobStatus', "Draft");
+      localStorage.setItem('userMessage', "no messages");
       navigate('/home', { state: { userStatus } });
+      return;
     }
-    //  console.log('handle submit' + userStatus)
+    incrementJobStatus();
+    navigate('/home', { state: { userStatus } });
+    
   };
+  
 
  
 

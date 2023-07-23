@@ -29,14 +29,20 @@ const AddWorker = () => {
    const userStatus = 'Manager'
   const handleAddWorker = () => {
     // Handle registration
-    if (true) {
+
+
+
+     // Assume some registration API call happens here, and it was successful.
+   // API to push new worker record
+   
+     if (true) {
       alert("New Worker added Sucessfully");
         // Redirect to manager home page
         navigate('/home',{ state: { userStatus } });
       return;
   };
 
-   // Assume some registration API call happens here, and it was successful.
+  
 
   
   };

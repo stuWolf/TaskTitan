@@ -1,4 +1,4 @@
-import React , { useState} from 'react';
+import React from 'react';
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -17,10 +17,19 @@ function Home() {
   const handleNewJob = () => {
     navigate('/jobForm',{ state: { userStatus } });
     // Handle login
-    console.log('loginpage' + {userStatus})
+    // console.log('loginpage' + {userStatus})
   };
 
-  console.log('home  ' + userStatus)
+// probably on the API side: 
+// find all open jobs, filter out Job # (first 4 digits) Worker, Address, Date in, Quoted, Started, Status
+
+// in react: put all filtered jobs in an array, display this array under the job column
+// each row should be a link to the corresponding job. when clicked, display form with corresponding status and user roll
+// manager should be able to see the whole form (now the visability is according to job status)
+// link to job clicked -> job form opens -> call API to fetch data from Job collection-> fill form -> user updates form -> update job when form submit 
+
+
+  // console.log('home  ' + userStatus)
   return (
     <div className="App">
       <Header />

@@ -6,6 +6,7 @@ import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import JobFormCustomer from '../components/JobFormCustomer';
 import {  useLocation, useNavigate} from 'react-router-dom';
+// import { useLocalStorage } from 'react-use';
 
 function JobForm() {
   const [licenseNr, setLicenseNr] = useState("");
@@ -35,9 +36,12 @@ function JobForm() {
   // let userMessage = location.state.userMessage;
 
 
-
-  const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
-  // const [jobStatus, setJobStatus] = useState(localStorage.getItem('jobStatus') || "Draft");
+    // Local storage is an object, and every piece of data is assigned to a key on that object.
+    // So, we must specify what key that is and what data we use if no key is found in local storage.
+    // const [storedName, setStoredName] = useLocalStorage("TheName", "");
+    // benefit: rerenders when value change
+  // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
+  const [userMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
 
   const jobStatuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review"];
 

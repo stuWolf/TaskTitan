@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/header';
 import Footer from '../components/footer';
 // import Profile from '../Pages/ProfilePage';
-
+import { login } from "../services/loginServices";
 
 
 
@@ -37,12 +37,12 @@ import Footer from '../components/footer';
       <div className="login-form">
         <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
-        <select value={userStatus} onChange={e => setStatus(e.target.value)}>
+        {/* <select value={userStatus} onChange={e => setStatus(e.target.value)}>
               <option value="">Status</option>
               <option value="Manager">Manager</option>
               <option value="Customer">Customer</option>
               <option value="Worker">Worker</option>
-          </select>
+          </select> */}
         {/* <Profile status={status}/> */}
         <Link to="/profile">Forgot Password?</Link>
         <button onClick={handleLogin}>Log in</button>

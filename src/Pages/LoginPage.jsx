@@ -1,61 +1,53 @@
-import React, { useState} from "react";
-// import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import '../App.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
-// import Profile from '../Pages/ProfilePage';
 import { login } from "../services/loginServices";
 
-
-
-
- const Login = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userStatus, setStatus] = useState("");
-  // const [termsAgreed, setTermsAgreed] = useState(false);
- 
-  // Get a reference to the history object
+  const [errorMessage, setErrorMessage] = useState("");
+  // const [userStatus, setStatus] = useState("");
   let navigate = useNavigate();
 
-  const handleLogin = () => {
-    navigate('/home',{ state: { userStatus } });
-    // Handle login
-    console.log('loginpage' + {userStatus})
+  const handleLogin = async () => {
+    const data = {
+      email,
+      password
+    };
+    const response = await login(data);
+    if (response.error) {
+      setErrorMessage('Please check your username and password');
+    } else {
+      setErrorMessage('');
+      localStorage.setItem('userStatus', response.userStatus);
+      localStorage.setItem('userId', response.user_ID);
+      localStorage.setItem('token', response.token);
+      navigate('/home', { state: { userStatus: response.userStatus } });
+    }
   };
 
   const handleCancel = () => {
-    // Handle login
     navigate('/landing');
   };
 
   return (
     <div className="App">
-       <Header/>
+      <Header/>
       <div className="login-form">
         <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
-        {/* <select value={userStatus} onChange={e => setStatus(e.target.value)}>
-              <option value="">Status</option>
-              <option value="Manager">Manager</option>
-              <option value="Customer">Customer</option>
-              <option value="Worker">Worker</option>
-          </select> */}
-        {/* <Profile status={status}/> */}
+        {errorMessage && <p>{errorMessage}</p>}
         <Link to="/profile">Forgot Password?</Link>
         <button onClick={handleLogin}>Log in</button>
         <button onClick={handleCancel}>Cancel</button>
-        
         <Link to="/register">Register for Wolf Electrical</Link>
-       
-        
       </div>
-
       <Footer/>
-    </div> 
-    
+    </div>
   );
 };
 

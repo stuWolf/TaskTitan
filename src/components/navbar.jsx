@@ -2,12 +2,25 @@
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 
+
+
 function Navbar({userStatus}) {
   const navigate = useNavigate();
   console.log('navbar  ' + userStatus)
   const handleNavigation = (path) => {
     
     navigate(path, { state: { userStatus } });
+  };
+
+
+  const handleLogout = async () => {
+
+   
+    localStorage.removeItem('userStatus');
+     localStorage.removeItem('userId');
+     localStorage.removeItem('token');
+      navigate('/landing');
+    
   };
 
   return (
@@ -23,7 +36,7 @@ function Navbar({userStatus}) {
         <div className="navbar-right">
           <button onClick={() => handleNavigation('/search')}>Search</button>
           <button onClick={() => handleNavigation('/profile')}>Profile</button>
-          <button onClick={() => handleNavigation('/landing')}>Logout</button>
+          <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
     </div>

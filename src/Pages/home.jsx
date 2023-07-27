@@ -5,6 +5,9 @@ import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import JobColumns from '../components/jobColumns';
+import { useNoteData, useNoteDispatch } from "../contexts/NotesContext"
+import { getNotes } from "../services/notesServices";
+
 // import JobForm from '../components/JobForm';
 import {  useLocation, useNavigate} from 'react-router-dom';
 

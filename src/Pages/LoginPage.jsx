@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import '../App.css';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { login } from "../services/loginServices";
 import Header from '../components/header';
 import Footer from '../components/footer';
 import { login } from "../services/loginServices";
@@ -13,32 +13,10 @@ const Login = () => {
   // const [userStatus, setStatus] = useState("");
   let navigate = useNavigate();
 
-  const handleLogin = async () => {
-    // login button pressed
-    const data = {
-      email,
-      password
-    };
-    try {
-      const response = await login(data);
-      if (response.error) {
-        setErrorMessage('Please check your username and password');
-      } else {
-        setErrorMessage(''); // clear error
-        localStorage.setItem('userStatus', response.userStatus);
-        localStorage.setItem('userId', response.user_ID);
-        localStorage.setItem('token', response.token);
-        console.log('response from login   ' +response.token )
-        // localStorage.setItem('password', password);
-        navigate('/home', { state: { userStatus: response.userStatus } });
-      }
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        setErrorMessage('Request timed out. Please try again.');
-      } else {
-        setErrorMessage('An unexpected error occurred. Please try again.');
-      }
-    }
+  const handleLogin = () => {
+    navigate('/home',{ state: { userStatus } });
+    // Handle login
+    console.log('loginpage' + {userStatus})
   };
   
 

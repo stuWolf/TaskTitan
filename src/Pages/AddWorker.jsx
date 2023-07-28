@@ -2,7 +2,7 @@ import React, { useState} from "react";
 // import React, { useState, useEffect } from "react";
 import '../App.css';
 import { registerWorker} from "../services/userServices";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -80,8 +80,8 @@ const AddWorker = () => {
       setErrorMessage("Your new worker is registered.");
       // Redirect to manage worker page
       setTimeout(() => {
-        // navigate('/managerWorkers',{ state: { userStatus } });
-      }, 2000); // 2000 milliseconds = 2 seconds
+        navigate('/managerWorkers',{ state: { userStatus } });
+      }, 1000); // 2000 milliseconds = 2 seconds
     } else if (response.message.includes('E11000')) {
       setErrorMessage("The email address already exists, please choose another one");
    // this works

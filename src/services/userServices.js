@@ -42,17 +42,7 @@ export async function registerWorker(data) {
     return json;
 }
 
-// Register a Customer
-// Used in: Register
-export async function registerCustomer(data) {
-    const response = await fetch(`${api}/users/registerCustomer`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(data)
-    });
-    const json = await response.json();
-    return json;
-}
+
 
 // Get a user by ID
 // Used in: display work form, copy from profile

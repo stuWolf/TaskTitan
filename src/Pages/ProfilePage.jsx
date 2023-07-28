@@ -82,7 +82,7 @@ const [employedSince, setEmployedSince] = useState("");
       // 3s timer
       setTimeout(() => {
         navigate('/login');
-      }, 3000); // 3000 milliseconds = 3 seconds
+      }, 2000); // 3000 milliseconds = 3 seconds
     }
     
   };

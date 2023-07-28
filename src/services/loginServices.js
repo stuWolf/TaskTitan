@@ -1,7 +1,7 @@
 const api = process.env.REACT_APP_BACKEND_URL;
 const token = '' // taken from state
 const headers = {
-    'Authorization': `Bearer ${token}`,
+     'Authorization': `Bearer ${token}`,
     'Content-Type': "application/json"
 }
 
@@ -35,6 +35,7 @@ export async function registerCustomer(data) {
         headers: headers,
         body: JSON.stringify(data)
     });
+    console.log('Server response:', response);
     const json = await response.json();
     return json;
 }

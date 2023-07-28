@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState} from "react";
+// import React, { useState, useEffect } from "react";
 import '../App.css';
-import { getLoggedInUser, updateUser } from "../services/userServices";
+import {  useNavigate, useLocation} from 'react-router-dom';
+import { login } from "../services/loginServices";
 import Header from '../components/header';
 import Footer from '../components/footer';
+
+
+
+
+
+
 const Profile = () => {
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
@@ -13,41 +20,36 @@ const Profile = () => {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+//   const [status, setStatus] = useState("");
   let location = useLocation();
-  let userStatus = location.state.userStatus;
+let userStatus = location.state.userStatus;
+
+  // Get a reference to the history object
   let navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const response = await getLoggedInUser();
-      setFirstName(response.FirstName);
-      setLastName(response.LastName);
-      setAddress(response.address);
-      setPhone(response.phone);
-    };
-    fetchUser();
-  }, []);
 
-  const handleUpdate = async () => {
+// get user , set existing data, FirstName, LastName, address, phone
+// using getLoggedInUser()
+
+
+  const handleUpdate = () => {
+    // Handle registration
+
+    
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");
       return;
-    }
-    const data = {
-      FirstName,
-      LastName,
-      email,
-      password,
-      address,
-      phone
-    };
-    const response = await updateUser(data);
-    if (response.error) {
-      setErrorMessage("The email address already exists, please choose another one");
-    } else {
-      setErrorMessage("Your profile was updated successfully");
-      navigate('/home', { state: { userStatus } });
-    }
+  };
+
+  // update user with form values using updateUser(id, data)
+//if response.error setErrorMessage( "The email address already exists, please choose another one"
+//else: 
+
+   // Assume some registration API call happens here, and it was successful.
+
+    // Redirect to home with the same status
+    setErrorMessage("Your profile was updated sucessfully");
+    navigate('/home',{ state: { userStatus } });
     
   };
 
@@ -55,7 +57,6 @@ const Profile = () => {
     // back home
     navigate('/home',{ state: { userStatus} });
   };
-
 
   return (
     <div className="App">

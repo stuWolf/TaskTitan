@@ -1,8 +1,8 @@
 const api = process.env.REACT_APP_BACKEND_URL;
 const token = '' // taken from state
 const headers = {
-    'Authoriszation': `Bearer ${token}`,
-    'Content-type':"application/json"
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': "application/json"
 }
 
 // Create a review

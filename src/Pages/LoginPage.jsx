@@ -26,6 +26,7 @@ const Login = () => {
       localStorage.setItem('userStatus', response.userStatus);
       localStorage.setItem('userId', response.user_ID);
       localStorage.setItem('token', response.token);
+      localStorage.setItem('password', password);
       navigate('/home', { state: { userStatus: response.userStatus } });
     }
   };

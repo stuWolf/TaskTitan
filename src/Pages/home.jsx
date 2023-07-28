@@ -43,23 +43,23 @@ function Home() {
       <div className="form-row">
         <h2>My Jobs</h2>
         
-        {(userStatus === "Manager"||userStatus === "Customer" )&&
+        {(userStatus === "manager"||userStatus === "customer" )&&
         <div>
         <button onClick={handleNewJob}>Create New Job</button>
         </div>
         }
       </div>
       <JobColumns />
-        {userStatus === "Manager" &&
+        {userStatus === "manager" &&
         <div>
           <p>Manager view : List of all jobs with Status, assigned worker, quote, and customer details. Option to add new job or quote.</p> 
          </div>
         }
 
-        {userStatus === "Worker" &&
+        {userStatus === "worker" &&
         <p>Worker view: List jobs with status, assigned worker.</p> }
 
-         {userStatus === "Customer" &&
+         {userStatus === "customer" &&
          <div>
 
         <p>Customer view: List jobs with status, specific to customer</p>

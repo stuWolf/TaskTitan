@@ -4,14 +4,18 @@ import '../App.css';
 import { getLoggedInUser, updateUser } from "../services/userServices";
 import Header from '../components/header';
 import Footer from '../components/footer';
+
+
+
+
 const Profile = () => {
-  const [FirstName, setFirstName] = useState("");
-  const [LastName, setLastName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 // additional state variables for worker
 const [dob, setDob] = useState("");
@@ -39,7 +43,7 @@ const [employedSince, setEmployedSince] = useState("");
       setEmail(response.email);
       setPassword(localStorage.getItem('password'));
       setAddress(response.address);
-      setPhone(response.contactNumber); 
+      setContactNumber(response.contactNumber); 
       // note that the property is 'contactNumber' in your response, not 'phone'
       // if user is a worker, set additional fields
     if (userStatus === 'worker') {
@@ -60,32 +64,50 @@ const [employedSince, setEmployedSince] = useState("");
       setErrorMessage("Passwords do not match");
       return;
     }
+
+      // Check if email is valid
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    setErrorMessage("Please enter a valid email address");
+    return;
+  }
     const data = {
-      FirstName,
-      LastName,
+      firstName,
+      lastName,
       email,
       password,
       address,
-      phone,
+      contactNumber,
       dob,
       license,
       licenseNo,
       employedSince
+
+      
     };
-    const response = await updateUser(data);
-    if (response.error) {
-      setErrorMessage("The email address already exists, please choose another one");
-    } else {
-      // if  email updated does new token need to be created or can i get going withthe old one till next login?
-      setErrorMessage("Your profile was updated successfully plesae login again");
-      // old: navigate('/home', { state: { userStatus } });
-      // 3s timer
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000); // 3000 milliseconds = 3 seconds
+    try {
+      // console.log(firstName)
+      const response = await updateUser(data);
+      // console.log('response email  ' + response.email)
+      if (response.email) {
+        setErrorMessage("Your update was sucessful. Please login again.");
+        // Redirect to the login page
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000); // 2000 milliseconds = 2 seconds
+      } else if (response.message.includes('E11000')) {
+        setErrorMessage("The email address already exists, please choose another one");
+     // this works
+     
+      } else {
+        setErrorMessage("Registration failed. Please try again.");
+      }
+    } catch (error) {
+      console.log('Registration failed:', error);
+      setErrorMessage("Registration failed. Please try again." + error);
     }
-    
   };
+  
 
   const handleCancel = () => {
     // back home
@@ -97,13 +119,19 @@ const [employedSince, setEmployedSince] = useState("");
     <div className="App">
        <Header/>
        <div className="login-form">
-       <input type="FirstName" value={FirstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" />
-       <input type="LastName" value={LastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" />
+
+         
+      <p>You are logged in as: {userStatus}</p>
+
+     
+        <h2>Update your profile here</h2>
+       <input type="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" />
+       <input type="fastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" />
           <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" />
           <input type="text" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
           <input type="text" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm Password" />
           <input type="address" value={address} onChange={e => setAddress(e.target.value)} placeholder="Address" />
-          <input type="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone" />
+          <input type="contactNumber" value={contactNumber} onChange={e => setContactNumber(e.target.value)} placeholder="Contact Number" />
 
           {/* additional input fields for worker */}
         {userStatus === 'worker' && (
@@ -115,7 +143,7 @@ const [employedSince, setEmployedSince] = useState("");
           </>
         )}
           {/* <input type="status" value={status} onChange={e => setStatus(e.target.value)} placeholder="Status" /> */}
-          <p>User status: {userStatus}</p>
+      
           {errorMessage && <p>{errorMessage}</p>}
           <button onClick={handleUpdate}>Update</button>
           <button onClick={handleCancel}>Cancel</button>

@@ -18,18 +18,29 @@ const Login = () => {
       email,
       password
     };
-    const response = await login(data);
-    if (response.error) {
-      setErrorMessage('Please check your username and password');
-    } else {
-      setErrorMessage('');
-      localStorage.setItem('userStatus', response.userStatus);
-      localStorage.setItem('userId', response.user_ID);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('password', password);
-      navigate('/home', { state: { userStatus: response.userStatus } });
+    try {
+      const response = await login(data);
+      if (response.error) {
+        setErrorMessage('Please check your username and password');
+      } else {
+        setErrorMessage('');
+        localStorage.setItem('userStatus', response.userStatus);
+        localStorage.setItem('userId', response.user_ID);
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('password', password);
+        navigate('/home', { state: { userStatus: response.userStatus } });
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        setErrorMessage('Request timed out. Please try again.');
+      } else {
+        setErrorMessage('An unexpected error occurred. Please try again.');
+      }
     }
   };
+  
+
+
 
   const handleCancel = () => {
     navigate('/landing');

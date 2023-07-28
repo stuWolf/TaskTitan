@@ -71,6 +71,8 @@ export async function getLoggedInUser() {
 // Update a user
 // Used in: Profile window
 export async function updateUser(data) {
+    // console.log('token from user services   ' + token)
+    // console.log('token from user services   ' + headers )
     const userId = localStorage.getItem('userId');
     console.log('userID update '+ userId)
     const response = await fetch(`${api}/users/user/${userId}`, {

@@ -22,7 +22,7 @@ export async function getStatusJobs(status) {
 }
 
 // Get all jobs started by logged-in customer
-// Used in: customer view
+// Used in: customer view search
 export async function getMyJob() {
     const response = await fetch(`${api}/jobs/myjobLogin`, { headers: headers });
     const json = await response.json();

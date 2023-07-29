@@ -15,10 +15,59 @@
 }
 
 .jobColumns a {
-  padding: 10px 16px;
+  padding: 20px 56px;
   text-decoration: none;
   font-weight: bold;
 }
+
+.jobs-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.job-details {
+  /* width: 1500px; */
+  display: flex;
+  flex-direction: column;
+}
+
+.job-details p {
+  /* width: 1000px; */
+  display: flex;
+  flex-direction: column;
+}
+
+.job-id {
+  width: 50px;
+}
+/* for everything greater than 500px */
+@media (min-width: 500px) {
+  .jobs-container {
+    /* justify-content: space-between; */
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-right: 200px;
+  }
+
+  .job-details {
+    justify-content: space-between;
+    flex-direction: row;
+    
+    width: 1500px;
+    display: flex;
+  /* justify-content: space-between; */
+  margin-left: 10px;
+  margin-right: 10px;
+  }
+  .job-details p {
+    max-width: 100px;
+  }
+}
+
+
+
+
 /************************************ Main view*************************************88 */
 .main-content {
   margin: 20px;

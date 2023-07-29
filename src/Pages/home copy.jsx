@@ -4,7 +4,7 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import { getOpenJobs, getAllJobsOpenWorker,getMyJobsOpen } from "../services/jobsServices";
+import { getOpenJobs } from "../services/jobsServices";
 import JobColumns from '../components/jobColumns';
 import { Link } from 'react-router-dom';
 
@@ -45,19 +45,7 @@ const [jobs, setJobs] = useState([]);
 
 const fetchJobs = async () => {
   try {
-
-    let jobsData;  // Declare jobsData here
-
-    if(userStatus === "manager"){
-      jobsData = await getOpenJobs();
-    } else if (userStatus === "customer"){
-      // Get all open jobs for logged in user
-      jobsData = await getMyJobsOpen();
-    } else if (userStatus === "worker"){
-      // Get all open jobs for a logged in worker, by worker ID
-      jobsData = await getAllJobsOpenWorker();
-    }
-    
+    const jobsData = await getOpenJobs();
     // Filter out the required fields
     const filteredJobs = jobsData.map((job) => ({
       _id: job._id.slice(-4),  // Last 4 digits of _id
@@ -78,7 +66,7 @@ const fetchJobs = async () => {
 useEffect(() => {
   // Fetch the open jobs when the component mounts
   fetchJobs();
-}, );
+}, []);
 
 // Function to format the date
 const formatDate = (dateString) => {
@@ -108,9 +96,8 @@ const formatDate = (dateString) => {
         }
       </div>
       <JobColumns />
-
-
-       
+        {userStatus === "manager" &&
+        <div>
           {/* <p>Manager view : List of all jobs with Status, assigned worker, quote, and customer details. Option to add new job or quote.</p>  */}
           {/* // find all open jobs using getOpenJobs(), and filter out  _id ,  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus
 
@@ -118,25 +105,31 @@ const formatDate = (dateString) => {
 // display this array with the following columns:
 //  _id (last 4 digits),  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus */}
 
-<div className="jobs-container">
-          {jobs.map((job) => (
-            // Display the job details
-            // Replace this with your actual UI
-            <div key={job._id} className="job-details">
-              <p className="job-id"><Link to={`/job/${job._id}`}>{job._id}</Link></p>  {/* Link to the job details page */}
-              <p>{job.workerID}</p>
-              <p>{job.addressOfInstallation}</p>
-              <p>{formatDate(job.dateQuoted)}</p>
-              <p>{formatDate(job.workStart)}</p>
-              <p>{job.jobStatus}</p>
-            </div>
-          ))}
-        </div>
+{jobs.map((job) => (
+          // Display the job details
+          // Replace this with your actual UI
+          <div key={job._id}>
+           <p><strong>ID:</strong> <Link to={`/job/${job._id}`}>{job._id}</Link></p>  {/* Link to the job details page */}
+            <p><strong>Worker ID:</strong> {job.workerID}</p>
+            <p><strong>Address:</strong> {job.addressOfInstallation}</p>
+            <p><strong>Date Quoted:</strong> {formatDate(job.dateQuoted)}</p>
+            <p><strong>Work Start:</strong> {formatDate(job.workStart)}</p>
+            <p><strong>Status:</strong> {job.jobStatus}</p>
+          </div>
+        ))}
         {errorMessage && <p>{errorMessage}</p>}
-      
+         </div>
+        }
 
+        {userStatus === "worker" &&
+        <p>Worker view: List jobs with status, assigned worker.</p> }
 
-        
+         {userStatus === "customer" &&
+         <div>
+
+        <p>Customer view: List jobs with status, specific to customer</p>
+         
+        </div>}
       
       </div>
 

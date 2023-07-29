@@ -6,27 +6,12 @@ import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import JobFormCustomer from '../components/JobFormCustomer';
 import {  useNavigate, useParams} from 'react-router-dom';
-import {getJob,createJob} from "../services/jobsServices"
-import { getLoggedInUser } from "../services/userServices";
+import {getJob} from "../services/jobsServices"
 // import { useLocalStorage } from 'react-use';
 
 function JobForm() {
   const { jobId } = useParams();  // Get the job _id from the URL parameters
   // const jobStatus = localStorage.getItem('userStatus');
-  
-  
-  const [FirstName, setFirstName] = useState("");
-  const [LastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-
-  const [address, setAddress] = useState("");
-  const [addressOfInstallation, setaddressOfInstallation] = useState("");
-  const [scopeOfWork, setScopeOfWork] = useState("");
-  const [preferredJobCompletionDate, setpreferredJobCompletionDate] = useState("");
-  const [quoted, setQuoted] = useState("");
-  const [quoteAmmount, setQuoteAmmount] = useState("");
-  
   const [customerId, setCustomerId] = useState("");
   const [licenseNr, setLicenseNr] = useState("");
   const [workerName, setWorkerName] = useState("");
@@ -44,21 +29,63 @@ function JobForm() {
     const [review, setReview] = useState("");
     const [reviewStars, setReviewStars] = useState("");
     const [completionDate, setCompletionDate] = useState("");
-    const [isFormVisible, setIsFormVisible] = useState(true)
-    // let location = useLocation();
-    const userStatus = localStorage.getItem('userStatus');
+    // const [userMessage, setUserMessage] = useState(" No Messages");
+    
+    // const [job, setJob] = useState(null);
 
-    let navigate = useNavigate();
-    const [userMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
-    const jobStatuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
-    const [jobStatus, setJobStatus] = useState(localStorage.getItem('jobStatus') || "Draft");
+  const [isFormVisible, setIsFormVisible] = useState(true)
+  // let location = useLocation();
+  const userStatus = localStorage.getItem('userStatus');
+  // let userStatus = location.state.userStatus;
+  let navigate = useNavigate();
+  
+  // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
+  const [userMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
+
+  const jobStatuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
+
+  const [jobStatus, setJobStatus] = useState(localStorage.getItem('jobStatus') || "Draft");
 
     console.log('Jobid: '  + jobId)
     // setuserMessage
+  useEffect(() => {
+    localStorage.setItem('userMessage', userMessage);
+  }, [userMessage]);
 
   localStorage.setItem('userMessage', "It is a wonderfull day today");
 
-  // **** logic of the form
+  
+  useEffect(() => {
+    // Fetch the job details when the component mounts
+    // only when opened from joblist link
+    // if lodged from start new job (jobId = 0): customer ID is fromm new user
+    // jobStatus = draft
+    // load jobdata
+if(jobId!=0){
+
+
+
+    const fetchJob = async () => {
+      try {
+        const jobData = await getJob(jobId);
+        console.log("(job.jobStatus)  "  + jobStatus)
+        console.log('Job data:', jobData);
+        // setJob(jobData);
+        setCustomerId(jobData.customerId);
+        setJobStatus(jobData.jobStatus);
+      } catch (error) {
+        console.error('Failed to fetch job:', error);
+      }
+    };
+    fetchJob();
+  }
+
+  }, [jobId]);
+
+ 
+
+
+
 
   const incrementJobStatus = () => {
     const currentIndex = jobStatuses.indexOf(jobStatus);
@@ -74,6 +101,10 @@ function JobForm() {
     }
   };
 
+
+  
+
+
   const decrementJobStatus = () => {
     const currentIndex = jobStatuses.indexOf(jobStatus);
     if (currentIndex > 0) {
@@ -85,42 +116,10 @@ function JobForm() {
     }
   };
 
-// functions to fill in form with user data (for new job):
-
-useEffect(() => {
-  // Fetch the job details when the component mounts
-  // only when opened from joblist link
-  // if lodged from start new job (jobId = 0): customer ID is fromm new user
-  // jobStatus = draft
-  // load jobdata
-if(jobId!=0){
-
-  const fetchJob = async () => {
-    try {
-      const jobData = await getJob(jobId);
-      console.log("(job.jobStatus)  "  + jobStatus)
-      console.log('Job data:', jobData);
-      // setJob(jobData);
-      setCustomerId(jobData.customerId);
-      setJobStatus(jobData.jobStatus);
-    } catch (error) {
-      console.error('Failed to fetch job:', error);
-    }
-  };
-  fetchJob();
-}
-
-}, [jobId]);
-
-
   const handleOnChange = () => {
     setChecked(!isChecked);
     // for tickbox worker , job complies
   }
-
-
-
-
   const handleClose = () => {
     navigate('/home',{ state: { userStatus } });
     // Close and save changes
@@ -128,9 +127,7 @@ if(jobId!=0){
 
     // console.log('loginpage' + {userStatus})
   };
-
   const toggleForm = () => {
-    // toggle customer data 
     setIsFormVisible(!isFormVisible);
   };
 
@@ -159,9 +156,6 @@ if(jobId!=0){
     navigate('/home',{ state: { userStatus } });
     // console.log('loginpage' + {status})
   };
-// *** for handle submit
-
-
 
   const handleSubmit = () => {
     if (jobStatus === "Draft") {
@@ -280,63 +274,20 @@ if(jobId!=0){
 
 
 </div>
-   
-   <div className="job-form"> 
-
 {/* this form will always displayed but when Job status is not Draft, the fields will be grayed out */}
       
 {/***************************  Job Status DRAFT ******************************888*/}
 
-<div className="form-row">
-            {/*allways be displayed  */}
-          <p>Customer Details:</p> 
-          <button disabled={jobStatus !== "Draft"} onClick={onButtonClick}>Copy from profile</button>
-          {/* <p>Job status: {jobStatus}</p> */}
-          </div>
+{/* in JobFormCustomer */}
+
+
+{/***************************  Job Status quoting ******************************888*/}
+
+       {/* in JobFormCustomer */}
         
-          <div className="form-row">
-         
-         <input type="FirstName" value={FirstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" disabled={jobStatus !== "Draft"} />
-         <input type="LastName" value={LastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" disabled={jobStatus !== "Draft"} />
-     </div>
 
-
-     <div className="form-row">
-         <input type="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone" disabled={jobStatus !== "Draft"} />
-         <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" disabled={jobStatus !== "Draft"} />
-         </div>
-
-         
-     <div className="form-row" >
-         <input type="address" value={address} onChange={e => setAddress(e.target.value)} placeholder="Address" disabled={jobStatus !== "Draft"} />
-         </div>
-         
-         <div className="form-row">
-       
-         <input type="addressOfInstallation" value={addressOfInstallation} onChange={e => setaddressOfInstallation(e.target.value)} placeholder="InstallationAddress" disabled={jobStatus !== "Draft"} />
-         <button disabled={jobStatus !== "Draft"} onClick={handleCustomerData}>Copy from Customer</button>
-     </div>
-     <p>Scope of Work:</p> 
-        <div className="form-row">
-            <textarea value={scopeOfWork} onChange={e => setScopeOfWork(e.target.value)} placeholder="Scope of Work" disabled={jobStatus !== "Draft"} />
-            </div>
-            
-            <div className="form-row">
-            <p>Prefered completion date:</p> 
-            <input type="date" value={preferredJobCompletionDate} onChange={e => setpreferredJobCompletionDate(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} />
-            </div>
-{/***************************  Job Status Quoting ******************************888*/}
-     
-
-
-
-     
-   {/***************************  Job Status  Customer Approval ******************************888*/} 
-
-
-
-
-
+   {/***************************  Job Status  Customer Approval ******************************888*/}    
+   <div className="job-form"> 
          {jobStatus === "Customer Approval" &&
          <div>
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}

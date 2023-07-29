@@ -22,7 +22,9 @@ function Home() {
   const userStatus = localStorage.getItem('userStatus');
 
   const handleNewJob = () => {
-    navigate('/jobForm');
+// const jobId = 0
+localStorage.setItem('jobStatus', "Draft");
+    navigate('/jobForm/0');
     // Handle login
     // console.log('loginpage' + {userStatus})
   };

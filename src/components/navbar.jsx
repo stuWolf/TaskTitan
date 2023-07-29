@@ -8,6 +8,10 @@ function Navbar({userStatus}) {
   userStatus = userStatus.toLowerCase();
   const navigate = useNavigate();
   console.log('navbar  ' + userStatus)
+
+ 
+
+
   const handleNavigation = (path) => {
     
     navigate(path, { state: { userStatus } });

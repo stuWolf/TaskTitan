@@ -5,10 +5,11 @@ import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import JobFormCustomer from '../components/JobFormCustomer';
-import {  useLocation, useNavigate} from 'react-router-dom';
+import {  useLocation, useNavigate, useParams} from 'react-router-dom';
 // import { useLocalStorage } from 'react-use';
 
 function JobForm() {
+  const { id } = useParams();  // Get the job _id from the URL parameters
   const [licenseNr, setLicenseNr] = useState("");
   const [workerName, setWorkerName] = useState("");
   const [isChecked, setChecked] = useState(false);
@@ -47,7 +48,7 @@ function JobForm() {
 
   const [jobStatus, setJobStatus] = useState(localStorage.getItem('jobStatus') || "Draft");
 
-
+    console.log('id: '  + id)
 
   useEffect(() => {
     localStorage.setItem('userMessage', userMessage);

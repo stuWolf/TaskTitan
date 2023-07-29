@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -9,7 +9,7 @@ import JobColumns from '../components/jobColumns';
 import { Link } from 'react-router-dom';
 
 
-// import JobForm from '../components/JobForm';
+// import JobForm from '../Pages/JobForm';
 import {  useLocation, useNavigate} from 'react-router-dom';
 
 function Home() {
@@ -19,6 +19,8 @@ function Home() {
   let navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const userMessage = localStorage.getItem('userMessage');
+
+
   const handleNewJob = () => {
     navigate('/jobForm',{ state: { userStatus } });
     // Handle login
@@ -43,42 +45,74 @@ function Home() {
 // State to hold the jobs
 const [jobs, setJobs] = useState([]);
 
-const fetchJobs = async () => {
+const fetchJobs = useCallback(async () => {
   try {
 
     let jobsData;  // Declare jobsData here
 
     if(userStatus === "manager"){
+      
       jobsData = await getOpenJobs();
     } else if (userStatus === "customer"){
       // Get all open jobs for logged in user
       jobsData = await getMyJobsOpen();
     } else if (userStatus === "worker"){
       // Get all open jobs for a logged in worker, by worker ID
+
+     
+
+
       jobsData = await getAllJobsOpenWorker();
     }
+
+      // Check if jobsData contains 'message404, not found'
+      if (jobsData.hasOwnProperty('message404')) {
+        if (userStatus === "worker"){
+        setErrorMessage("There are  no jobs for you at the moment");
+        } else if (userStatus === "customer"){
+          setErrorMessage("You have not loged any jobs yet");
+        } else { setErrorMessage("No jobs recorded yet");}
+        return;
+      }
+
+
+      
+    // console.log(jobsData)
+  
+// Filter out the required fields
+const filteredJobs = jobsData.map((job) => ({
+  _id: job._id,  // Last 4 digits of _id
+  workerID: job.workerId,
+  addressOfInstallation: job.addressOfInstallation,
+  dateQuoted: job.dateQuoted,
+  workStart: job.workStart,
+  jobStatus: job.jobStatus,
+}));
+// Set the filtered jobs in state
+setJobs(filteredJobs);
+
+
     
-    // Filter out the required fields
-    const filteredJobs = jobsData.map((job) => ({
-      _id: job._id.slice(-4),  // Last 4 digits of _id
-      workerID: job.workerId,
-      addressOfInstallation: job.addressOfInstallation,
-      dateQuoted: job.dateQuoted,
-      workStart: job.workStart,
-      jobStatus: job.jobStatus,
-    }));
-    // Set the filtered jobs in state
-    setJobs(filteredJobs);
+    
   } catch (error) {
     console.error('Failed to fetch jobs:', error);
     setErrorMessage("could not fetch jobs");
   }
-};
+},[userStatus]);
+
+
+
+setTimeout(() => {
+   
+}, 5000); // 2000 milliseconds = 2 seconds
+
 
 useEffect(() => {
+
+
   // Fetch the open jobs when the component mounts
   fetchJobs();
-}, );
+}, [fetchJobs]);
 
 // Function to format the date
 const formatDate = (dateString) => {
@@ -93,8 +127,8 @@ const formatDate = (dateString) => {
   return (
     <div className="App">
       <Header />
-      <Navbar userStatus = {userStatus} />
-
+      {/* <Navbar userStatus = {userStatus} /> */}
+      <Navbar userStatus = 'manager'/> 
       <div className="main-content">
       <p>User Status: {userStatus}</p>
 
@@ -123,8 +157,9 @@ const formatDate = (dateString) => {
             // Display the job details
             // Replace this with your actual UI
             <div key={job._id} className="job-details">
-              <p className="job-id"><Link to={`/job/${job._id}`}>{job._id}</Link></p>  {/* Link to the job details page */}
-              <p>{job.workerID}</p>
+              {/* <Link to="/jobForm">SignIn</Link> */}
+              <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-4)}</Link></p>  {/* Link to the job details page */}
+              <p>{job.workerID.slice(-4)}</p>
               <p>{job.addressOfInstallation}</p>
               <p>{formatDate(job.dateQuoted)}</p>
               <p>{formatDate(job.workStart)}</p>

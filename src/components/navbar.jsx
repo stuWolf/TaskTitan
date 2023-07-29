@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 function Navbar({userStatus}) {
   userStatus = userStatus.toLowerCase();
   const navigate = useNavigate();
-  console.log('navbar  ' + userStatus)
+  // console.log('navbar  ' + userStatus)
 
  
 

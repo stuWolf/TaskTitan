@@ -5,11 +5,14 @@ import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import JobFormCustomer from '../components/JobFormCustomer';
-import {  useLocation, useNavigate, useParams} from 'react-router-dom';
+import {  useNavigate, useParams} from 'react-router-dom';
+import {getJob} from "../services/jobsServices"
 // import { useLocalStorage } from 'react-use';
 
 function JobForm() {
-  const { id } = useParams();  // Get the job _id from the URL parameters
+  const { jobId } = useParams();  // Get the job _id from the URL parameters
+  
+  const [customerId, setCustomerId] = useState("");
   const [licenseNr, setLicenseNr] = useState("");
   const [workerName, setWorkerName] = useState("");
   const [isChecked, setChecked] = useState(false);
@@ -28,36 +31,53 @@ function JobForm() {
     const [completionDate, setCompletionDate] = useState("");
     // const [userMessage, setUserMessage] = useState(" No Messages");
     
-
+    // const [job, setJob] = useState(null);
 
   const [isFormVisible, setIsFormVisible] = useState(true)
-  let location = useLocation();
-  let userStatus = location.state.userStatus;
+  // let location = useLocation();
+  const userStatus = localStorage.getItem('userStatus');
+  // let userStatus = location.state.userStatus;
   let navigate = useNavigate();
-  // let userMessage = location.state.userMessage;
-
-
-    // Local storage is an object, and every piece of data is assigned to a key on that object.
-    // So, we must specify what key that is and what data we use if no key is found in local storage.
-    // const [storedName, setStoredName] = useLocalStorage("TheName", "");
-    // benefit: rerenders when value change
+  
   // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
   const [userMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
 
-  const jobStatuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review"];
+  const jobStatuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
 
   const [jobStatus, setJobStatus] = useState(localStorage.getItem('jobStatus') || "Draft");
 
-    console.log('id: '  + id)
-
+    console.log('Jobid: '  + jobId)
+    // setuserMessage
   useEffect(() => {
     localStorage.setItem('userMessage', userMessage);
   }, [userMessage]);
 
- 
+  localStorage.setItem('userMessage', "It is a wonderfull day today");
   // localStorage.setItem('jobStatus', "Draft");
   
+  useEffect(() => {
+    // Fetch the job details when the component mounts
+    // load jobdata
+   
 
+    const fetchJob = async () => {
+      try {
+        const jobData = await getJob(jobId);
+        console.log("(job.jobStatus)  "  + jobStatus)
+        console.log('Job data:', jobData);
+        // setJob(jobData);
+        setCustomerId(jobData.customerId);
+        setJobStatus(jobData.jobStatus);
+      } catch (error) {
+        console.error('Failed to fetch job:', error);
+      }
+    };
+    fetchJob();
+
+
+  }, [jobId]);
+
+ 
 
 
 
@@ -78,16 +98,7 @@ function JobForm() {
 
 
   
-  // alert('new job status' + {jobStatus});
-  // const decrementJobStatus = () => {
-  //   const currentStatusNumber = getJobStatusNumber(jobStatus);
-  //   if (currentStatusNumber <= 1) return;
 
-  //   const previousStatusNumber = currentStatusNumber - 2;
-  //   const statusList = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review"];
-
-  //   setJobStatus(statusList[previousStatusNumber -1]);
-  // }
 
   const decrementJobStatus = () => {
     const currentIndex = jobStatuses.indexOf(jobStatus);
@@ -235,15 +246,7 @@ function JobForm() {
       <Header />
       <Navbar userStatus = {userStatus} />
 
-      {/* <select value={jobStatus} onChange={e => setJobStatus(e.target.value)}>
-              
-              <option value="Draft" >Draft</option>
-              <option value="Quoting">Quoting</option>
-              <option value="Customer Approval">Customer Approval</option>
-              <option value="Worker Assignment">Worker Assignment</option>
-              <option value="Job Implementation">Job Implementation</option>
-              <option value="Customer Review">Customer Review</option>
-          </select> */}
+      
 
 
 <div className="job-form-and-side-panel">
@@ -260,7 +263,7 @@ function JobForm() {
   <button onClick={toggleForm}>Toggle Customer data</button>
       {isFormVisible && (
         <div className="job-form">
-          <JobFormCustomer jobStatus = {jobStatus}/>
+          <JobFormCustomer jobStatus = {jobStatus}  jobId = {jobId}/>
         </div>
       )}
 

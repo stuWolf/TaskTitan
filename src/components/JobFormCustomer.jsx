@@ -1,12 +1,10 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import '../App.css';
-// import Header from '../components/header';
-// import Footer from '../components/footer';
-// import  Navbar from '../components/navbar';
-// import Side from '../components/SidePanel';
-// import {  useLocation} from 'react-router-dom';
 
-function JobFormCustomer({jobStatus}) {
+import { getLoggedInUser } from "../services/userServices";
+import {updateJob} from "../services/jobsServices"
+
+function JobFormCustomer({jobStatus,  jobId}) {
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -19,14 +17,35 @@ function JobFormCustomer({jobStatus}) {
   const [quoted, setQuoted] = useState("");
   const [quoteAmmount, setQuoteAmmount] = useState("");
 
-//   const [jobStatus, setJobStatus] = useState("Draft");
-//   let location = useLocation();
-//   let status = location.state.status;
-//   let navigate = useNavigate();
+  useEffect(() => {
+    // Fetch the user details when the component mounts
+
+    const fetchUser = async () => {
+      try {
+        const userData = await getLoggedInUser();
+        // console.log("(job.jobStatus)  "  + jobStatus)
+        console.log('userData:', userData);
+        // setJob(jobData);
+        // setJobStatus(jobData.jobStatus);
+      } catch (error) {
+        console.error('Failed to fetch user in job form customer:', error);
+      }
+    };
+    fetchUser();
+
+
+  }, [jobId]);
 
 // const jobStatus = "Draft";
-  const handleProfile = () => {
-    alert("TODO");
+  const handleProfile = (userData) => {
+
+    setFirstName(userData.firstName)
+    setLastName(userData.lastName)
+    setPhone(userData.contactNumber)
+    setEmail(userData.email)
+    setAddress(userData.address)
+
+    // alert("TODO");
     // console.log('loginpage' + {status})
   };
 

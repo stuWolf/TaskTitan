@@ -4,12 +4,13 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import {  useLocation, useNavigate} from 'react-router-dom';
+import {  useNavigate} from 'react-router-dom';
 
 function ManageWorkers() {
 
-  let location = useLocation();
-  let userStatus = location.state.userStatus;
+  // let location = useLocation();
+  const userStatus = localStorage.getItem('userStatus');
+  // let userStatus = location.state.userStatus;
  // Get a reference to the history object
  let navigate = useNavigate();
   const handleWorker = () => {

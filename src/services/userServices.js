@@ -56,8 +56,8 @@ export async function getUser(id) {
 // Get logged in user
 // Used in: create new job, profile (id)
 export async function getLoggedInUser() {
-    console.log('token from user services   ' + token)
-    console.log('token from user services   ' + headers )
+    // console.log('token from user services   ' + token)
+    // console.log('token from user services   ' + headers )
     const response = await fetch(`${api}/users/loggedIn`, { 
         headers: headers });
     if (!response.ok) {

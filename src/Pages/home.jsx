@@ -10,19 +10,19 @@ import { Link } from 'react-router-dom';
 
 
 // import JobForm from '../Pages/JobForm';
-import {  useLocation, useNavigate} from 'react-router-dom';
+import {   useNavigate} from 'react-router-dom';
 
 function Home() {
 
-  let location = useLocation();
-  let userStatus = location.state.userStatus;
+  // let location = useLocation();
+  // let userStatus = location.state.userStatus;
   let navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const userMessage = localStorage.getItem('userMessage');
-
+  const userStatus = localStorage.getItem('userStatus');
 
   const handleNewJob = () => {
-    navigate('/jobForm',{ state: { userStatus } });
+    navigate('/jobForm');
     // Handle login
     // console.log('loginpage' + {userStatus})
   };
@@ -102,9 +102,9 @@ setJobs(filteredJobs);
 
 
 
-setTimeout(() => {
+// setTimeout(() => {
    
-}, 5000); // 2000 milliseconds = 2 seconds
+// }, 5000); // 2000 milliseconds = 2 seconds
 
 
 useEffect(() => {

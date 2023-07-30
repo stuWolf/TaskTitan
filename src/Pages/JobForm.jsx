@@ -4,10 +4,10 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import JobFormCustomer from '../components/JobFormCustomer';
+// import JobFormCustomer from '../components/JobFormCustomer';
 import {  useNavigate, useParams} from 'react-router-dom';
 import {getJob,createJob} from "../services/jobsServices"
-import { getLoggedInUser } from "../services/userServices";
+import { getLoggedInUser, getUser } from "../services/userServices";
 // import { useLocalStorage } from 'react-use';
 
 function JobForm() {
@@ -23,6 +23,7 @@ function JobForm() {
   const [address, setAddress] = useState("");
   const [addressOfInstallation, setaddressOfInstallation] = useState("");
   const [scopeOfWork, setScopeOfWork] = useState("");
+  const [dateCreated, setDateCreated] = useState("");
   const [preferredJobCompletionDate, setpreferredJobCompletionDate] = useState("");
   const [quoted, setQuoted] = useState("");
   const [quoteAmmount, setQuoteAmmount] = useState("");
@@ -90,27 +91,93 @@ function JobForm() {
 useEffect(() => {
   // Fetch the job details when the component mounts
   // only when opened from joblist link
-  // if lodged from start new job (jobId = 0): customer ID is fromm new user
+  // if lodged from start new job (jobId = 0): customer ID is from new user
   // jobStatus = draft
   // load jobdata
-if(jobId!=0){
+
+  const fetchUser = async (customerId) => {
+    try {
+      const userData = await getUser(customerId);
+      console.log('userData from fetch user:', userData);
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setPhone(userData.contactNumber);
+      setEmail(userData.email);
+      setAddress(userData.address); // add this line to update user data once it's fetched
+    } catch (error) {
+      console.error('Failed to fetch data from logged in customer:', error);
+    }
+  };
 
   const fetchJob = async () => {
     try {
       const jobData = await getJob(jobId);
-      console.log("(job.jobStatus)  "  + jobStatus)
+      console.log("(job.jobStatus)  "  + jobStatus);
       console.log('Job data:', jobData);
       // setJob(jobData);
       setCustomerId(jobData.customerId);
       setJobStatus(jobData.jobStatus);
+      setaddressOfInstallation(jobData.addressOfInstallation);
+      setScopeOfWork(jobData.scopeOfWork);
+      // setpreferredJobCompletionDate(jobData.preferredJobCompletionDate);
+    
+      // set
+
+      // Fetch user data after job data is successfully fetched
+      fetchUser(jobData.customerId);
     } catch (error) {
       console.error('Failed to fetch job:', error);
     }
   };
-  fetchJob();
-}
 
-}, [jobId]);
+  if (jobId !== 0) {
+    fetchJob();
+  } // endif jobID
+}, [jobId]);  // end use effect
+
+
+// The fetchUser function as its own standalone function
+// if new job 
+// const fetchUser = async () => {
+//   try {
+//     const userData = await getLoggedInUser();
+//     console.log('userData from fetch user:', userData);
+//     setFirstName(userData.firstName);
+//   setLastName(userData.lastName);
+//   setPhone(userData.contactNumber);
+//   setEmail(userData.email);
+//   setAddress(userData.address); // add this line to update user data once it's fetched
+//   } catch (error) {
+//     console.error('Failed to fetch dataform logged in customer:', error);
+//   }
+// };
+
+// *** create new job buttton
+const  copyUserData = async() => {
+  // copy data from customer profile profile click
+  try {
+    const userData = await getLoggedInUser();
+    console.log('userData from fetch user:', userData);
+    setFirstName(userData.firstName);
+  setLastName(userData.lastName);
+  setPhone(userData.contactNumber);
+  setEmail(userData.email);
+  setAddress(userData.address); 
+  setDateCreated(userData.dateCreated);
+  } catch (error) {
+    console.error('Failed to fetch dataform logged in customer:', error);
+  }
+  
+      // alert("TODO");
+      // console.log('loginpage' + {status})
+    };
+  
+    const handleCustomerData = () => {
+      // copy customer address to job address
+      setaddressOfInstallation(address)
+      // alert("TODO");
+      // console.log('loginpage' + {status})
+    };
 
 
   const handleOnChange = () => {
@@ -140,19 +207,54 @@ if(jobId!=0){
     // send email or message to manager: "your quote was accepted by sustomer"
     // forward status one step
     incrementJobStatus();
+
+    //update job with status
     console.log('handle Accept next status' + jobStatus)
       // go back to home view of role who edited the form
       navigate('/home',{ state: { userStatus } });
     // alert("TODO");
     // console.log('loginpage' + {status})
+
+
+
     
   };
+
+  const createNewJob = async () => {
+    // Replace this with your actual function for creating a new job
+    // if(jobId === 0){
+// if this is a new job
+
+   
+    const jobData = {
+      customerId,     // id of logged in user from local memory
+      scopeOfWork,
+      jobStatus,
+      addressOfInstallation,
+      preferredJobCompletionDate
+      // here later job date raised by customer Not needed, created by server
+    };
+    console.log("jobData from create new job"  +  customerId,     // id of logged in user from local memory
+    scopeOfWork,
+    addressOfInstallation,
+    preferredJobCompletionDate )
+
+
+
+    try {
+      const newJob = await createJob(jobData); // replace this with your API call
+      console.log("New job created:", newJob);
+    } catch (error) {
+      console.error("Failed to create new job:", error );
+    }
+ 
+  };// end Create new job
 
 // Reject quote from customer
   const handleReject = () => {
     // alert("TODO");
     // send email or message to manager: "your quote was rejected by sustomer"
-    // reduce status one step
+    // reduce status back to quoting
     decrementJobStatus();
    
     // go back to home view of role who edited the form
@@ -165,18 +267,22 @@ if(jobId!=0){
 
   const handleSubmit = () => {
     if (jobStatus === "Draft") {
+
+      // if Job ID === 0 , create job with form data
       //if (userStatus === "Customer" && jobStatus === "Draft") {
       // sendEmail('manager@example.com', 'New Quote Request', 'A new quote request has arrived');
       localStorage.setItem('userMessage', "To Manager: a new quote request has arrived");
       // setUserMessage("To Manager: a new quote request has arrived");
       // incrementJobStatus();
     } else if (jobStatus === "Quoting") {
+      // update job with form data
       //} else if (userStatus === "Manager" && jobStatus === "Quoting") {
       // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
       localStorage.setItem('userMessage', "To Customer: your quote has arrived");
       // setUserMessage("To Customer: your quote has arrived");
       // incrementJobStatus();
     } else if (jobStatus === "Customer Approval") {
+      // update job with form data
       //} else if (userStatus === "Manager" && jobStatus === "Quoting") {
       // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
       localStorage.setItem('userMessage', "To Manager: your quote was approved");
@@ -209,12 +315,18 @@ if(jobId!=0){
       // sendEmail('manager@example.com', 'New Review', 'A new review has arrived');
       // localStorage.setItem('userMessage', "To Manager: a new review has arrived");
       // setUserMessage("To Manager: a new review has arrived");
+
+      // create new review,  review ID from response just created review
+
       localStorage.setItem('jobStatus', "Closed");
       localStorage.setItem('userMessage', "no messages");
-      navigate('/home', { state: { userStatus } });
+      // navigate('/home', { state: { userStatus } });
       return;
     }
     incrementJobStatus();
+
+    // if NOt Draft: update job with form data
+
     navigate('/home', { state: { userStatus } });
     
   };
@@ -222,12 +334,15 @@ if(jobId!=0){
 
  
 
-  const handleSave = () => {
-    alert("TODO");
-    // save changes to document of Jobs coolection, keep job status
+  // const handleSave = () => {
+  //   alert("TODO");
+
+  //   // if job ID === 0 create new job with available data
+  //   // else
+  //   // save changes to document of Jobs coolection, keep job status
   
-    // console.log('loginpage' + {userStatus})
-  };
+  //   // console.log('loginpage' + {userStatus})
+  // };
   
 
   const handleAssignWorker = () => {
@@ -262,26 +377,27 @@ if(jobId!=0){
 
 <div className="job-form-and-side-panel">
 <div className="job-form">
-    <div className="job-form">
+    {/* <div className="job-form"> */}
         <h2>Job Profile</h2>
         <div className="form-row">
         <p>User status: {userStatus}</p>
         <p>Job status: {jobStatus}</p>
         </div>
-    </div>
+    {/* </div> */}
 {/***************************  Job Status DRAFT ******************************888*/}
-<div className="job-form">
+
   <button onClick={toggleForm}>Toggle Customer data</button>
       {isFormVisible && (
         <div className="job-form">
-          <JobFormCustomer jobStatus = {jobStatus}  jobId = {jobId}/>
+          {/* <JobFormCustomer jobStatus = {jobStatus}  jobId = {jobId}/>
         </div>
-      )}
+      )}  */}
+      {/* end isFormVisible */}
 
 
-</div>
+
    
-   <div className="job-form"> 
+   {/* <div className="job-form">  */}
 
 {/* this form will always displayed but when Job status is not Draft, the fields will be grayed out */}
       
@@ -290,7 +406,7 @@ if(jobId!=0){
 <div className="form-row">
             {/*allways be displayed  */}
           <p>Customer Details:</p> 
-          <button disabled={jobStatus !== "Draft"} onClick={onButtonClick}>Copy from profile</button>
+          <button disabled={jobStatus !== "Draft"} onClick={copyUserData}>Copy from profile</button>
           {/* <p>Job status: {jobStatus}</p> */}
           </div>
         
@@ -325,17 +441,37 @@ if(jobId!=0){
             <p>Prefered completion date:</p> 
             <input type="date" value={preferredJobCompletionDate} onChange={e => setpreferredJobCompletionDate(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} />
             </div>
+            </div>
+      )} 
+
+   {/*************************** End Job Status DRAFT ******************************888*/}         
 {/***************************  Job Status Quoting ******************************888*/}
+{(jobStatus === "Quoting" || jobStatus === "Customer Approval")&& <div className="job-form">
+      <div className="form-row">
+        <p>Date Created by customer:    {dateCreated} </p>
+    
+        {/* <input className="date-input" type="date" value={preferredJobCompletionDate} onChange={e => setpreferredJobCompletionDate(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} /> */}
+    
+      </div>
+        <div className="form-row">
+          
+        <p>Date Quoted by manager: </p>
      
+        <input className="date-input" type="date" value={quoted} onChange={e => setQuoted(e.target.value)} placeholder="Date Quoted" disabled={jobStatus !== "Quoting"} />
+        </div>
+      
+        <div className="form-row">
+        <p>Ammount Quoted AUD </p>
+        <input type="quoteAmmount" value={quoteAmmount} onChange={e => setQuoteAmmount(e.target.value)} placeholder="Quote Ammount" disabled={jobStatus !== "Quoting"} />
+        <p>Quote attached </p>
+        </div>
+        {/* <input type="date" value={completion} onChange={e => setCompletion(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} /> */}
+        </div> }
+
+{/***************************  end Job Status Quoting ******************************888*/}
 
 
-
-     
    {/***************************  Job Status  Customer Approval ******************************888*/} 
-
-
-
-
 
          {jobStatus === "Customer Approval" &&
          <div>
@@ -358,23 +494,26 @@ if(jobId!=0){
          <div className="job-form">
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
           <p>Job Implementation</p>
-          < div className="form-row">
+          
+          <div className="form-row">
           <button disabled={jobStatus !== "Job Implementation"} onClick={handleAcceptJob}>Accept Job</button>
           <button disabled={jobStatus !== "Job Implementation"} onClick={handleRejectJob}>Reject Job</button>
           </div>
          
-         < div className="form-row">
+         <div className="form-row">
           <input type="maximumDemand" value={maximumDemand} onChange={e => setMaximumDemand(e.target.value)} placeholder="Maximum Demand in Amp" disabled={jobStatus !== "Job Implementation"} />
           <input type="consumerMains" value={consumerMains} onChange={e => setConsumerMains(e.target.value)} placeholder="Consumer Mains" disabled={jobStatus !== "Job Implementation"} />
           </div>
 
-          < div className="form-row">
+          <div className="form-row">
           <input type="ectricalRetailer" value={ectricalRetailer} onChange={e => setEctricalRetailer(e.target.value)} placeholder="Electrical Retailer" disabled={jobStatus !== "Job Implementation"} />
           <input type="ergyDistributor" value={ergyDistributor} onChange={e => setErgyDistributor(e.target.value)} placeholder="Energy Distributor" disabled={jobStatus !== "Job Implementation"} />
           </div>
-          < div className="form-row">
+
+          <div className="form-row">
           <input type="phasesMains" value={phasesMains} onChange={e => setPhasesMains(e.target.value)} placeholder="Phases Mains" disabled={jobStatus !== "Job Implementation"} />
           </div>
+
           <input type="checkbox"checked={isChecked}onChange={handleOnChange}disabled={jobStatus !== "Job Implementation"}/>
           <label>I, the electrical worker certify that the electrical installation work above complies to the electrical safety standards</label>
         
@@ -386,11 +525,11 @@ if(jobId!=0){
          <div className="job-form">
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
           
-          < div className="form-row">
+          <div className="form-row">
           <p>Date work started</p>
           <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} placeholder="Start Date" disabled={jobStatus !== "Customer Review"} />
           </div>
-          < div className="form-row">
+          <div className="form-row">
           <p>Please rate your work</p>
           <select value={reviewStars} onChange={e => setReviewStars(e.target.value)}>
               {/* <option value="">JobStatus</option> */}
@@ -409,11 +548,12 @@ if(jobId!=0){
             </div>
 
 
-          < div className="form-row">
+          <div className="form-row">
           <p>Date work completed</p>
           <input type="date" value={completionDate} onChange={e => setCompletionDate(e.target.value)} placeholder= "Completion Date" disabled={jobStatus !== "Customer Review"} />
           </div>
         </div>}
+        {/* end job form */}
 
         {jobStatus === "Customer Approval"? (
           <div>
@@ -424,21 +564,22 @@ if(jobId!=0){
         ) : (
           <div>
             <button onClick={handleSubmit}>Submit</button> 
-            <button onClick={handleSave}>Save</button> 
+            {/* <button onClick={handleSave}>Save</button>  */}
             <button onClick={handleClose}>Close</button>
              
         </div>
         )}  
         {/* end Job Status */}
            
-      </div>  
+      {/* </div>   */}
       {/* end div sub job form */}
       </div>
       {/* Show side pannel */}
       <Side userMessage = {userMessage} />
       </div>  {/* "job-form-and-side-panel" */}
       <Footer/> 
-    </div>
+    </div>  
+    // end app
   );
 }
 

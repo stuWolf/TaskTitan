@@ -75,6 +75,9 @@ const handleProfile = (userData) => {
   scopeOfWork,
   addressOfInstallation,
   preferredJobCompletionDate )
+
+
+
   const createNewJob = async () => {
     // Replace this with your actual function for creating a new job
     // if(jobId === 0){
@@ -87,21 +90,23 @@ const handleProfile = (userData) => {
       jobStatus,
       addressOfInstallation,
       preferredJobCompletionDate
-      // here later job date raised by customer
+      // here later job date raised by customer Not needed, created by server
     };
     console.log("jobData from create new job"  +  customerId,     // id of logged in user from local memory
     scopeOfWork,
     addressOfInstallation,
     preferredJobCompletionDate )
-// console.log("customerId from create new job  "  + customerId)
+
+
+
     try {
       const newJob = await createJob(jobData); // replace this with your API call
       console.log("New job created:", newJob);
     } catch (error) {
       console.error("Failed to create new job:", error );
     }
-  // } // end if jobId
-  };
+ 
+  };// end Create new job
   
 
 //   console.log('home  ' + status)
@@ -159,7 +164,8 @@ const handleProfile = (userData) => {
             </div>
 
 
-        </div>
+        </div> 
+        {/* end job form */}
 
       {/***************************  Job Status Quoting ******************************888*/}
 
@@ -186,7 +192,7 @@ const handleProfile = (userData) => {
         </div> }
 
 
-{/***************************  Job Status Quoting ******************************888*/}
+    {/***************************  Job Status Quoting ******************************888*/}
   
 
   </div>

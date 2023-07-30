@@ -50,19 +50,17 @@ const [jobs, setJobs] = useState([]);
 const fetchJobs = useCallback(async () => {
   try {
 
-    let jobsData;  // Declare jobsData here
+    let jobsData;  
 
     if(userStatus === "manager"){
       
       jobsData = await getOpenJobs();
+      // console.log('jobsData.dateCreated  ' + jobsData.dateCreated)
     } else if (userStatus === "customer"){
-      // Get all open jobs for logged in user
+      // Get all open jobs for logged in Customer
       jobsData = await getMyJobsOpen();
     } else if (userStatus === "worker"){
-      // Get all open jobs for a logged in worker, by worker ID
-
-     
-
+      // Get all open jobs for a logged in worker, by worker Id
 
       jobsData = await getAllJobsOpenWorker();
     }
@@ -72,28 +70,30 @@ const fetchJobs = useCallback(async () => {
         if (userStatus === "worker"){
         setErrorMessage("There are  no jobs for you at the moment");
         } else if (userStatus === "customer"){
-          setErrorMessage("You have not loged any jobs yet");
+          setErrorMessage("You have not lodged any jobs yet");
         } else { setErrorMessage("No jobs recorded yet");}
         return;
       }
 
 
       
-    // console.log(jobsData)
+    // console.log(jobsData)not availabledateCreated
   
 // Filter out the required fields
 const filteredJobs = jobsData.map((job) => ({
-  _id: job._id,  // Last 4 digits of _id
-  workerID: job.workerId,
-  addressOfInstallation: job.addressOfInstallation,
-  dateQuoted: job.dateQuoted,
-  workStart: job.workStart,
-  jobStatus: job.jobStatus,
+  _id: job._id || 'No Data',  // Last 4 digits of _id
+  workerId: job.workerId || 'No Data',
+  addressOfInstallation: job.addressOfInstallation|| 'No Data',
+  dateIn: job.dateCreated || 'No Data',
+  dateQuoted: job.dateQuoted || 'No Data',
+  workStart: job.workStarted || 'No Data',
+  jobStatus: job.jobStatus || 'No Data',
+  
 }));
 // Set the filtered jobs in state
 setJobs(filteredJobs);
 
-
+// console.log('job.dateCreated' +  job.dateCreated)
     
     
   } catch (error) {
@@ -101,7 +101,7 @@ setJobs(filteredJobs);
     setErrorMessage("could not fetch jobs");
   }
 },[userStatus]);
-
+// end fetch jobs
 
 
 // setTimeout(() => {
@@ -118,12 +118,18 @@ useEffect(() => {
 
 // Function to format the date
 const formatDate = (dateString) => {
+if(dateString === 'No Data'){
+return 'No Data';
+
+}else{
   const date = new Date(dateString);
   const day = date.getDate();
   const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
   const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
   return `${day}/${month}/${year}`;
-};
+}
+ 
+}; // end format date
 
   // console.log('home  ' + userStatus)
   return (
@@ -161,8 +167,9 @@ const formatDate = (dateString) => {
             <div key={job._id} className="job-details">
               {/* <Link to="/jobForm">SignIn</Link> */}
               <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-4)}</Link></p>  {/* Link to the job details page */}
-              <p>{job.workerID.slice(-4)}</p>
+              <p>{job.workerId.slice(-4)}</p>
               <p>{job.addressOfInstallation}</p>
+              <p>{formatDate(job.dateIn)}</p>
               <p>{formatDate(job.dateQuoted)}</p>
               <p>{formatDate(job.workStart)}</p>
               <p>{job.jobStatus}</p>
@@ -176,6 +183,7 @@ const formatDate = (dateString) => {
         
       
       </div>
+      {/* end main -content */}
 
       {/* <div className="side-panel">
         <h2>Notifications</h2>

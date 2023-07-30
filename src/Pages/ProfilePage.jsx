@@ -59,6 +59,7 @@ const [employedSince, setEmployedSince] = useState("");
   fetchUser();
   }, [userStatus]);
 
+  
   const handleUpdate = async () => {
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");

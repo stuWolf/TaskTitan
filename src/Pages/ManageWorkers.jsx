@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
@@ -6,6 +6,7 @@ import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import WorkerColumns from '../components/workerColumns';
 import {  useNavigate} from 'react-router-dom';
+import { getUsers } from "../services/userServices";
 import { Link } from 'react-router-dom';
 function ManageWorkers() {
 
@@ -16,9 +17,10 @@ function ManageWorkers() {
  let navigate = useNavigate();
 
  const [errorMessage, setErrorMessage] = useState("");
-  const userMessage = localStorage.getItem('userMessage');
-
-
+  // const userMessage = localStorage.getItem('userMessage');
+  
+  const [jobIdHome, setJobIdHome] = useState("64c554b269a5213214551fd9");
+  // const jobStatusJobForm = localStorage.getItem('jobStatus');
   const handleWorker = () => {
     // Handle login
     navigate('/addWorker');
@@ -31,78 +33,53 @@ function ManageWorkers() {
 
   const fetchWorkers = useCallback(async () => {
     try {
-  
       let workerData;  
-  
-    
-  
-        workerData = await getAllJobsOpenWorker();
       
-  
-        // Check if workerData contains 'message404, not found'
-        if (workerData.hasOwnProperty('message404')) {
-          if (userStatus === "worker"){
-          setErrorMessage("There are  no jobs for you at the moment");
-          } else if (userStatus === "customer"){
-            setErrorMessage("You have not lodged any jobs yet");
-          } else { setErrorMessage("No jobs recorded yet");}
-          return;
-        }
-  
-  
+      // get all users with status Worker
+      workerData = await getUsers("worker");
         
-      // console.log(workerData)not availabledateCreated
+      // Check if workerData contains 'message404, not found'
+      if (workerData.hasOwnProperty('message404')) {
+        setErrorMessage("You have no workers yet")
+        return;
+      }
     
-  // Filter out the required fields
-  const filteredWorkers = workerData.map((job) => ({
-    _id: job._id || 'No Data',  // Last 4 digits of _id
-    workerId: job.workerId || 'No Data',
-    addressOfInstallation: job.addressOfInstallation|| 'No Data',
-    dateIn: job.dateCreated || 'No Data',
-    dateQuoted: job.dateQuoted || 'No Data',
-    workStart: job.workStarted || 'No Data',
-    jobStatus: job.jobStatus || 'No Data',
-    
-  }));
-  // Set the filtered jobs in state
-  setJobs(filteredWorkers);
+      // Filter out the required fields
+      const filteredWorkers = workerData.map((worker) => ({
+        _id: worker._id || 'No Data',  
+        firstName: worker.firstName || 'No Data',
+        lastName: worker.lastName || 'No Data',
+        address: worker.address || 'No Data',
+        employedSince: worker.employedSince || 'No Data',
+        license: worker.license || 'No Data',
+      }));
   
-  // console.log('job.dateCreated' +  job.dateCreated)
-      
-      
+      // Set the filtered workers in state
+      setWorkers(filteredWorkers);
+        
     } catch (error) {
       console.error('Failed to fetch workers:', error);
       setErrorMessage("could not fetch workers");
     }
-  },[userStatus]);
+  },[]);
   // end fetch workers
   
-  
-  // setTimeout(() => {
-     
-  // }, 5000); // 2000 milliseconds = 2 seconds
-  
-  
   useEffect(() => {
-  
-  
     // Fetch the open jobs when the component mounts
     fetchWorkers();
   }, [fetchWorkers]);
   
   // Function to format the date
   const formatDate = (dateString) => {
-  if(dateString === 'No Data'){
-  return 'No Data';
-  
-  }else{
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
-    const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
-    return `${day}/${month}/${year}`;
-  }
-   
+    if(dateString === 'No Data'){
+      return 'No Data';
+    }else{
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
+      const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
+      return `${day}/${month}/${year}`;
+    }
   }; // end format date
 
   // call API to fetch all workers 
@@ -123,21 +100,17 @@ function ManageWorkers() {
 
 
         <div className="jobs-container">
-          {workers.map((job) => (
-            // Display the job details
-            // Replace this with your actual UI
-            <div key={job._id} className="job-details">
-              {/* <Link to="/jobForm">SignIn</Link> */}
-              <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-4)}</Link></p>  {/* Link to the job details page */}
-              <p>{job.workerId.slice(-4)}</p>
-              <p>{job.addressOfInstallation}</p>
-              <p>{formatDate(job.dateIn)}</p>
-              <p>{formatDate(job.dateQuoted)}</p>
-              <p>{formatDate(job.workStart)}</p>
-              <p>{job.jobStatus}</p>
-            </div>
-          ))}
-        </div>
+        {workers.map((worker) => (
+          <div key={worker._id} className="job-details">
+            <p className="job-id"><Link to={`/jobForm/${jobIdHome}`}>{worker._id.slice(-4)}</Link></p>
+            <p>{worker.firstName}</p>
+            <p>{worker.lastName}</p>
+            <p>{worker.address}</p>
+            <p>{formatDate(worker.employedSince)}</p>
+            <p>{worker.license}</p>
+          </div>
+        ))}
+      </div>
         {errorMessage && <p>{errorMessage}</p>}
 
 

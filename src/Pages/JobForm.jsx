@@ -12,7 +12,10 @@ import { getLoggedInUser, getUser } from "../services/userServices";
 
 function JobForm() {
   const { jobId } = useParams();  // Get the job _id from the URL parameters
-  // const jobStatus = localStorage.getItem('userStatus');
+  // const jobStatus = localStorage.getItem('jobStatus');
+  // from JobForm
+  // const jobIdHome = localStorage.getItem('jobId');
+  // to open the jobform and assign the worker
   
   
   const [FirstName, setFirstName] = useState("");
@@ -130,10 +133,10 @@ useEffect(() => {
     }
   };
 
-  if (jobId !== 0) {
+  if (jobId !== 'New') {
     fetchJob();
   } // endif jobID
-}, [jobId]);  // end use effect
+}, [jobId, jobStatus]);  // end use effect
 
 
 // The fetchUser function as its own standalone function
@@ -221,6 +224,7 @@ const  copyUserData = async() => {
   };
 
   const createNewJob = async () => {
+    // to be copied to handleSubmit
     // Replace this with your actual function for creating a new job
     // if(jobId === 0){
 // if this is a new job
@@ -318,14 +322,17 @@ const  copyUserData = async() => {
 
       // create new review,  review ID from response just created review
 
-      localStorage.setItem('jobStatus', "Closed");
+      // localStorage.setItem('jobStatus', "Closed");
       localStorage.setItem('userMessage', "no messages");
       // navigate('/home', { state: { userStatus } });
       return;
     }
+    // allways increment, gets decremented when customer rejects quote or worker rejects job
     incrementJobStatus();
-
-    // if NOt Draft: update job with form data
+    // if JobId == 'New'
+// Create new Job, store results
+// else
+    //  update job with form data
 
     navigate('/home', { state: { userStatus } });
     

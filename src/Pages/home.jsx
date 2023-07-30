@@ -20,11 +20,12 @@ function Home() {
   const [errorMessage, setErrorMessage] = useState("");
   const userMessage = localStorage.getItem('userMessage');
   const userStatus = localStorage.getItem('userStatus');
+  
 
   const handleNewJob = () => {
 // const jobId = 0
 localStorage.setItem('jobStatus', "Draft");
-    navigate('/jobForm/0');
+    navigate('/jobForm/New');
     // Handle login
     // console.log('loginpage' + {userStatus})
   };
@@ -78,7 +79,7 @@ const fetchJobs = useCallback(async () => {
 
       
     // console.log(jobsData)not availabledateCreated
-  
+    // localStorage.setItem('token', response.token);
 // Filter out the required fields
 const filteredJobs = jobsData.map((job) => ({
   _id: job._id || 'No Data',  // Last 4 digits of _id

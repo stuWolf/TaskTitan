@@ -9,6 +9,7 @@ import {  useNavigate, useParams} from 'react-router-dom';
 import {getJob,createJob} from "../services/jobsServices"
 import { getLoggedInUser, getUser } from "../services/userServices";
 import { getReview } from "../services/reviewsServices";
+import {calculateVisibility} from "../services/visibilityManager";
 // import { useLocalStorage } from 'react-use';
 
 function JobForm() {
@@ -60,8 +61,10 @@ function JobForm() {
     const [userMessage] = useState(localStorage.getItem('userMessage') || "No Messages");
     const jobStatuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
     const [jobStatus, setJobStatus] = useState(localStorage.getItem('jobStatus') || "Draft");
+    const [visibility, setVisibility] = useState({quotingVisable: false, assignVisable: false, implementVisable: false, reviewVisable: false,});
 
-    console.log('Jobid: '  + jobId)
+
+    console.log('Jobid from JobForm: '  + jobId)
     // setuserMessage
 
   localStorage.setItem('userMessage', "It is a wonderfull day today");
@@ -93,7 +96,7 @@ function JobForm() {
     }
   };
 
-// functions to fill in form with user data (for new job):
+
 
 useEffect(() => {
   // Fetch the job details when the component mounts
@@ -102,6 +105,8 @@ useEffect(() => {
   // jobStatus = draft
   // load jobdata
 
+
+// functions to fill in form with user data customerId either from job DB (fetchJob ) or from logged in user:
   const fetchUser = async (customerId) => {
     try {
       const userData = await getUser(customerId);
@@ -144,7 +149,7 @@ useEffect(() => {
       }else{
         setReviewStars(reviewData.stars);
         setReview(reviewData.review );
-        setCompletionDate(review.endDate );
+        setCompletionDate(reviewData.endDate );
 
       }
   
@@ -153,7 +158,7 @@ useEffect(() => {
       console.error('Failed to fetch data from review ID:', error);
     }
   };
-// this runs when job is selected from form. fetch all values, render form according to status
+// this runs when job is selected from form (new Job). fetch all values, render form according to status
   const fetchJob = async () => {
     try {
       const jobData = await getJob(jobId);
@@ -182,13 +187,20 @@ useEffect(() => {
 
       // Fetch user data after job data is successfully fetched
       fetchUser(jobData.customerId);
-      fetchWorker(jobData.workerId)
-      fetchReview(jobData.reviewId)
+
+      
+      if (visibility.assignVisable) {
+        fetchWorker(jobData.workerId);
+      }
+      if (visibility.reviewVisable) {
+        fetchReview(jobData.reviewId);
+      }
     } catch (error) {
       console.error('Failed to fetch job:', error);
     }
   };
 
+  console.log('visibility.assignVisable' + visibility.assignVisable)
   // Function to format the date
 const formatDate = (dateString) => {
   if(dateString === 'No Data'){
@@ -205,13 +217,23 @@ const formatDate = (dateString) => {
   }; // end format date
 
   if (jobId !== 'New') {
-
-    fetchJob();
-    console.log('preferredJobCompletionDate '  + preferredJobCompletionDate)
+    fetchJob();  // get jobdata from server if new job
+    // console.log('preferredJobCompletionDate '  + preferredJobCompletionDate)
   } // endif jobID
-}, [jobId, jobStatus]);  // end use effect
 
 
+
+
+}, [jobId, jobStatus,visibility]);  // end use effect
+
+
+
+useEffect(() => {
+  if(jobStatus && userStatus) {
+    const visibilityResult = calculateVisibility(jobStatus, userStatus);
+    setVisibility(visibilityResult);
+  }
+}, [jobStatus, userStatus]);
 // The fetchUser function as its own standalone function
 // if new job 
 // const fetchUser = async () => {
@@ -272,7 +294,7 @@ const  copyUserData = async() => {
 
   const handleClose = () => {
     navigate('/home',{ state: { userStatus } });
-    // Close and save changes
+    // Close and save changes, don't increase status
     
 
     // console.log('loginpage' + {userStatus})
@@ -289,14 +311,13 @@ const  copyUserData = async() => {
     // send email or message to manager: "your quote was accepted by sustomer"
     // forward status one step
     incrementJobStatus();
+// update job with new status
 
-    //update job with status
     console.log('handle Accept next status' + jobStatus)
       // go back to home view of role who edited the form
       navigate('/home',{ state: { userStatus } });
     // alert("TODO");
     // console.log('loginpage' + {status})
-
 
 
     
@@ -339,7 +360,7 @@ const  copyUserData = async() => {
     // send email or message to manager: "your quote was rejected by sustomer"
     // reduce status back to quoting
     decrementJobStatus();
-   
+   // update job with new status
     // go back to home view of role who edited the form
     navigate('/home',{ state: { userStatus } });
     // console.log('loginpage' + {status})
@@ -352,6 +373,10 @@ const  copyUserData = async() => {
     if (jobStatus === "Draft") {
 
       // if Job ID === 0 , create job with form data
+
+
+
+      
       //if (userStatus === "Customer" && jobStatus === "Draft") {
       // sendEmail('manager@example.com', 'New Quote Request', 'A new quote request has arrived');
       localStorage.setItem('userMessage', "To Manager: a new quote request has arrived");
@@ -532,7 +557,7 @@ const  copyUserData = async() => {
 
    {/*************************** End Job Status DRAFT ******************************888*/}         
 {/***************************  Job Status Quoting ******************************888*/}
-{(jobStatus === "Quoting" || jobStatus === "Customer Approval" || userStatus === "manager")&& <div className="job-form">
+{(visibility.quotingVisable)&& <div className="job-form">
       <div className="form-row">
         <p>Date Created by customer:    {dateCreated} </p>
     
@@ -565,7 +590,7 @@ const  copyUserData = async() => {
           <p>For approval please confirm Clicking ACCEPT</p>
         </div>}
 {/***************************  Job Status Worker Assignment******************************888*/}
-        {(jobStatus === "Worker Assignment" || userStatus === "manager") &&
+        {(visibility.assignVisable) &&
           <div className="job-form">
             <p>Your Electrical Worker </p>
           <div className="form-row">
@@ -576,7 +601,7 @@ const  copyUserData = async() => {
           </div>
           </div>}
 {/***************************  Job Status Job Implementation ******************************888*/}
-        {jobStatus === "Job Implementation" &&
+        {visibility.implementVisable &&
          <div className="job-form">
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
           <p>Job Implementation</p>
@@ -607,7 +632,7 @@ const  copyUserData = async() => {
         
         </div>}
 {/***************************  Job Customer Review ******************************888*/}
-        {(jobStatus === "Customer Review" || userStatus === "manager") &&
+        {(visibility.reviewVisable) &&
          <div className="job-form">
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
           

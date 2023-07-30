@@ -8,10 +8,11 @@ import Side from '../components/SidePanel';
 import {  useNavigate, useParams} from 'react-router-dom';
 import {getJob,createJob} from "../services/jobsServices"
 import { getLoggedInUser, getUser } from "../services/userServices";
+import { getReview } from "../services/reviewsServices";
 // import { useLocalStorage } from 'react-use';
 
 function JobForm() {
-  const { jobId } = useParams();  // Get the job _id from the URL parameters
+  const { jobId } = useParams();  // Get the job _id from the URL parameters, link from home
   // const jobStatus = localStorage.getItem('jobStatus');
   // from JobForm
   // const jobIdHome = localStorage.getItem('jobId');
@@ -30,8 +31,10 @@ function JobForm() {
   const [preferredJobCompletionDate, setpreferredJobCompletionDate] = useState("");
   const [quoted, setQuoted] = useState("");
   const [quoteAmmount, setQuoteAmmount] = useState("");
-  
+  const [quoteAttachment, setQuoteAttachment] = useState("");
   const [customerId, setCustomerId] = useState("");
+  const [workerId, setWorkerId] = useState("");
+  const [workStarted, setWorkStarted] = useState("");
   const [licenseNr, setLicenseNr] = useState("");
   const [workerName, setWorkerName] = useState("");
   const [isChecked, setChecked] = useState(false);
@@ -46,6 +49,7 @@ function JobForm() {
 
     const [startDate, setStartDate] = useState("");
     const [review, setReview] = useState("");
+    const [reviewId, setReviewId] = useState("");
     const [reviewStars, setReviewStars] = useState("");
     const [completionDate, setCompletionDate] = useState("");
     const [isFormVisible, setIsFormVisible] = useState(true)
@@ -111,7 +115,45 @@ useEffect(() => {
       console.error('Failed to fetch data from logged in customer:', error);
     }
   };
+  const fetchWorker = async (workerId) => {
+    try {
+      const workerData = await getUser(workerId);
+      console.log('workerData from fetch user:', workerData);
+      if (workerData.hasOwnProperty('message404')){
+        setLicenseNr('not assigned');
+        setWorkerName('not assigned');
 
+      }else{
+        setLicenseNr(workerData.licenseNo);
+        setWorkerName(workerData.firstName + ' ' + workerData.lastName);
+      }
+      
+      
+    } catch (error) {
+      console.error('Failed to fetch data from worker ID', error);
+    }
+  };
+
+  const fetchReview = async (reviewId) => {
+    try {
+      const reviewData = await getReview(reviewId);
+      console.log('review from fetch review:', reviewData);
+      if (reviewData.hasOwnProperty('message404')){
+        setReview('no review yet')
+
+      }else{
+        setReviewStars(reviewData.stars);
+        setReview(reviewData.review );
+        setCompletionDate(review.endDate );
+
+      }
+  
+      
+    } catch (error) {
+      console.error('Failed to fetch data from review ID:', error);
+    }
+  };
+// this runs when job is selected from form. fetch all values, render form according to status
   const fetchJob = async () => {
     try {
       const jobData = await getJob(jobId);
@@ -122,19 +164,50 @@ useEffect(() => {
       setJobStatus(jobData.jobStatus);
       setaddressOfInstallation(jobData.addressOfInstallation);
       setScopeOfWork(jobData.scopeOfWork);
-      // setpreferredJobCompletionDate(jobData.preferredJobCompletionDate);
-    
+      setpreferredJobCompletionDate(formatDate(jobData.preferredJobCompletionDate));
+      setDateCreated(formatDate(jobData.dateCreated));
+      setQuoted(formatDate(jobData.dateQuoted));
+      setQuoteAmmount(jobData.amountQuoted);
+      setQuoteAttachment(jobData.quoteAttachment);
+      setWorkerId(jobData.workerId);
+      setWorkStarted(formatDate(jobData.workerkStarted));
+      setMaximumDemand(jobData.maximumDemandInAmps);
+      setConsumerMains(jobData.consumerMainsCapacity);
+      setEctricalRetailer(jobData.ectricalRetailer);
+      setErgyDistributor(jobData.energyDistributor);
+      setPhasesMains(jobData.mainsPhases);
+      setReviewId(jobData.reviewId);
+      // setDateQ
       // set
 
       // Fetch user data after job data is successfully fetched
       fetchUser(jobData.customerId);
+      fetchWorker(jobData.workerId)
+      fetchReview(jobData.reviewId)
     } catch (error) {
       console.error('Failed to fetch job:', error);
     }
   };
 
+  // Function to format the date
+const formatDate = (dateString) => {
+  if(dateString === 'No Data'){
+  return 'No Data';
+  
+  }else{
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
+    const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
+    return `${day}/${month}/${year}`;
+  }
+   
+  }; // end format date
+
   if (jobId !== 'New') {
+
     fetchJob();
+    console.log('preferredJobCompletionDate '  + preferredJobCompletionDate)
   } // endif jobID
 }, [jobId, jobStatus]);  // end use effect
 
@@ -156,6 +229,12 @@ useEffect(() => {
 // };
 
 // *** create new job buttton
+
+// when job is selected from form: 
+// fetch job data via jobID
+// fetch
+
+
 const  copyUserData = async() => {
   // copy data from customer profile profile click
   try {
@@ -453,7 +532,7 @@ const  copyUserData = async() => {
 
    {/*************************** End Job Status DRAFT ******************************888*/}         
 {/***************************  Job Status Quoting ******************************888*/}
-{(jobStatus === "Quoting" || jobStatus === "Customer Approval")&& <div className="job-form">
+{(jobStatus === "Quoting" || jobStatus === "Customer Approval" || userStatus === "manager")&& <div className="job-form">
       <div className="form-row">
         <p>Date Created by customer:    {dateCreated} </p>
     
@@ -486,7 +565,7 @@ const  copyUserData = async() => {
           <p>For approval please confirm Clicking ACCEPT</p>
         </div>}
 {/***************************  Job Status Worker Assignment******************************888*/}
-        {jobStatus === "Worker Assignment" &&
+        {(jobStatus === "Worker Assignment" || userStatus === "manager") &&
           <div className="job-form">
             <p>Your Electrical Worker </p>
           <div className="form-row">
@@ -528,7 +607,7 @@ const  copyUserData = async() => {
         
         </div>}
 {/***************************  Job Customer Review ******************************888*/}
-        {jobStatus === "Customer Review" &&
+        {(jobStatus === "Customer Review" || userStatus === "manager") &&
          <div className="job-form">
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
           
@@ -538,7 +617,7 @@ const  copyUserData = async() => {
           </div>
           <div className="form-row">
           <p>Please rate your work</p>
-          <select value={reviewStars} onChange={e => setReviewStars(e.target.value)}>
+          <select value={reviewStars} onChange={e => setReviewStars(e.target.value)}disabled={(jobStatus !== "Customer Review"|| userStatus === "manager")} >
               {/* <option value="">JobStatus</option> */}
               <option value="1 Star" >1 Star</option>
               <option value="2 Star">2 Star</option>
@@ -551,7 +630,7 @@ const  copyUserData = async() => {
 
           <p>Review</p> 
             <div className="form-row">
-            <textarea value={review} onChange={e => setReview(e.target.value)} placeholder="Please write a review" disabled={jobStatus !== "Customer Review"} />
+            <textarea value={review} onChange={e => setReview(e.target.value)} placeholder="Please write a review" disabled={(jobStatus !== "Customer Review"|| userStatus === "manager")} />
             </div>
 
 

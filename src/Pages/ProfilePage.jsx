@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../App.css';
-import { getLoggedInUser, updateUser } from "../services/userServices";
+import { getLoggedInUser, updateUser, getUser} from "../services/userServices";
 import Header from '../components/header';
 import Footer from '../components/footer';
 
@@ -24,8 +24,9 @@ const [licenseNo, setLicenseNo] = useState("");
 const [employedSince, setEmployedSince] = useState("");
 
   let location = useLocation();
-  let userStatus = location.state.userStatus;
+  // let userStatus = location.state.userStatus;
   let navigate = useNavigate();
+  const userStatus = localStorage.getItem('userStatus');
 
 
 
@@ -36,7 +37,8 @@ const [employedSince, setEmployedSince] = useState("");
 
    const fetchUser = async () => {
     try {
-      const response = await getLoggedInUser();
+      // const response = await getLoggedInUser();
+      const response = await getUser(localStorage.getItem('userId'))
       console.log('from fetch user', response); // log the entire response object
       setFirstName(response.firstName);
       setLastName(response.lastName);

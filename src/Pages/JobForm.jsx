@@ -5,21 +5,25 @@ import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 // import JobFormCustomer from '../components/JobFormCustomer';
-import {  useNavigate, useParams} from 'react-router-dom';
+import {  useNavigate,useParams} from 'react-router-dom';
 import {getJob,createJob, updateJob} from "../services/jobsServices"
 import { getLoggedInUser, getUser } from "../services/userServices";
 import { getReview } from "../services/reviewsServices";
 import {calculateVisibility} from "../services/visibilityManager";
 // import { useLocalStorage } from 'react-use';
 
-function JobForm() {
-  const { jobId } = useParams();  // Get the job _id from the URL parameters, link from home
+// function JobForm({ match }) {
+//   const { jobId, workerAssignId } = match.params;
+  // const { params } = match;
+  // const { jobId, workerAssignId } = params;
+  // const { jobId, workerAssignId } = useParams();  // Get the job _id from the URL parameters, link from home
   // const jobStatus = localStorage.getItem('jobStatus');
   // from JobForm
   // const jobIdHome = localStorage.getItem('jobId');
   // to open the jobform and assign the worker
   
-  
+  function JobForm() {
+    const { jobId } = useParams();
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -50,7 +54,7 @@ function JobForm() {
 
 
  
-    const[dateCompleted, setDateCompleted]= useState("");
+    // const[dateCompleted, setDateCompleted]= useState("");
     const [startDate, setStartDate] = useState("");
     const [review, setReview] = useState("");
     const [reviewId, setReviewId] = useState("");
@@ -78,7 +82,26 @@ function JobForm() {
 
   // **** logic of the form
 
-  
+  const fetchWorker = async (workerId) => {
+    // fetch name and license no from worker ID and write them into form variables
+    try {
+      const workerData = await getUser(workerId);
+      console.log('workerid  '  + workerId)
+      console.log('workerData from fetch Worker:', workerData);
+      if (workerData.hasOwnProperty('message404')){
+        setLicenseNr('not assigned');
+        setWorkerName('not assigned');
+
+      }else{
+        setLicenseNr(workerData.licenseNo);
+        setWorkerName(workerData.firstName + ' ' + workerData.lastName);
+      }
+      
+      
+    } catch (error) {
+      console.error('Failed to fetch data from worker ID', error);
+    }
+  };
 
 
 useEffect(() => {
@@ -103,24 +126,7 @@ useEffect(() => {
       console.error('Failed to fetch data from logged in customer:', error);
     }
   };
-  const fetchWorker = async (workerId) => {
-    try {
-      const workerData = await getUser(workerId);
-      console.log('workerData from fetch user:', workerData);
-      if (workerData.hasOwnProperty('message404')){
-        setLicenseNr('not assigned');
-        setWorkerName('not assigned');
-
-      }else{
-        setLicenseNr(workerData.licenseNo);
-        setWorkerName(workerData.firstName + ' ' + workerData.lastName);
-      }
-      
-      
-    } catch (error) {
-      console.error('Failed to fetch data from worker ID', error);
-    }
-  };
+  
 
   const fetchReview = async (reviewId) => {
     try {
@@ -141,7 +147,7 @@ useEffect(() => {
       console.error('Failed to fetch data from review ID:', error);
     }
   };
-// this runs when job is selected from form (new Job). fetch all values, render form according to status
+// this runs when job is selected from form . fetch all values, render form according to status
   const fetchJob = async () => {
     try {
       const jobData = await getJob(jobId);
@@ -159,13 +165,14 @@ useEffect(() => {
       setQuoteAmmount(jobData.amountQuoted);
       setQuoteAttachment(jobData.quoteAttachment);
       setWorkerId(jobData.workerId);
-      setWorkStarted(formatDate(jobData.workerkStarted));
+      setWorkStarted(formatDate(jobData.workStarted));
       setMaximumDemand(jobData.maximumDemandInAmps);
       setConsumerMains(jobData.consumerMainsCapacity);
       setEctricalRetailer(jobData.ectricalRetailer);
       setErgyDistributor(jobData.energyDistributor);
       setPhasesMains(jobData.mainsPhases);
       setReviewId(jobData.reviewId);
+      setCompletionDate(jobData.setCompletionDate);
       // setDateQ
       // set
 
@@ -173,7 +180,7 @@ useEffect(() => {
       fetchUser(jobData.customerId);
 
       
-      if (visibility.assignVisable) {
+      if (visibility.implementVisable) {
         fetchWorker(jobData.workerId);
       }
       if (visibility.reviewVisable) {
@@ -182,6 +189,9 @@ useEffect(() => {
     } catch (error) {
       console.error('Failed to fetch job:', error);
     }
+
+   
+
   };
 
   console.log('visibility.assignVisable' + visibility.assignVisable)
@@ -191,6 +201,7 @@ const formatDate = (dateString) => {
   return 'No Data';
   
   }else{
+    
     const date = new Date(dateString);
     const day = date.getDate();
     const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
@@ -202,6 +213,7 @@ const formatDate = (dateString) => {
 
   if (jobId !== 'New') {
     fetchJob();  // get jobdata from server if new job
+    
     // console.log('preferredJobComplDraftetionDate '  + preferredJobCompletionDate)
   } // endif jobID
 
@@ -218,35 +230,16 @@ useEffect(() => {
     setVisibility(visibilityResult);
   }
 }, [jobStatus, userStatus]);
-// The fetchUser function as its own standalone function
-// if new job 
-// const fetchUser = async () => {
-//   try {
-//     const userData = await getLoggedInUser();
-//     console.log('userData from fetch user:', userData);
-//     setFirstName(userData.firstName);
-//   setLastName(userData.lastName);
-//   setPhone(userData.contactNumber);
-//   setEmail(userData.email);
-//   setAddress(userData.address); // add this line to update user data once it's fetched
-//   } catch (error) {
-//     console.error('Failed to fetch dataform logged in customer:', error);
-//   }
-// };
 
-// *** create new job buttton
-
-// when job is selected from form: 
-// fetch job data via jobID
-// fetch
 
 
 const  copyUserData = async() => {
-  // copy data from customer profile profile click
+  // copy data from customer profile click
   try {
+    // fetch user data and write them into form
     const userData = await getLoggedInUser();
-    console.log('userData from fetch user:', userData);
-    setFirstName(userData.firstName);
+  console.log('userData from fetch user:', userData);
+  setFirstName(userData.firstName);
   setLastName(userData.lastName);
   setPhone(userData.contactNumber);
   setEmail(userData.email);
@@ -294,10 +287,16 @@ const  copyUserData = async() => {
   const handleAccept = () => {
     // send email or message to manager: "your quote was accepted by sustomer"
     // forward status one step
-    incrementJobStatus();
-// update job with new status
+    const newStatus = incrementJobStatus();
+    console.log('handle Submit next status  ' + newStatus);
+    const jobData = {
+      jobStatus: newStatus
+      
+    };
+    
+    updateJobFormData(jobId, jobData);
 
-    console.log('handle Accept next status' + jobStatus)
+
       // go back to home view of role who edited the form
       navigate('/home',{ state: { userStatus } });
     // alert("TODO");
@@ -354,32 +353,11 @@ const incrementJobStatus = () => {
    
   }
 };
-const createNewJob = async (jobStatus) => {
+const createNewJob = async (jobData) => {
   // to be copied to handleSubmit
-  // Replace this with your actual function for creating a new job
-  // if(jobId === 0){
-// if this is a new job
-// console.log('create new jobstatus  ' + jobStatus)
- 
-  const jobData = {
-    customerId,     // id of logged in user from local memory
-    scopeOfWork,
-    jobStatus,
-    addressOfInstallation,
-    preferredJobCompletionDate
-    // here later job date raised by customer Not needed, created by server
-  };
-
-
-  // console.log("jobData from create new job"  +  customerId,     // id of logged in user from local memory
-  // scopeOfWork,
-  // addressOfInstallation,
-  // preferredJobCompletionDate )
-
-
 
   try {
-    const newJob = await createJob(jobData); // replace this with your API call
+    const newJob = await createJob(jobData); 
     console.log("New job created:", newJob);
   } catch (error) {
     console.error("Failed to create new job:", error );
@@ -387,23 +365,83 @@ const createNewJob = async (jobStatus) => {
 
 };// end Create new job
 
+const updateJobFormData = async (jobId, jobData) => {
+  // to be copied to handleSubmit
+  
+  // if(jobId === 0){
+// if this is a new job
+// console.log('create new jobstatus  ' + jobStatus)
+
+  console.log('jobData from updateJobFormData    job:'+ jobId, 'customer:'+ customerId,
+  jobStatus,     // id of logged in user from local memory
+  scopeOfWork,
+  addressOfInstallation,
+  preferredJobCompletionDate )
+
+
+
+  try {
+    const newJob = await updateJob(jobId,jobData); 
+    console.log("New job updated:", newJob);
+  } catch (error) {
+    console.error("Failed to create new job:", error );
+  }
+  
+};// end updateJobFormData 
+
 
   const handleSubmit = async () => {
+
+    const today = new Date().toISOString();  // get today's date in ISO format
     console.log('handleSubmit jobstat  ' + jobStatus)
     if (jobStatus === "Draft") {
-
-      // if Job ID === 0 , create job with form data
-
+      
       const newStatus = incrementJobStatus();
+      if (jobId === 'New'){
+       
+      const jobData = {
+        jobStatus: newStatus,
+        customerId,     // id of logged in user from local memory
+        scopeOfWork,
+        addressOfInstallation,
+        preferredJobCompletionDate,
+        dateCreated: today  // today's date when submit Draft
+        // here later job date raised by customer Not needed, created by server
+      };
+// get job data from form and create new job
   console.log('handle Submit next status  ' + newStatus);
-  createNewJob(newStatus);
+  createNewJob(jobData);
+}else{
+  const jobData = {
+    jobStatus: newStatus
+  }
+  updateJobFormData(jobId, jobData);
 
+}
       //if (userStatus === "Customer" && jobStatus === "Draft") {
       // sendEmail('manager@example.com', 'New Quote Request', 'A new quote request has arrived');
       // localStorage.setItem('userMessage', "To Manager: a new quote request has arrived");
       setUserMessage("To Manager: a new quote request has arrived");
       // incrementJobStatus();
     } else if (jobStatus === "Quoting") {
+
+      const newStatus = incrementJobStatus();
+      console.log('handle Submit next status  ' + newStatus);
+
+      const jobData = {
+  
+        jobStatus: newStatus,
+        dateQuoted: today,   // today's date when manager submit quote
+        amountQuoted,
+        quoteAttachment
+        
+      };
+
+
+
+      updateJobFormData(jobId, jobData);
+      
+
       // update job with form data
       //} else if (userStatus === "Manager" && jobStatus === "Quoting") {
       // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
@@ -411,25 +449,51 @@ const createNewJob = async (jobStatus) => {
       setUserMessage("To Customer: your quote has arrived");
       // incrementJobStatus();
     } else if (jobStatus === "Customer Approval") {
-      // update job with form data
-      //} else if (userStatus === "Manager" && jobStatus === "Quoting") {
-      // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
+      //not needed, done in accept quote handler
+      
+      
+        // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
       // localStorage.setItem('userMessage', "To Manager: your quote was approved");
-      //setUserMessage("To Manager: your quote was approved");
+      setUserMessage("To Manager: your quote was approved");
       // incrementJobStatus();
     } else if (jobStatus === "Worker Assignment") {
-      //} else if (userStatus === "Manager" && jobStatus === "Worker Assignment") {
+      const newStatus = incrementJobStatus();
+      // form goes to manager
+      // manager assigns worker
+      // handle assignWorker
+      // fetch license, name and surname from Worker
+      try{
+        fetchWorker(localStorage.getItem('workerID'));
+          }  catch (error) {
+        console.error('Failed to fetch worker in worker assign:', error);
+          }
+
+      const jobData = {
+        jobStatus: newStatus,
+        workerId: '64c5540169a5213214551fcd'
+       
+      };
+      updateJobFormData(jobId, jobData);
       // sendEmail('worker@example.com', 'New Job Assignment', 'You have a new job');
       // localStorage.setItem('userMessage', "To Worker: you have a new job");
       setUserMessage("To Worker: you have a new job");
       // incrementJobStatus();
     } else if (jobStatus === "Job Implementation") {
       //} else if (userStatus === "Worker" && jobStatus === "Job Implementation") {
+        const newStatus = incrementJobStatus();
       if (isChecked) {
-        // alert("isChecked = true");
-        // sendEmail('manager@example.com', 'Job Completed', 'Your job has been completed');
-        // localStorage.setItem('userMessage', "To Manager: your job has been completed");
-        // localStorage.setItem('userMessage', "To Customer: your job has been completed, please leave a review");
+        const jobData = {
+        jobStatus: newStatus,
+        workStarted: today,   // today's date when worker accept job
+        maximumDemandInAmps,
+        consumerMainsCapacity,
+        electricalRetailer,
+        energyDistributor,
+        mainsPhases,
+       
+      };
+
+      updateJobFormData(jobId, jobData);
          setUserMessage("To Manager: your job has been completed");
         setUserMessage("To Customer: your job has been completed, please leave a review");
         // incrementJobStatus();
@@ -440,6 +504,13 @@ const createNewJob = async (jobStatus) => {
         return;
       }
     } else if (jobStatus === "Customer Review") {
+      const newStatus = incrementJobStatus();
+      const jobData = {
+        jobStatus: newStatus,
+      reviewId,
+      dateCompleted: today // today's date when customer submit review
+      };
+      updateJobFormData(jobId, jobData);
       //} else if (userStatus === "Customer" && jobStatus === "Customer Review") {
       // sendEmail('manager@example.com', 'New Review', 'A new review has arrived');
       // localStorage.setItem('userMessage', "To Manager: a new review has arrived");
@@ -463,64 +534,17 @@ const createNewJob = async (jobStatus) => {
       // createNewJob();
     }else{
 
-
-
-
       //updateJob(id, data)
         //  update job with form data
     }
-    const updateJobFormData = async (jobStatus) => {
-      // to be copied to handleSubmit
-      // Replace this with your actual function for creating a new job
-      // if(jobId === 0){
-    // if this is a new job
-    console.log('create new jobstatus  ' + jobStatus)
-     
-    const jobData = {
-      jobStatus, 
-      customerId, 
-      addressOfInstallation, 
-      scopeOfWork, 
-      preferredJobCompletionDate,
-      dateCreated,  // todays date
-      dateQuoted,   // todays date
-      amountQuoted,
-      quoteAttachment,
-      workerId,
-      workStarted,   // todays date
-      maximumDemandInAmps,
-      consumerMainsCapacity,
-      electricalRetailer,
-      energyDistributor,
-      mainsPhases,
-      reviewId,
-      dateCompleted
-    };
 
 
-
-
-      console.log("jobData from create new job"  +  customerId,     // id of logged in user from local memory
-      scopeOfWork,
-      addressOfInstallation,
-      preferredJobCompletionDate )
-    
-    
-    
-      try {
-        const newJob = await updateJob(jobId,jobData); // replace this with your API call
-        console.log("New job updated:", newJob);
-      } catch (error) {
-        console.error("Failed to create new job:", error );
-      }
-    
-    };// end Create new job
     
 
 
     navigate('/home', { state: { userStatus } });
     
-  };
+  }; // end handle submit
   
 
  
@@ -537,9 +561,17 @@ const createNewJob = async (jobStatus) => {
   
 
   const handleAssignWorker = () => {
+    // go to manage worker and hand over actual job id
+    localStorage.setItem('workerJobID', jobId);
+    localStorage.setItem('workerID', '64c553df69a5213214551fc9');
+
     navigate('/managerWorkers',{ state: { userStatus } });
     // console.log('loginpage' + {userStatus})
   };
+
+
+
+
   const handleAcceptJob = () => {
     // worker accepts job
     // send email or message to manager: "assigned worker accepted the job"
@@ -675,8 +707,8 @@ const createNewJob = async (jobStatus) => {
             <p>Your Electrical Worker </p>
           <div className="form-row">
           
-          <input type="licenseNr" value={licenseNr} onChange={e => setLicenseNr(e.target.value)} placeholder="License Number" disabled={jobStatus !== "Worker Assignment"} />
-          <input type="workerName" value={workerName} onChange={e => setWorkerName(e.target.value)} placeholder="Worker Name" disabled={jobStatus !== "Worker Assignment"} />
+          <input type="licenseNr" value={licenseNr} onChange={e => setLicenseNr(e.target.value)} placeholder="License Number" disabled={true} />
+          <input type="workerName" value={workerName} onChange={e => setWorkerName(e.target.value)} placeholder="Worker Name" disabled={true} />
           <button disabled={jobStatus !== "Worker Assignment"} onClick={handleAssignWorker}>Assign Electrical Worker</button>
           </div>
           </div>}
@@ -692,20 +724,25 @@ const createNewJob = async (jobStatus) => {
           </div>
          
          <div className="form-row">
-          <input type="maximumDemand" value={maximumDemandInAmps} onChange={e => setMaximumDemand(e.target.value)} placeholder="Maximum Demand in Amp" disabled={jobStatus !== "Job Implementation"} />
-          <input type="consumerMains" value={consumerMainsCapacity} onChange={e => setConsumerMains(e.target.value)} placeholder="Consumer Mains" disabled={jobStatus !== "Job Implementation"} />
+          <input type="maximumDemand" value={maximumDemandInAmps} onChange={e => setMaximumDemand(e.target.value)} placeholder="Maximum Demand in Amp" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
+          <input type="consumerMains" value={consumerMainsCapacity} onChange={e => setConsumerMains(e.target.value)} placeholder="Consumer Mains" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
           </div>
 
           <div className="form-row">
-          <input type="ectricalRetailer" value={electricalRetailer} onChange={e => setEctricalRetailer(e.target.value)} placeholder="Electrical Retailer" disabled={jobStatus !== "Job Implementation"} />
-          <input type="string" value={energyDistributor} onChange={e => setErgyDistributor(e.target.value)} placeholder="Energy Distributor" disabled={jobStatus !== "Job Implementation"} />
+          <input type="ectricalRetailer" value={electricalRetailer} onChange={e => setEctricalRetailer(e.target.value)} placeholder="Electrical Retailer" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
+          <input type="string" value={energyDistributor} onChange={e => setErgyDistributor(e.target.value)} placeholder="Energy Distributor" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
           </div>
 
           <div className="form-row">
-          <input type="phasesMains" value={mainsPhases} onChange={e => setPhasesMains(e.target.value)} placeholder="Phases Mains" disabled={jobStatus !== "Job Implementation"} />
+          <input type="phasesMains" value={mainsPhases} onChange={e => setPhasesMains(e.target.value)} placeholder="Phases Mains" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
           </div>
 
-          <input type="checkbox"checked={isChecked}onChange={handleOnChange}disabled={jobStatus !== "Job Implementation"}/>
+          <input type="checkbox"checked={isChecked}onChange={handleOnChange}disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")}/>
           <label>I, the electrical worker certify that the electrical installation work above complies to the electrical safety standards</label>
         
 

@@ -123,10 +123,16 @@ setJobs(filteredJobs);
 
 
 useEffect(() => {
+ // Fetch the open jobs when the component mounts
+ fetchJobs();
 
+ // Set up an interval to fetch jobs every 3 seconds
+ const interval = setInterval(() => {
+   fetchJobs();
+ }, 3000); // 3000 milliseconds = 3 seconds
 
-  // Fetch the open jobs when the component mounts
-  fetchJobs();
+ // Clean up function to clear the interval when the component is unmounted
+ return () => clearInterval(interval);
 }, [fetchJobs]);
 
 // Function to format the date
@@ -179,6 +185,7 @@ return 'No Data';
             // Replace this with your actual UI
             <div key={job._id} className="job-details">
               {/* <Link to="/jobForm">SignIn</Link> */}
+              {/* open jobform with the jobID */}
               <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-8)}</Link></p>  {/* Link to the job details page */}
               <p>{job.workerId}</p>
               <p>{job.addressOfInstallation}</p>

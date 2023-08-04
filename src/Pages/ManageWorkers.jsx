@@ -18,8 +18,8 @@ function ManageWorkers() {
 
  const [errorMessage, setErrorMessage] = useState("");
   // const userMessage = localStorage.getItem('userMessage');
-  
-  const [jobIdHome, setJobIdHome] = useState("64c554b269a5213214551fd9");
+  // to get back to jobform of actual job
+  const [jobIdHome, setJobIdHome] = useState(localStorage.getItem('workerJobID'));
   // const jobStatusJobForm = localStorage.getItem('jobStatus');
   const handleWorker = () => {
     // Handle login
@@ -102,7 +102,14 @@ function ManageWorkers() {
         <div className="jobs-container">
         {workers.map((worker) => (
           <div key={worker._id} className="job-details">
-            <p className="job-id"><Link to={`/jobForm/${jobIdHome}`}>{worker._id.slice(-4)}</Link></p>
+            {/* go back to job form of ID = jobIdHome  and hand over worker id of selected worker when link on list clicked */}
+            {/* <Link to={`/jobForm/${jobIdHome}/${worker._id}`}>{worker._id.slice(-4)}</Link> */}
+
+            
+            <p className="job-id"><Link to={`/jobForm/${jobIdHome }`}>{worker._id.slice(-4)}</Link></p>
+
+            {/* <p className="job-id"><Link to={`/jobForm/${jobIdHome }/${worker._id}`}>{worker._id.slice(-4)}</Link></p> */}
+
             <p>{worker.firstName}</p>
             <p>{worker.lastName}</p>
             <p>{worker.address}</p>

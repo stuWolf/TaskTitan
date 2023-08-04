@@ -25,7 +25,7 @@ function Home() {
 
   const handleNewJob = () => {
 // const jobId = 0
-localStorage.setItem('jobStatus', "Draft");
+// localStorage.setItem('jobStatus', "Draft");
     navigate('/jobForm/New');
     // Handle login
     // console.log('loginpage' + {userStatus})

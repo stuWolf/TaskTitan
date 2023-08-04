@@ -1,13 +1,19 @@
 const api = process.env.REACT_APP_BACKEND_URL;
 const token = localStorage.getItem('token');
 const headers = {
-    'Authorization': `Bearer ${token}`,
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
     'Content-Type': "application/json"
 }
+
+console.log('job services token  '  + token)
 
 // Get all jobs with status "open"
 // Used in: manager view
 export async function getOpenJobs() {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs/status/open`, { headers: headers });
     const json = await response.json();
     return json;
@@ -32,6 +38,10 @@ export async function getMyJob() {
 // Get all open jobs for logged in user
 // Used in: customer view
 export async function getMyJobsOpen() {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs/open`, { headers: headers });
     const json = await response.json();
     return json;
@@ -40,6 +50,11 @@ export async function getMyJobsOpen() {
 // Get all open jobs for a logged in worker, by worker ID
 // Used in: worker view
 export async function getAllJobsOpenWorker() {
+    const headers = {
+        
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs/open/worker`, { headers: headers });
     const json = await response.json();
     return json;

@@ -21,15 +21,16 @@ function ManageWorkers() {
   // to get back to jobform of actual job
   const [jobIdHome, setJobIdHome] = useState(localStorage.getItem('workerJobID'));
   // const jobStatusJobForm = localStorage.getItem('jobStatus');
+    // State to hold the workers
+    const [workers, setWorkers] = useState([]);
+  
   const handleWorker = () => {
-    // Handle login
+    // Add new Worker button
     navigate('/addWorker');
     // could be signup with status 'new worker', just has extra fields
 //  registerWorker(data)
- 
   };
-  // State to hold the workers
-  const [workers, setWorkers] = useState([]);
+
 
   const fetchWorkers = useCallback(async () => {
     try {

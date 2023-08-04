@@ -21,17 +21,18 @@ function Home() {
   const [errorMessage, setErrorMessage] = useState("");
   const userMessage = localStorage.getItem('userMessage');
   const userStatus = localStorage.getItem('userStatus');
-  
+  // State to hold the jobs
+  const [jobs, setJobs] = useState([]);
 
   const handleNewJob = () => {
-// const jobId = 0
+// Create new job button pressed
 // localStorage.setItem('jobStatus', "Draft");
     navigate('/jobForm/New');
     // Handle login
     // console.log('loginpage' + {userStatus})
   };
 
-// probably on the API side: 
+//  on the API side: 
 
 // find all open jobs using getOpenJobs(), and filter out  _id ,  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus
 
@@ -43,11 +44,10 @@ function Home() {
 // the manager sees all open jobs, the customer sees all jobs originated by him, 
 // the worker sees all jobs assigned to him
 // each row should be a link to the corresponding job. when clicked, display Job form, using search job by ID with corresponding status and user roll
-// manager should be able to see the whole form for review (the visability of the form is according to job status)
+// manager should be able to see the whole form for review (the visability of the form is according to job status -> visibilityManager.js)
 // link to job clicked -> job form opens -> call API to fetch data from Job collection-> fill form -> user updates form -> update job when form submit 
 
-// State to hold the jobs
-const [jobs, setJobs] = useState([]);
+
 
 const fetchJobs = useCallback(async () => {
   try {

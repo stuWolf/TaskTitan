@@ -7,20 +7,12 @@ import Side from '../components/SidePanel';
 // import JobFormCustomer from '../components/JobFormCustomer';
 import {  useNavigate,useParams} from 'react-router-dom';
 import {getJob,createJob, updateJob} from "../services/jobsServices"
-import { getLoggedInUser, getUser } from "../services/userServices";
+import {  getUser } from "../services/userServices";
 import { getReview } from "../services/reviewsServices";
 import {calculateVisibility} from "../services/visibilityManager";
 // import { useLocalStorage } from 'react-use';
 
-// function JobForm({ match }) {
-//   const { jobId, workerAssignId } = match.params;
-  // const { params } = match;
-  // const { jobId, workerAssignId } = params;
-  // const { jobId, workerAssignId } = useParams();  // Get the job _id from the URL parameters, link from home
-  // const jobStatus = localStorage.getItem('jobStatus');
-  // from JobForm
-  // const jobIdHome = localStorage.getItem('jobId');
-  // to open the jobform and assign the worker
+
   
   function JobForm() {
     const { jobId } = useParams();
@@ -176,7 +168,7 @@ useEffect(() => {
       // setDateQ
       // set
 
-      // Fetch user data after job data is successfully fetched
+      // Fetch user data after job data is successfully fetched, update fields in header
       fetchUser(jobData.customerId);
 
       
@@ -237,7 +229,7 @@ const  copyUserData = async() => {
   // copy data from customer profile click
   try {
     // fetch user data and write them into form
-    const userData = await getLoggedInUser();
+    const userData = await getUser(localStorage.getItem('userId'));
   console.log('userData from fetch user:', userData);
   setFirstName(userData.firstName);
   setLastName(userData.lastName);
@@ -393,14 +385,14 @@ const updateJobFormData = async (jobId, jobData) => {
   const handleSubmit = async () => {
 
     const today = new Date().toISOString();  // get today's date in ISO format
-    console.log('handleSubmit jobstat  ' + jobStatus)
+    // console.log('handleSubmit jobstat  ' + jobStatus)
     if (jobStatus === "Draft") {
       
-      const newStatus = incrementJobStatus();
+      // const newStatus = incrementJobStatus();
       if (jobId === 'New'){
        
       const jobData = {
-        jobStatus: newStatus,
+        jobStatus: incrementJobStatus(),
         customerId,     // id of logged in user from local memory
         scopeOfWork,
         addressOfInstallation,
@@ -409,15 +401,15 @@ const updateJobFormData = async (jobId, jobData) => {
         // here later job date raised by customer Not needed, created by server
       };
 // get job data from form and create new job
-  console.log('handle Submit next status  ' + newStatus);
-  createNewJob(jobData);
-}else{
-  const jobData = {
-    jobStatus: newStatus
-  }
-  updateJobFormData(jobId, jobData);
+  // console.log('handle Submit next status  ' + newStatus);
+    createNewJob(jobData);
+    }else{
+      const jobData = {
+        jobStatus: incrementJobStatus()
+      }
+      updateJobFormData(jobId, jobData); // update with new status
 
-}
+    }
       //if (userStatus === "Customer" && jobStatus === "Draft") {
       // sendEmail('manager@example.com', 'New Quote Request', 'A new quote request has arrived');
       // localStorage.setItem('userMessage', "To Manager: a new quote request has arrived");
@@ -425,19 +417,19 @@ const updateJobFormData = async (jobId, jobData) => {
       // incrementJobStatus();
     } else if (jobStatus === "Quoting") {
 
-      const newStatus = incrementJobStatus();
-      console.log('handle Submit next status  ' + newStatus);
+      // const newStatus = incrementJobStatus();
+      
 
       const jobData = {
   
-        jobStatus: newStatus,
+        jobStatus: incrementJobStatus(),
         dateQuoted: today,   // today's date when manager submit quote
         amountQuoted,
         quoteAttachment
         
       };
 
-
+      console.log('handle Submit next status  ' + jobData.jobStatus);
 
       updateJobFormData(jobId, jobData);
       
@@ -457,7 +449,7 @@ const updateJobFormData = async (jobId, jobData) => {
       setUserMessage("To Manager: your quote was approved");
       // incrementJobStatus();
     } else if (jobStatus === "Worker Assignment") {
-      const newStatus = incrementJobStatus();
+      // const newStatus = incrementJobStatus();
       // form goes to manager
       // manager assigns worker
       // handle assignWorker
@@ -469,7 +461,7 @@ const updateJobFormData = async (jobId, jobData) => {
           }
 
       const jobData = {
-        jobStatus: newStatus,
+        jobStatus: incrementJobStatus(),
         workerId: '64c5540169a5213214551fcd'
        
       };
@@ -480,10 +472,10 @@ const updateJobFormData = async (jobId, jobData) => {
       // incrementJobStatus();
     } else if (jobStatus === "Job Implementation") {
       //} else if (userStatus === "Worker" && jobStatus === "Job Implementation") {
-        const newStatus = incrementJobStatus();
+        
       if (isChecked) {
         const jobData = {
-        jobStatus: newStatus,
+        jobStatus: incrementJobStatus(),
         workStarted: today,   // today's date when worker accept job
         maximumDemandInAmps,
         consumerMainsCapacity,
@@ -504,9 +496,9 @@ const updateJobFormData = async (jobId, jobData) => {
         return;
       }
     } else if (jobStatus === "Customer Review") {
-      const newStatus = incrementJobStatus();
+      // const newStatus = incrementJobStatus();
       const jobData = {
-        jobStatus: newStatus,
+        jobStatus: incrementJobStatus(),  // set jobstatus to closed
       reviewId,
       dateCompleted: today // today's date when customer submit review
       };
@@ -680,7 +672,7 @@ const updateJobFormData = async (jobId, jobData) => {
           
         <p>Date Quoted by manager: </p>
      
-        <input className="date-input" type="date" value={dateQuoted} onChange={e => setDateQuoted(e.target.value)} placeholder="Date Quoted" disabled={jobStatus !== "Quoting"} />
+        <input className="date-input" type="date" value={dateQuoted} onChange={e => setDateQuoted(e.target.value)} placeholder="Date Quoted" disabled={(jobStatus !== "Quoting"||userStatus !== 'manager' )} />
         </div>
       
         <div className="form-row">

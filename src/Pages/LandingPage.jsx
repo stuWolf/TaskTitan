@@ -37,9 +37,9 @@ export default function Landing(){
      
       <div className="testimonial-section">
       <h2>What customers say about Wolf Electrical</h2>
-      <p>  They fixed a problem that the previous electrician had created. Even telstra could not completely fix the issue, and they would have charged me more! They cleaned up after themselves and they charged me a reasonable fee. Excellent job!
-Albertp516</p>
-<p>Wolf is very professional. He will provide a realistic and fair quote and then provide the service in a timely and efficient manner. You can't ask for much more than that</p>
+      <p> " They fixed a problem that the previous electrician had created. Even telstra could not completely fix the issue, and they would have charged me more! They cleaned up after themselves and they charged me a reasonable fee. Excellent job!
+Albertp516"</p>
+<p>"Wolf is very professional. He will provide a realistic and fair quote and then provide the service in a timely and efficient manner. You can't ask for much more than that"</p>
       </div>
       </div>
       <Footer/>

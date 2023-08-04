@@ -1,5 +1,5 @@
 const api = process.env.REACT_APP_BACKEND_URL;
-const token = '' // taken from state
+const token = localStorage.getItem('token');
 const headers = {
      'Authorization': `Bearer ${token}`,
     'Content-Type': "application/json"

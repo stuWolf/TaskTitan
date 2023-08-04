@@ -14,6 +14,7 @@ const Login = () => {
   let navigate = useNavigate();
 
   const handleLogin = async () => {
+    // login button pressed
     const data = {
       email,
       password
@@ -23,7 +24,7 @@ const Login = () => {
       if (response.error) {
         setErrorMessage('Please check your username and password');
       } else {
-        setErrorMessage('');
+        setErrorMessage(''); // clear error
         localStorage.setItem('userStatus', response.userStatus);
         localStorage.setItem('userId', response.user_ID);
         localStorage.setItem('token', response.token);

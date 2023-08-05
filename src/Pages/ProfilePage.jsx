@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import '../App.css';
-import { getLoggedInUser, updateUser, getUser} from "../services/userServices";
+import { updateUser, getUser} from "../services/userServices";
 import Header from '../components/header';
 import Footer from '../components/footer';
 
@@ -23,7 +23,7 @@ const [license, setLicense] = useState("");
 const [licenseNo, setLicenseNo] = useState("");
 const [employedSince, setEmployedSince] = useState("");
 
-  let location = useLocation();
+  // let location = useLocation();
   // let userStatus = location.state.userStatus;
   let navigate = useNavigate();
   const userStatus = localStorage.getItem('userStatus');

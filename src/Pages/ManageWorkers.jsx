@@ -19,7 +19,7 @@ function ManageWorkers() {
  const [errorMessage, setErrorMessage] = useState("");
   // const userMessage = localStorage.getItem('userMessage');
   // to get back to jobform of actual job
-  const [jobIdHome, setJobIdHome] = useState(localStorage.getItem('workerJobID'));
+  // const [jobIdHome, setJobIdHome] = useState(localStorage.getItem('workerJobID'));
   // const jobStatusJobForm = localStorage.getItem('jobStatus');
     // State to hold the workers
     const [workers, setWorkers] = useState([]);
@@ -107,7 +107,7 @@ function ManageWorkers() {
             {/* <Link to={`/jobForm/${jobIdHome}/${worker._id}`}>{worker._id.slice(-4)}</Link> */}
 
             
-            <p className="job-id"><Link to={`/jobForm/${jobIdHome }`}>{worker._id.slice(-4)}</Link></p>
+            <p className="job-id"><Link to={`/jobForm/${(localStorage.getItem('workerJobID')) }`}>{worker._id.slice(-4)}</Link></p>
 
             {/* <p className="job-id"><Link to={`/jobForm/${jobIdHome }/${worker._id}`}>{worker._id.slice(-4)}</Link></p> */}
 

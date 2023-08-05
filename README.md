@@ -7,9 +7,13 @@ The purpose of this app is to provide a platform for customers and trades people
 
 ### Main links of the project:
 
+[Deployed version client](https://task-titan.netlify.app)
+
 [TASK TITAN Full stack application Part B](#task-titan-full-stack-application-part-b)
 
-[GIT Hub](https://github.com/stuWolf/TaskTitan)
+[GIT Hub Client](https://github.com/stuWolf/TaskTitan)
+
+[GIT Hub Server](https://github.com/stuWolf/Task_Titan_backend)
 
 [Figma profile](https://www.figma.com/file/qX4jzRthi9lIYAqwHgjYf8/Task-Titan-Hero?type=design&node-id=0-1&mode=design&t=8PGbexuF1cPnLRi6-0)
 
@@ -229,3 +233,7 @@ Please see [Workflow diagram](#workflow-diagram)
 ![ImplementationPlan](./docs/screenshots/Trello16_07.jpg)
 
 ## TASK TITAN Full stack application Part B
+[TASK TITAN Full stack application Part B](#task-titan-full-stack-application-part-a)
+
+
+Deployed version: 

@@ -1,17 +1,29 @@
 
 # TASK TITAN
 The purpose of this app is to provide a platform for customers and trades people to initiate trade jobs, assign them to workers and track their progress. Also give customers an option to leave a review.
+
+
+![Screenshot Landing](./docs/screenshotsfrontend/ScreenshoLanding.jpg)
+
+
+
+
+
+
 ## TASK TITAN Full stack application Part A
 
 
 
 ### Main links of the project:
 
-[Deployed version client](https://task-titan.netlify.app)
+[Deployed version client 1](https://task-titan.netlify.app)
+[Deployed version client 2](https://tasktitan.onrender.com)  Both are working but can't talk to the backend
+[Deployed version server 1](https://task-titan-render.onrender.com)
+[Deployed version server 2](https://tasktitan-2ec5140db0ab.herokuapp.com)  Produces Application error, no error log
 
 [TASK TITAN Full stack application Part B](#task-titan-full-stack-application-part-b)
 
-[GIT Hub Client](https://github.com/stuWolf/TaskTitan)
+[GIT Hub Client](https://github.com/stuWolf/TaskTitan/tree/integration)
 
 [GIT Hub Server](https://github.com/stuWolf/Task_Titan_backend)
 
@@ -233,7 +245,49 @@ Please see [Workflow diagram](#workflow-diagram)
 ![ImplementationPlan](./docs/screenshots/Trello16_07.jpg)
 
 ## TASK TITAN Full stack application Part B
-[TASK TITAN Full stack application Part B](#task-titan-full-stack-application-part-a)
+
+[Back to  Part A](#task-titan-full-stack-application-part-a)
+
+
+A long journeys end! it was well and truly an enoumous task to create an app like this.
+the hero of the app is a job form that changes its status and visability according to workstep and the different roles.
+ It doesn't look like much but the ligic behind it is pretty cracy. It is not easy to pass information between the different components and than all the async functions does not make it easier.
+
+ enclosed an overview about the Job form
+
+![JobForm](.//docs/JobFormOverview.jpg)
+
+
 
 
 Deployed version: 
+[Deployed version client 1](https://task-titan.netlify.app)
+[Deployed version client 2](https://tasktitan.onrender.com)  Both are working but can't talk to the backend
+[Deployed version server 1](https://task-titan-render.onrender.com)
+[Deployed version server 2](https://tasktitan-2ec5140db0ab.herokuapp.com)  Produces Application error, no error log
+
+[Figma profile](https://www.figma.com/file/qX4jzRthi9lIYAqwHgjYf8/Task-Titan-Hero?type=design&node-id=0-1&mode=design&t=8PGbexuF1cPnLRi6-0)
+
+
+[Trello Part B](https://trello.com/b/PkppCmaY/taks-titan-part-b)
+
+
+
+
+
+![ImplementationPlan](./docs/screenshotsfrontend/Backend_deployment.jpg)
+
+
+That is about as far as I got.
+
+Test in production environment:
+The backend is connected to Atlas cloud server
+The frontend is deployed too but there where issues with the server. Timeout and CORS.
+# Errors found:
+
+CORS error During login:
+
+Access to fetch at 'https://task-titan-render.onrender.com/login' from origin 'https://tasktitan.onrender.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. 
+
+Routes Test
+![Routes test:](./docs/RoutesTest.jpg)

@@ -13,10 +13,33 @@ const Login = () => {
   // const [userStatus, setStatus] = useState("");
   let navigate = useNavigate();
 
-  const handleLogin = () => {
-    navigate('/home',{ state: { userStatus } });
-    // Handle login
-    console.log('loginpage' + {userStatus})
+  const handleLogin = async () => {
+    // login button pressed
+    const data = {
+      email,
+      password
+    };
+    try {
+      console.log('login pushed with' + data.email,  data.password)
+      const response = await login(data);
+      if (response.error) {
+        setErrorMessage('Please check your username and password');
+      } else {
+        setErrorMessage(''); // clear error
+        localStorage.setItem('userStatus', response.userStatus);
+        localStorage.setItem('userId', response.user_ID);
+        localStorage.setItem('token', response.token);
+        console.log('response from login   ' +response.token )
+        // localStorage.setItem('password', password);
+        navigate('/home', { state: { userStatus: response.userStatus } });
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        setErrorMessage('Request timed out. Please try again.');
+      } else {
+        setErrorMessage('An unexpected error occurred. Please try again.');
+      }
+    }
   };
   
 

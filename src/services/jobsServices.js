@@ -1,11 +1,11 @@
 const api = process.env.REACT_APP_BACKEND_URL;
-const token = localStorage.getItem('token');
+// const token = localStorage.getItem('token');
 const headers = {
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
     'Content-Type': "application/json"
 }
 
-console.log('job services token  '  + token)
+// console.log('job services token  '  + token)
 
 // Get all jobs with status "open"
 // Used in: manager view

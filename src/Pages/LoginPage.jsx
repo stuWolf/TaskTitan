@@ -20,6 +20,7 @@ const Login = () => {
       password
     };
     try {
+      console.log('login pushed with' + data.email,  data.password)
       const response = await login(data);
       if (response.error) {
         setErrorMessage('Please check your username and password');

@@ -18,12 +18,16 @@ export async function signup(data) {
 
 // Login a user
 export async function login(data) {
+    // console.log('login from login services client' + json)
+    console.log('login token from login services client' + headers.token)
     const response = await fetch(`${api}/login`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(data)
     });
     const json = await response.json();
+    console.log('login from login services client' + json)
+    console.log('login token from login services client' + headers.token)
     return json;
 }
 

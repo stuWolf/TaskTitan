@@ -283,11 +283,24 @@ That is about as far as I got.
 Test in production environment:
 The backend is connected to Atlas cloud server
 The frontend is deployed too but there where issues with the server. Timeout and CORS.
+
+
+
+
 # Errors found:
 
 CORS error During login:
 
 Access to fetch at 'https://task-titan-render.onrender.com/login' from origin 'https://tasktitan.onrender.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource. 
+http://localhost:3001/login. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.
+
+Basically the frontend needs to send instead of http://localhost:3001/login 
+Access-Control-Allow-Origin: http://localhost:3001/login 
+
+# Testing: 
 
 Routes Test
 ![Routes test:](./docs/RoutesTest.jpg)
+
+Integration test
+Functional test continuously

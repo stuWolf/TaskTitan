@@ -105,9 +105,15 @@ function ManageWorkers() {
           <div key={worker._id} className="job-details">
             {/* go back to job form of ID = jobIdHome  and hand over worker id of selected worker when link on list clicked */}
             {/* <Link to={`/jobForm/${jobIdHome}/${worker._id}`}>{worker._id.slice(-4)}</Link> */}
-
+            {/* workerJobID is the job ID handed back to upen the form in home view. we would to hand over a worker ID as well */}
             
-            <p className="job-id"><Link to={`/jobForm/${(localStorage.getItem('workerJobID')) }`}>{worker._id.slice(-4)}</Link></p>
+            <p className="job-id">
+            {
+              localStorage.getItem('workerJobID') 
+              ? <Link to={`/jobForm/${localStorage.getItem('workerJobID')}`}>{worker._id.slice(-4)}</Link>
+              : worker._id.slice(-4)
+            }
+          </p>
 
             {/* <p className="job-id"><Link to={`/jobForm/${jobIdHome }/${worker._id}`}>{worker._id.slice(-4)}</Link></p> */}
 

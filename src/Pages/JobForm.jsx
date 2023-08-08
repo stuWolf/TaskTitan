@@ -147,7 +147,6 @@ useEffect(() => {
       console.log('Job data:', jobData);
       // setJob(jobData);
       setCustomerId(jobData.customerId);
-
       setJobStatus(jobData.jobStatus);
       setaddressOfInstallation(jobData.addressOfInstallation);
       setScopeOfWork(jobData.scopeOfWork);
@@ -307,6 +306,7 @@ const  copyUserData = async() => {
     // reduce status back to quoting
     decrementJobStatus();
    // update job with new status
+   // save new status inn server
     // go back to home view of role who edited the form
     navigate('/home',{ state: { userStatus } });
     // console.log('loginpage' + {status})
@@ -322,6 +322,9 @@ const decrementJobStatus = () => {
     const newStatus = jobStatuses[currentIndex - 1];
     setJobStatus(newStatus);
     // localStorage.setItem('jobStatus', newStatus);
+
+   
+    updateJobFormData(jobId, {jobStatus: newStatus}); 
     console.log("jobStatus decremented, new status is: "+ newStatus);
   } else {
     console.log("Job status is already at the initial state");
@@ -398,7 +401,7 @@ const updateJobFormData = async (jobId, jobData) => {
         addressOfInstallation,
         preferredJobCompletionDate,
         dateCreated: today  // today's date when submit Draft
-        // here later job date raised by customer Not needed, created by server
+        // here later job date raised by customer  -> Not needed, created by server
       };
 // get job data from form and create new job
   // console.log('handle Submit next status  ' + newStatus);
@@ -574,9 +577,11 @@ const updateJobFormData = async (jobId, jobData) => {
   const handleRejectJob = () => {
     // worker recects job
     // send email or message to manager: "assigned worker recected the job"
-    navigate('/home',{ state: { userStatus } });
     // Go back to previous process step
     decrementJobStatus();
+    
+    navigate('/home',{ state: { userStatus } });
+    
     // go back to home view of worker
     // console.log('loginpage' + {status})
   };

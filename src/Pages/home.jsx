@@ -52,13 +52,15 @@ function Home() {
 const fetchJobs = useCallback(async () => {
   try {
 
-    let jobsData;  
+    let jobsData;  // array with all jobs rawdata
 
     if(userStatus === "manager"){
+
       // manager sees all open jobs
       jobsData = await getOpenJobs();
       // console.log('jobsData.dateCreated  ' + jobsData.dateCreated)
     } else if (userStatus === "customer"){
+
       // Get all open jobs for logged in Customer
       jobsData = await getMyJobsOpen();
     } else if (userStatus === "worker"){
@@ -72,7 +74,7 @@ const fetchJobs = useCallback(async () => {
         if (userStatus === "worker"){
         setErrorMessage("There are  no jobs for you at the moment");
         } else if (userStatus === "customer"){
-          setErrorMessage("You have not lodged any jobs yet");
+          setErrorMessage("No Jobs yet. Lodge your first job by clicking 'Create New Job' ");
         } else { setErrorMessage("No jobs recorded yet");}
         return;
       }
@@ -93,7 +95,7 @@ for(let job of jobsData) {
 const filteredJobs = jobsData.map((job) => ({
   _id: job._id || 'No Data',  // Last 4 digits of _id
   workerId: job.workerId || 'No Data',
-
+// extract this dataset out of each job in jobs.data
 
 
   addressOfInstallation: job.addressOfInstallation|| 'No Data',

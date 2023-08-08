@@ -56,7 +56,7 @@ const Login = () => {
         <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
         {errorMessage && <p>{errorMessage}</p>}
-        <Link to="/profile">Forgot Password?</Link>
+        <Link to="/workerHome" element={<h1>TODO</h1>} >Forgot Password?</Link>
         <button onClick={handleLogin}>Log in</button>
         <button onClick={handleCancel}>Cancel</button>
         <Link to="/register">Register for Wolf Electrical</Link>

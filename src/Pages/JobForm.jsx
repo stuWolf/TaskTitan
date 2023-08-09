@@ -829,8 +829,8 @@ const updateJobFormData = async (jobId, jobData) => {
         {/* {errorMessage && <p>{errorMessage}</p>} */}
         {jobStatus === "Customer Approval"? (
           <div>
-            <button onClick={handleAccept}>Accept Quote</button> 
-            <button onClick={handleReject}>Reject Quote</button>  
+           {(editability.quotingEditable)&& <button onClick={handleAccept}>Accept Quote</button> }
+           {(editability.quotingEditable)&&<button onClick={handleReject}>Reject Quote</button>  }
             <button onClick={handleClose}>Close</button>
         </div>
         ) : (

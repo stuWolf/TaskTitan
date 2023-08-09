@@ -53,6 +53,14 @@ const fetchJobs = useCallback(async () => {
   try {
 
     let jobsData;  // array with all jobs rawdata
+    // increase loading speed
+  // at page load:
+    // if jobsData id empty load data from server and write jobsData into local mamory
+  // else load jobData from local memory
+
+    // check number of jobs every 3 seconds with getCountOfJobs(optional customer ID)
+    // if the number has changed, refresh local memory from server, rerender
+    // while jobsdata are loading setErrorMessage("Jobs Data loading...");
 
     if(userStatus === "manager"){
 

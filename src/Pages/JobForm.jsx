@@ -45,7 +45,7 @@ import {calculateEditability} from "../services/editManager";
   const [mainsPhases, setPhasesMains] = useState("");
   // const [jobStatus, setJobStatus] = useState("Draft");
     // This state determines whether the form is visible or not
-
+  // const [errorMessage, setErrorMessage] = useState("");
 
  
     // const[dateCompleted, setDateCompleted]= useState("");
@@ -69,7 +69,7 @@ import {calculateEditability} from "../services/editManager";
     const [visibility, setVisibility] = useState({quotingVisable: false, assignVisable: false, implementVisable: false, reviewVisable: false,});
     const [editability, setEditability] = useState("");
     const userId = localStorage.getItem('userId');
-    console.log('Jobid from JobForm: '  + jobId)
+    // console.log('Jobid from JobForm: '  + jobId)
     // setuserMessage
 
   localStorage.setItem('userMessage', "It is a wonderfull day today");
@@ -97,7 +97,7 @@ import {calculateEditability} from "../services/editManager";
     }
   };
 
-
+  
 useEffect(() => {
   // Fetch the job details when the component mounts
   // only when opened from joblist link
@@ -116,6 +116,7 @@ useEffect(() => {
       setPhone(userData.contactNumber);
       setEmail(userData.email);
       setAddress(userData.address); // add this line to update user data once it's fetched
+      setDateCreated(userData.dateCreated);
     } catch (error) {
       console.error('Failed to fetch data from logged in customer:', error);
     }
@@ -140,16 +141,16 @@ useEffect(() => {
     } catch (error) {
       console.error('Failed to fetch data from review ID:', error);
     }
-  };
+  };  
 // this runs when job is selected from form . fetch all values, render form according to status
   const fetchJob = async () => {
     try {
       // console.log('fetch jobb called')
       const jobData = await getJob(jobId);
-      console.log("(job.jobStatus from fetch job)  "  + jobStatus);
-      console.log('Job data:', jobData);
+      // console.log("(job.jobStatus from fetch job)  "  + jobStatus);
+      // console.log('Job data:', jobData);
       // setJob(jobData);
-      setCustomerId(jobData.customerId);
+      setCustomerId(jobData.customerId);  // load existing job
       setJobStatus(jobData.jobStatus);
       setaddressOfInstallation(jobData.addressOfInstallation);
       setScopeOfWork(jobData.scopeOfWork);
@@ -171,7 +172,11 @@ useEffect(() => {
       // set
 
       // Fetch user data after job data is successfully fetched, update fields in header
-      fetchUser(jobData.customerId);
+      if(!email){
+
+        fetchUser(jobData.customerId); 
+      }
+   
 
       
       if (visibility.implementVisable) {
@@ -190,27 +195,28 @@ useEffect(() => {
 
   // console.log('visibility.assignVisable' + visibility.assignVisable)
 
-// reconvert date bevore storing it in DB
-//   function reconvertDate(inputDate) {
-//     const parts = inputDate.split('/');
-//     if (parts.length !== 3) {
-//         throw new Error('Invalid date format');
-//     }
-//     return `${parts[2]}-${parts[1]}-${parts[0]}`;
-// }
-  // Function to format the date
 
 
   if (jobId !== 'New') {
-    fetchJob();  // get jobdata from server if new job
-    console.log('fetch jobb called')
+    fetchJob();  // get jobdata from server if existing job
+    console.log('jobId'+  jobId+   'fetch jobb called')
     // console.log('preferredJobComplDraftetionDate '  + preferredJobCompletionDate)
-  } // endif jobID
+  } else{
+
+    console.log('jobId:  '+  jobId)
+
+
+      fetchUser(userId); 
+    
+   
+  }
+
+  
 
 
 
 
-}, [jobId, jobStatus,visibility]);  // end use effect
+}, []);  // end use effect
 
 
 
@@ -219,38 +225,42 @@ useEffect(() => {
   if(jobStatus && userStatus) {
     const visibilityResult = calculateVisibility(jobStatus, userStatus);
     setVisibility(visibilityResult);
+    // console.log('visibility' + visibility)
+    console.log('userId  ' + userId + 'customerId  ' + customerId)
     if(userId && customerId){
      
       setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
-      console.log('editability' + editability)
+      
     }
   }
 
+// copyUserData();
+
+}, [jobStatus, userStatus]);
 
 
-}, []);
 
-
-
-const  copyUserData = async() => {
-  // copy data from customer profile click
-  try {
-    // fetch user data and write them into form
-    const userData = await getUser(localStorage.getItem('userId'));
-  console.log('userData from fetch user:', userData);
-  setFirstName(userData.firstName);
-  setLastName(userData.lastName);
-  setPhone(userData.contactNumber);
-  setEmail(userData.email);
-  setAddress(userData.address); 
-  setDateCreated(userData.dateCreated);
-  } catch (error) {
-    console.error('Failed to fetch dataform logged in customer:', error);
-  }
+// const  copyUserData = async() => {
+//   // copy data from customer profile click
+//   try {
+//     // fetch user data and write them into form
+//     if (!email){
+//     const userData = await getUser(localStorage.getItem('userId'));
+//   console.log('userData from copy user data:', userData);
+//   setFirstName(userData.firstName);
+//   setLastName(userData.lastName);
+//   setPhone(userData.contactNumber);
+//   setEmail(userData.email);
+//   setAddress(userData.address); 
+//   setDateCreated(userData.dateCreated);
+//   }
+//   } catch (error) {
+//     console.error('Failed to fetch dataform logged in customer:', error);
+//   }
   
-      // alert("TODO");
-      // console.log('loginpage' + {status})
-    };
+//       // alert("TODO");
+//       // console.log('loginpage' + {status})
+//     };
   
     const handleCustomerData = () => {
       // copy customer address to job address
@@ -387,7 +397,7 @@ const updateJobFormData = async (jobId, jobData) => {
     const newJob = await updateJob(jobId,jobData); 
     console.log("New job updated:", newJob);
   } catch (error) {
-    console.error("Failed to create new job:", error );
+    console.error("Failed to update job:", error );
   }
   
 };// end updateJobFormData 
@@ -487,7 +497,7 @@ const updateJobFormData = async (jobId, jobData) => {
       if (isChecked) {
         const jobData = {
         jobStatus: incrementJobStatus(),
-        workStarted: today,   // today's date when worker accept job
+        // workStarted: today,   // today's date when worker accept job  in handleAcceptJob
         maximumDemandInAmps,
         consumerMainsCapacity,
         electricalRetailer,
@@ -578,6 +588,13 @@ const updateJobFormData = async (jobId, jobData) => {
   const handleAcceptJob = () => {
     // worker accepts job
     // send email or message to manager: "assigned worker accepted the job"
+    const jobData = {
+
+      workStarted: new Date().toISOString() // today's date when customer submit review
+    };
+    updateJobFormData(jobId, jobData);
+    
+    
     navigate('/home',{ state: { userStatus } });
     // console.log('loginpage' + {userStatus})
   };
@@ -594,6 +611,20 @@ const updateJobFormData = async (jobId, jobData) => {
     // console.log('loginpage' + {status})
   };
 
+  
+// reconvert date bevore storing it in DB
+// function reconvertDate(inputDate) {
+//   console.log('inputDate  ' + inputDate);
+  
+//   const date = new Date(inputDate);
+//   const day = String(date.getDate()).padStart(2, '0');
+//   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed in JavaScript
+//   const year = date.getFullYear();
+
+//   return `${day}/${month}/${year}`;
+// }
+
+  // Function to format the date
 
   const formatDate = (dateString) => {
     if(dateString === 'No Data'){
@@ -633,15 +664,7 @@ const updateJobFormData = async (jobId, jobData) => {
   <button onClick={toggleForm}>Toggle Customer data</button>
       {isFormVisible && (
         <div className="job-form">
-          {/* <JobFormCustomer jobStatus = {jobStatus}  jobId = {jobId}/>
-        </div>
-      )}  */}
-      {/* end isFormVisible */}
-
-
-
-   
-   {/* <div className="job-form">  */}
+          
 
 {/* this form will always displayed but when Job status is not Draft, the fields will be grayed out */}
       
@@ -650,7 +673,7 @@ const updateJobFormData = async (jobId, jobData) => {
 <div className="form-row">
             {/*allways be displayed  */}
           <p>Customer Details:</p> 
-          <button disabled={jobStatus !== "Draft"} onClick={copyUserData}>Copy from profile</button>
+          {/* <button disabled={jobStatus !== "Draft"} onClick={copyUserData}>Copy from profile</button> */}
           {/* <p>Job status: {jobStatus}</p> */}
           </div>
         
@@ -674,7 +697,7 @@ const updateJobFormData = async (jobId, jobData) => {
          <div className="form-row">
        
          <input type="addressOfInstallation" value={addressOfInstallation} onChange={e => setaddressOfInstallation(e.target.value)} placeholder="InstallationAddress" disabled={jobStatus !== "Draft"} />
-         <button disabled={jobStatus !== "Draft"} onClick={handleCustomerData}>Copy from Customer</button>
+         {(editability.draftEditable)&&<button disabled={jobStatus !== "Draft"} onClick={handleCustomerData}>Copy from Customer</button>}
      </div>
      <p>Scope of Work:</p> 
         <div className="form-row">
@@ -730,7 +753,7 @@ const updateJobFormData = async (jobId, jobData) => {
           
           <input type="licenseNr" value={licenseNr} onChange={e => setLicenseNr(e.target.value)} placeholder="License Number" disabled={true} />
           <input type="workerName" value={workerName} onChange={e => setWorkerName(e.target.value)} placeholder="Worker Name" disabled={true} />
-          <button disabled={jobStatus !== "Worker Assignment"} onClick={handleAssignWorker}>Assign Electrical Worker</button>
+          {(editability.assignEditable)&&<button disabled={jobStatus !== "Worker Assignment"} onClick={handleAssignWorker}>Assign Electrical Worker</button>}
           </div>
           </div>}
 {/***************************  Job Status Job Implementation ******************************888*/}
@@ -739,9 +762,9 @@ const updateJobFormData = async (jobId, jobData) => {
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
           <p>Job Implementation</p>
           
-          <div className="form-row">
-          <button disabled={jobStatus !== "Job Implementation"} onClick={handleAcceptJob}>Accept Job</button>
-          <button disabled={jobStatus !== "Job Implementation"} onClick={handleRejectJob}>Reject Job</button>
+          <div className="form-row">  
+          {(editability.implementEditable)&&<button disabled={jobStatus !== "Job Implementation"} onClick={handleAcceptJob}>Accept Job</button>}
+          {(editability.implementEditable)&&<button disabled={jobStatus !== "Job Implementation"} onClick={handleRejectJob}>Reject Job</button>}
           </div>
          
          <div className="form-row">
@@ -803,7 +826,7 @@ const updateJobFormData = async (jobId, jobData) => {
           </div>
         </div>}
         {/* end job form */}
-
+        {/* {errorMessage && <p>{errorMessage}</p>} */}
         {jobStatus === "Customer Approval"? (
           <div>
             <button onClick={handleAccept}>Accept Quote</button> 
@@ -812,7 +835,7 @@ const updateJobFormData = async (jobId, jobData) => {
         </div>
         ) : (
           <div>
-            <button onClick={handleSubmit}>Submit</button> 
+            {(editability.implementEditable||editability.quotingEditable||editability.assignEditable)&&<button onClick={handleSubmit}>Submit</button> }
             {/* <button onClick={handleSave}>Save</button>  */}
             <button onClick={handleClose}>Close</button>
              

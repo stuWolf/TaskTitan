@@ -4,7 +4,7 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import { getOpenJobs, getAllJobsOpenWorker,getMyJobsOpen ,getCountOfJobs } from "../services/jobsServices";
+import { getOpenJobs, getAllJobsOpenWorker,getMyJobsOpen  } from "../services/jobsServices";
 import {getUser} from '../services/userServices';
 import JobColumns from '../components/jobColumns';
 import { Link } from 'react-router-dom';
@@ -221,7 +221,7 @@ function getFirstFourWords(str) {
           ))}
         </div>
         {errorMessage && <p>{errorMessage}</p>}
-      
+      {/* only displays when there is an error message */}
 
 
         

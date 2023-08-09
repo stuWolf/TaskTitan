@@ -1,25 +1,15 @@
-export function calculateEditability(jobStatus, userStatus) {
-    const quotingStatuses = ["Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
-    const assignStatuses = ["Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
-    const implementStatuses = ["Job Implementation", "Customer Review", "Closed"];
-    const reviewStatuses = ["Customer Review", "Closed"];
+export function calculateEditability(jobStatus, userStatus, userId, customerId) {
+   
 
-    const draftEditable = (userStatus === "manager") || 
-                           (userStatus === "customer" && quotingStatuses.includes(jobStatus));
-    
-    const quotingEditable = (userStatus === "manager") || 
-                           (userStatus === "customer" && quotingStatuses.includes(jobStatus));
+    const draftEditable =  (userId  === customerId && jobStatus === 'Draft');
+   
+    const quotingEditable = (userStatus === "manager" && jobStatus === 'Quoting'); 
+                         
+    const approvalEditable =  (userId  === customerId && jobStatus === 'Draft');
+    const assignEditable  = (userStatus === "manager" && jobStatus === "Worker Assignment"); 
+    const implementEditable  = (userStatus === "worker" && jobStatus === "Job Implementation"); 
 
-    const assignEditable  = (userStatus === "manager" && assignStatuses.includes(jobStatus)) || 
-                          (userStatus === "customer" && assignStatuses.includes(jobStatus));
+    const reviewEditable = (userId  === customerId && jobStatus === "Customer Review");
 
-    const implementEditable  = (userStatus === "manager" && implementStatuses.includes(jobStatus)) || 
-                             (userStatus === "customer" && implementStatuses.includes(jobStatus)) || 
-                             (userStatus === "worker" && implementStatuses.includes(jobStatus));
-
-    const reviewEditable = (userStatus === "manager" && jobStatus === "Closed") ||
-                          (userStatus === "customer" && reviewStatuses.includes(jobStatus)) || 
-                          (userStatus === "worker" && jobStatus === "Closed");
-
-    return { quotingEditable , assignEditable , implementEditable , reviewEditable,draftEditable  };
+    return { quotingEditable , approvalEditable,assignEditable , implementEditable , reviewEditable,draftEditable  };
 }

@@ -21,6 +21,11 @@
 }
 
 /**********************************Home view **********************************/
+
+.job-details {
+  border-bottom: 1px solid #ccc;
+}
+
 .jobColumns {
   background-color: #F4EB27;
   overflow: hidden;

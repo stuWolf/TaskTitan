@@ -10,6 +10,8 @@ import {getJob,createJob, updateJob} from "../services/jobsServices"
 import {  getUser } from "../services/userServices";
 import { getReview } from "../services/reviewsServices";
 import {calculateVisibility} from "../services/visibilityManager";
+import {calculateEditability} from "../services/editManager";
+
 // import { useLocalStorage } from 'react-use';
 
 
@@ -65,8 +67,8 @@ import {calculateVisibility} from "../services/visibilityManager";
     // const jobStatus= localStorage.getItem('userMessage');
     // const userMessage = localStorage.getItem('userMessage');
     const [visibility, setVisibility] = useState({quotingVisable: false, assignVisable: false, implementVisable: false, reviewVisable: false,});
-
-
+    const [editability, setEditability] = useState("");
+    const userId = localStorage.getItem('userId');
     console.log('Jobid from JobForm: '  + jobId)
     // setuserMessage
 
@@ -185,7 +187,16 @@ useEffect(() => {
 
   };
 
-  console.log('visibility.assignVisable' + visibility.assignVisable)
+  // console.log('visibility.assignVisable' + visibility.assignVisable)
+
+// reconvert date bevore storing it in DB
+  function reconvertDate(inputDate) {
+    const parts = inputDate.split('/');
+    if (parts.length !== 3) {
+        throw new Error('Invalid date format');
+    }
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}
   // Function to format the date
 const formatDate = (dateString) => {
   if(dateString === 'No Data'){
@@ -216,11 +227,20 @@ const formatDate = (dateString) => {
 
 
 useEffect(() => {
+  
   if(jobStatus && userStatus) {
     const visibilityResult = calculateVisibility(jobStatus, userStatus);
     setVisibility(visibilityResult);
+    if(userId && customerId){
+     
+      setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
+      console.log('editability' + editability)
+    }
   }
-}, [jobStatus, userStatus]);
+
+
+
+}, [jobStatus, userStatus,userId, customerId, editability]);
 
 
 

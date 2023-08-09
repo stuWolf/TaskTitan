@@ -1,0 +1,121 @@
+useEffect(() => {
+  // Fetch the job details when the component mounts
+  // only when opened from joblist link
+  // if lodged from start new job (jobId = 0): customer ID is from new user
+  // jobStatus = draft
+  // load jobdata
+  // localStorage.setItem('jobStatus', jobStatus)
+
+// functions to fill in form with user data customerId either from job DB (fetchJob ) or from logged in user:
+  const fetchUser = async (customerId) => {
+    try {
+      const userData = await getUser(customerId);
+      console.log('userData from fetch user:', userData);
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setPhone(userData.contactNumber);
+      setEmail(userData.email);
+      setAddress(userData.address); // add this line to update user data once it's fetched
+      setDateCreated(userData.dateCreated);
+    } catch (error) {
+      console.error('Failed to fetch data from logged in customer:', error);
+    }
+  };
+  
+
+  const fetchReview = async (reviewId) => {
+    try {
+      const reviewData = await getReview(reviewId);
+      console.log('review from fetch review:', reviewData);
+      if (reviewData.hasOwnProperty('message404')){
+        setReview('no review yet')
+
+      }else{
+        setReviewStars(reviewData.stars);
+        setReview(reviewData.review );
+        setCompletionDate(reviewData.endDate );
+
+      }
+  
+      
+    } catch (error) {
+      console.error('Failed to fetch data from review ID:', error);
+    }
+  };  
+// this runs when job is selected from form . fetch all values, render form according to status
+  const fetchJob = async () => {
+    try {
+      // console.log('fetch jobb called')
+      const jobData = await getJob(jobId);
+      // console.log("(job.jobStatus from fetch job)  "  + jobStatus);
+      // console.log('Job data:', jobData);
+      // setJob(jobData);
+      setCustomerId(jobData.customerId);  // load existing job
+      setJobStatus(jobData.jobStatus);
+      setaddressOfInstallation(jobData.addressOfInstallation);
+      setScopeOfWork(jobData.scopeOfWork);
+      setpreferredJobCompletionDate(formatDate(jobData.preferredJobCompletionDate));
+      setDateCreated(formatDate(jobData.dateCreated));
+      setDateQuoted(formatDate(jobData.dateQuoted));
+      setQuoteAmmount(jobData.amountQuoted);
+      setQuoteAttachment(jobData.quoteAttachment);
+      // setWorkerId(jobData.workerId);
+      // setWorkStarted(formatDate(jobData.workStarted));
+      setMaximumDemand(jobData.maximumDemandInAmps);
+      setConsumerMains(jobData.consumerMainsCapacity);
+      setEctricalRetailer(jobData.ectricalRetailer);
+      setErgyDistributor(jobData.energyDistributor);
+      setPhasesMains(jobData.mainsPhases);
+      setReviewId(jobData.reviewId);
+      setCompletionDate(jobData.setCompletionDate);
+      // setDateQ
+      // set
+
+      // Fetch user data after job data is successfully fetched, update fields in header
+      if(!email){
+
+        fetchUser(jobData.customerId); 
+      }
+   
+
+      
+      if (visibility.implementVisable) {
+        fetchWorker(jobData.workerId);
+      }
+      if (visibility.reviewVisable) {
+        fetchReview(jobData.reviewId);
+      }
+    } catch (error) {
+      console.error('Failed to fetch job:', error);
+    }
+
+   
+
+  };
+
+  // console.log('visibility.assignVisable' + visibility.assignVisable)
+
+
+
+  if (jobId !== 'New') {
+    fetchJob();  // get jobdata from server if existing job
+    console.log('jobId'+  jobId+   'fetch jobb called')
+    // console.log('preferredJobComplDraftetionDate '  + preferredJobCompletionDate)
+  } else{
+
+    console.log('jobId:  '+  jobId)
+
+
+      fetchUser(userId); 
+    
+   
+  }
+
+  
+
+
+
+
+}, [jobId, jobStatus,visibility, email, userId]);  // end use effect
+
+n the above use effect fetchUser() is called multiple times every time jobjorm is started. it should be once in each scenario: new form or open an old form. how can i reduce this?

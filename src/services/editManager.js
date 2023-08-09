@@ -10,6 +10,7 @@ export function calculateEditability(jobStatus, userStatus, userId, customerId) 
     const implementEditable  = (userStatus === "worker" && jobStatus === "Job Implementation"); 
 
     const reviewEditable = (userId  === customerId && jobStatus === "Customer Review");
-
-    return { quotingEditable , approvalEditable,assignEditable , implementEditable , reviewEditable,draftEditable  };
+console.log('quotingEditable ' + quotingEditable +'  approvalEditable ' +approvalEditable+ '  assignEditable '+ assignEditable +"  implementEditable "+ implementEditable +
+'  reviewEditable '+ reviewEditable+ '  draftEditable  '+ draftEditable)
+    return { draftEditable,quotingEditable , approvalEditable,assignEditable , implementEditable , reviewEditable  };
 }

@@ -14,6 +14,7 @@ export async function getOpenJobs() {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': "application/json"
     }
+    // console.log('get open jobs')
     const response = await fetch(`${api}/jobs/status/open`, { headers: headers });
     const json = await response.json();
     return json;
@@ -71,16 +72,27 @@ export async function createJob(data) {
     const json = await response.json();
     return json;
 }
-
-// Count all jobs
+// const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+// Count all jobs, optional for a specific user
 // Used in: home getCountOfJobs
 // needs to be upgraded with parameter userId
 export async function getCountOfJobs(id = null) {
-    let url = `${api}/jobs`;
+    let url = `${api}/jobs/count`;
     if (id) {
         url += `/${id}`;
     }
     const response = await fetch(url, { headers: headers });
+    // await delay(100);
+    const json = await response.json();
+    return json;
+}
+
+// Count all jobs, optional for a specific worker
+// Used in: home getCountOfJobs
+// needs to be upgraded with parameter userId
+export async function getCountOfJobsWorker(workerId) {
+   
+    const response = await fetch(`${api}/jobs/countWorker/${workerId}`, { headers: headers });
     const json = await response.json();
     return json;
 }

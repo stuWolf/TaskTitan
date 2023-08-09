@@ -110,8 +110,10 @@ function ManageWorkers() {
             <p className="job-id">
             {
               localStorage.getItem('workerJobID') 
-              ? <Link to={`/jobForm/${localStorage.getItem('workerJobID')}`}>{worker._id.slice(-4)}</Link>
+              // if workerJobID is set, make it a link go back to job form and hand over worker ID
+  ? <Link to={`/jobForm/${localStorage.getItem('workerJobID')}`}>{worker._id.slice(-4)}</Link>
               : worker._id.slice(-4)
+              // else only display the id
             }
           </p>
 

@@ -74,11 +74,17 @@ export async function createJob(data) {
 
 // Count all jobs
 // Used in: home getCountOfJobs
-export async function getCountOfJobs() {
-    const response = await fetch(`${api}/jobs`, { headers: headers });
+// needs to be upgraded with parameter userId
+export async function getCountOfJobs(id = null) {
+    let url = `${api}/jobs`;
+    if (id) {
+        url += `/${id}`;
+    }
+    const response = await fetch(url, { headers: headers });
     const json = await response.json();
     return json;
 }
+
 // Get all jobs
 // Used in: admin getCountOfJobs
 export async function getAllJobs() {

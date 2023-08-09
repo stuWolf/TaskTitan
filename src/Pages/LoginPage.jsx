@@ -26,10 +26,13 @@ const Login = () => {
         setErrorMessage('Please check your username and password');
       } else {
         setErrorMessage(''); // clear error
+        // jobsData
+        localStorage.setItem('userData', JSON.stringify(response));
+
         localStorage.setItem('userStatus', response.userStatus);
         localStorage.setItem('userId', response.user_ID);
         localStorage.setItem('token', response.token);
-        console.log('response from login   ' +response.token )
+        console.log('response from login   ' + JSON.parse(localStorage.getItem('userData')) )
         // localStorage.setItem('password', password);
         navigate('/home', { state: { userStatus: response.userStatus } });
       }
@@ -42,7 +45,7 @@ const Login = () => {
     }
   };
   
-
+// i want to write the whole of response into local storage.user
 
 
   const handleCancel = () => {

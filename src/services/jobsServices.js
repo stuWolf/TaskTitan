@@ -72,8 +72,15 @@ export async function createJob(data) {
     return json;
 }
 
+// Count all jobs
+// Used in: home getCountOfJobs
+export async function getCountOfJobs() {
+    const response = await fetch(`${api}/jobs`, { headers: headers });
+    const json = await response.json();
+    return json;
+}
 // Get all jobs
-// Used in: admin
+// Used in: admin getCountOfJobs
 export async function getAllJobs() {
     const response = await fetch(`${api}/jobs`, { headers: headers });
     const json = await response.json();

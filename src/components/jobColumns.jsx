@@ -5,7 +5,7 @@ export default function JobColumns() {
   return (
     <div className="App">
       <div className="jobColumns">
-        <p>Job #</p>
+        <p>Customer Name</p>
         <p>Worker</p>
         <p>Address</p>
         <p>Date in</p>

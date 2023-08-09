@@ -4,7 +4,7 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import { getOpenJobs, getAllJobsOpenWorker,getMyJobsOpen } from "../services/jobsServices";
+import { getOpenJobs, getAllJobsOpenWorker,getMyJobsOpen ,getCountOfJobs } from "../services/jobsServices";
 import {getUser} from '../services/userServices';
 import JobColumns from '../components/jobColumns';
 import { Link } from 'react-router-dom';
@@ -83,9 +83,13 @@ const fetchJobs = useCallback(async () => {
 
 
       // Fetch the user name for each job
+      // can't use this because it returns the number of all jobs,
+      // however jobsData is different for every user
+      // const numberOfJobs = await (getCountOfJobs())
 for(let job of jobsData) {
-  //  if
-
+  //  no if here, every job has a user id
+  const customerData = await getUser(job.customerId)
+  job.customer = customerData.firstName || 'No Name'
 
 }
 // Fetch the worker names for each job
@@ -93,7 +97,7 @@ for(let job of jobsData) {
   if(job.workerId) {
     const workerData = await getUser(job.workerId);
     job.workerId = workerData.firstName || 'No Name';
-    job.customerName = 'fritz'
+    // job.customer = 'fritz'
   } else {
     job.workerId = 'No Data';
   }
@@ -107,7 +111,7 @@ const filteredJobs = jobsData.map((job) => ({
   workerName: job.workerId || 'No Data',
 // extract this dataset out of each job in jobs.data
   //  customerName: job.workerId
-  customerName: job.customerName,
+  customerName: job.customer,
   addressOfInstallation: job.addressOfInstallation|| 'No Data',
   dateIn: job.dateCreated || 'No Data',
   dateQuoted: job.dateQuoted || 'No Data',
@@ -159,9 +163,14 @@ return 'No Data';
   const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
   return `${day}/${month}/${year}`;
 }
+
+
+
  
 }; // end format date
-
+function getFirstFourWords(str) {
+  return str.split(' ').slice(0, 4).join(' ');
+}
   // console.log('home  ' + userStatus)
   return (
     <div className="App">
@@ -200,10 +209,10 @@ return 'No Data';
               {/* <Link to="/jobForm">SignIn</Link> */}
               {/* open jobform with the jobID */}
               <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job.customerName}</Link></p>  
-              {/* <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-8)}</Link></p>   */}
+              {/* <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-8)}</Link></p>  job.customerName */}
               {/* Link to the job details page */}
               <p>{job.workerName}</p>
-              <p>{job.addressOfInstallation}</p>
+              <p>{getFirstFourWords(job.addressOfInstallation)}</p>
               <p>{formatDate(job.dateIn)}</p>
               <p>{formatDate(job.dateQuoted)}</p>
               <p>{formatDate(job.workStart)}</p>

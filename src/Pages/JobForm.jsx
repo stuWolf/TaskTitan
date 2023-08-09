@@ -144,6 +144,7 @@ useEffect(() => {
 // this runs when job is selected from form . fetch all values, render form according to status
   const fetchJob = async () => {
     try {
+      // console.log('fetch jobb called')
       const jobData = await getJob(jobId);
       console.log("(job.jobStatus from fetch job)  "  + jobStatus);
       console.log('Job data:', jobData);
@@ -190,32 +191,19 @@ useEffect(() => {
   // console.log('visibility.assignVisable' + visibility.assignVisable)
 
 // reconvert date bevore storing it in DB
-  function reconvertDate(inputDate) {
-    const parts = inputDate.split('/');
-    if (parts.length !== 3) {
-        throw new Error('Invalid date format');
-    }
-    return `${parts[2]}-${parts[1]}-${parts[0]}`;
-}
+//   function reconvertDate(inputDate) {
+//     const parts = inputDate.split('/');
+//     if (parts.length !== 3) {
+//         throw new Error('Invalid date format');
+//     }
+//     return `${parts[2]}-${parts[1]}-${parts[0]}`;
+// }
   // Function to format the date
-const formatDate = (dateString) => {
-  if(dateString === 'No Data'){
-  return 'No Data';
-  
-  }else{
-    
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
-    const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
-    return `${day}/${month}/${year}`;
-  }
-   
-  }; // end format date
+
 
   if (jobId !== 'New') {
     fetchJob();  // get jobdata from server if new job
-    
+    console.log('fetch jobb called')
     // console.log('preferredJobComplDraftetionDate '  + preferredJobCompletionDate)
   } // endif jobID
 
@@ -240,7 +228,7 @@ useEffect(() => {
 
 
 
-}, [jobStatus, userStatus,userId, customerId, editability]);
+}, []);
 
 
 
@@ -605,6 +593,22 @@ const updateJobFormData = async (jobId, jobData) => {
     // go back to home view of worker
     // console.log('loginpage' + {status})
   };
+
+
+  const formatDate = (dateString) => {
+    if(dateString === 'No Data'){
+    return 'No Data';
+    
+    }else{
+      
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
+      const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
+      return `${day}/${month}/${year}`;
+    }
+     
+    }; // end format date
   
   // console.log('home  ' + userStatus)
   return (

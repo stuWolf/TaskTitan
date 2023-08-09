@@ -79,11 +79,21 @@ const fetchJobs = useCallback(async () => {
         return;
       }
 
+
+
+
+      // Fetch the user name for each job
+for(let job of jobsData) {
+  //  if
+
+
+}
 // Fetch the worker names for each job
 for(let job of jobsData) {
   if(job.workerId) {
     const workerData = await getUser(job.workerId);
     job.workerId = workerData.firstName || 'No Name';
+    job.customerName = 'fritz'
   } else {
     job.workerId = 'No Data';
   }
@@ -94,10 +104,10 @@ for(let job of jobsData) {
 // Filter out the required fields
 const filteredJobs = jobsData.map((job) => ({
   _id: job._id || 'No Data',  // Last 4 digits of _id
-  workerId: job.workerId || 'No Data',
+  workerName: job.workerId || 'No Data',
 // extract this dataset out of each job in jobs.data
-
-
+  //  customerName: job.workerId
+  customerName: job.customerName,
   addressOfInstallation: job.addressOfInstallation|| 'No Data',
   dateIn: job.dateCreated || 'No Data',
   dateQuoted: job.dateQuoted || 'No Data',
@@ -156,8 +166,8 @@ return 'No Data';
   return (
     <div className="App">
       <Header />
-      {/* <Navbar userStatus = {userStatus} /> */}
-      <Navbar userStatus = 'manager'/> 
+      <Navbar userStatus = {userStatus} />
+     
       <div className="main-content">
       <p>User Status: {userStatus}</p>
 
@@ -182,14 +192,17 @@ return 'No Data';
 //  _id (last 4 digits),  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus */}
 
 <div className="jobs-container">
-          {jobs.map((job) => (
+{[...jobs].reverse().map((job) => (
             // Display the job details
             // Replace this with your actual UI
-            <div key={job._id} className="job-details">
+            <div key={job._id} className="job-details" style={{ borderBottom: '1px solid #ccc' }}>
+
               {/* <Link to="/jobForm">SignIn</Link> */}
               {/* open jobform with the jobID */}
-              <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-8)}</Link></p>  {/* Link to the job details page */}
-              <p>{job.workerId}</p>
+              <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job.customerName}</Link></p>  
+              {/* <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-8)}</Link></p>   */}
+              {/* Link to the job details page */}
+              <p>{job.workerName}</p>
               <p>{job.addressOfInstallation}</p>
               <p>{formatDate(job.dateIn)}</p>
               <p>{formatDate(job.dateQuoted)}</p>

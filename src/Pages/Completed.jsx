@@ -8,7 +8,7 @@ import WorkerColumns from '../components/workerColumns';
 import {  useNavigate} from 'react-router-dom';
 import { getUsers } from "../services/userServices";
 import { Link } from 'react-router-dom';
-function ManageWorkers() {
+function Completed() {
 
 
   const userStatus = localStorage.getItem('userStatus');
@@ -35,7 +35,7 @@ function ManageWorkers() {
   const fetchWorkers = useCallback(async () => {
     try {
       let workerData;  
-      console.log('fetch worker called')
+      
       // get all users with status Worker
       workerData = await getUsers("worker");
         
@@ -147,4 +147,4 @@ function ManageWorkers() {
   );
 }
 
-export default ManageWorkers;
+export default Completed;

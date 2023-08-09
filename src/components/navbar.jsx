@@ -37,7 +37,7 @@ function Navbar({userStatus}) {
     <div className="App">
       <div className="navbar">
         <button onClick={() => handleNavigation('/home')}>Home</button>
-        <button onClick={() => handleNavigation('/quotes')}>Quotes</button>
+        {/* <button onClick={() => handleNavigation('/quotes')}>Quotes</button> */}
         <button onClick={() => handleNavigation('/completed')}>Completed Jobs</button>
         {userStatus === "manager" && 
           <button onClick={() => handleNavigation('/managerWorkers')}>My Workers</button>

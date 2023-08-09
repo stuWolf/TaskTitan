@@ -27,8 +27,9 @@ const Login = () => {
       } else {
         setErrorMessage(''); // clear error
         // jobsData
-        localStorage.setItem('userData', JSON.stringify(response));
-
+        // localStorage.setItem('userData', JSON.stringify(response));
+        console.log('first name ' + response.firstName)
+        localStorage.setItem('userName', response.firstName);
         localStorage.setItem('userStatus', response.userStatus);
         localStorage.setItem('userId', response.user_ID);
         localStorage.setItem('token', response.token);

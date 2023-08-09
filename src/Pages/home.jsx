@@ -51,8 +51,10 @@ function Home() {
 
 const fetchJobs = useCallback(async () => {
   try {
-
+    setErrorMessage('Fetching your Jobs...');
     let jobsData;  // array with all jobs rawdata
+    // console.log('fetch jobs called')
+    
     // increase loading speed
   // at function call:
     // if jobsData id empty load data from server and write jobsData into local mamory
@@ -110,7 +112,7 @@ for(let job of jobsData) {
 
 for(let job of jobsData) {
   //  no if here, every job has a user id
-  console.log('get first name')
+  // console.log('get first name')
 // console.log('job '  + job)
   if(job.customerId) {
   const customerData = await getUser(job.customerId)
@@ -147,6 +149,7 @@ setJobs(filteredJobs);
     console.error('Failed to fetch jobs:', error);
     setErrorMessage("could not fetch jobs");
   }
+  setErrorMessage('');
 },[]);
 // end fetch jobs
 
@@ -163,7 +166,7 @@ useEffect(() => {
  // Set up an interval to fetch jobs every 3 seconds
  const interval = setInterval(() => {
    fetchJobs();
- }, 3000); // 3000 milliseconds = 3 seconds
+ }, 5000); // 3000 milliseconds = 3 seconds
 
  // Clean up function to clear the interval when the component is unmounted
  return () => clearInterval(interval);
@@ -171,24 +174,22 @@ useEffect(() => {
 
 // Function to format the date
 const formatDate = (dateString) => {
-if(dateString === 'No Data'){
-return 'No Data';
+    if(dateString === 'No Data'){
+    return 'No Data';
 
-}else{
-  const date = new Date(dateString);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
-  const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
-  return `${day}/${month}/${year}`;
-}
-
-
-
- 
+    }else{
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
+      const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
+      return `${day}/${month}/${year}`;
+    }
 }; // end format date
 function getFirstFourWords(str) {
   return str.split(' ').slice(0, 4).join(' ');
 }
+
+console.log('username  ' + localStorage.getItem('userName'))
   // console.log('home  ' + userStatus)
   return (
     <div className="App">
@@ -196,7 +197,7 @@ function getFirstFourWords(str) {
       <Navbar userStatus = {userStatus} />
      
       <div className="main-content">
-      <p>User Status: {userStatus}</p>
+      <p>Welcome back {localStorage.getItem('userName')},  you are logged in as {userStatus}</p>
 
       <div className="form-row">
         <h2>My Jobs</h2>
@@ -229,7 +230,7 @@ function getFirstFourWords(str) {
               <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job.customerName}</Link></p>  
               {/* <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-8)}</Link></p>  job.customerName */}
               {/* Link to the job details page */}
-              <p>{job.workerName}</p>
+              <p >{job.workerName}</p>
               <p>{getFirstFourWords(job.addressOfInstallation)}</p>
               <p>{formatDate(job.dateIn)}</p>
               <p>{formatDate(job.dateQuoted)}</p>

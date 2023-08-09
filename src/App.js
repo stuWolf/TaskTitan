@@ -8,6 +8,9 @@ import Profile from './Pages/ProfilePage';
 import AddWorker from './Pages/AddWorker';
 import ManageWorkers from './Pages/ManageWorkers';
 import JobForm from './Pages/JobForm';
+import Reviews from './Pages/Reviews';
+import Search from './Pages/Search';
+import Completed from './Pages/Completed';
 
 import Home from './Pages/home';
 
@@ -35,15 +38,15 @@ function App() {
        <Route path="/addWorker" element={<AddWorker/>} />
        <Route path="/jobForm/:jobId" element={<JobForm/>} />
        <Route path="/home" element={<Home />} />
-       <Route path="/workerHome" element={<h1>TODO</h1>} />
+      
        <Route path="/managerWorkers" element={<ManageWorkers/>} />
        
        {/* search functions */}
-       <Route path="/completed" element={<h1>TODO</h1>} />
-       <Route path="/openjobs" element={<h1>TODO</h1>} />
+       <Route path="/completed" element={<Completed/>} />
+       {/* <Route path="/openjobs" element={<ManageWorkers/>} /> */}
         <Route path="/quotes" element={<h1>TODO</h1>}/>  {/*displays list of all quotes*/}
-        <Route path="/reviews" element={<h1>TODO</h1>}/>  {/*displays list of all reviews*/} 
-        <Route path="/search" element={<h1>TODO</h1>}/>
+        <Route path="/reviews" element={<Reviews/>}/>  {/*displays list of all reviews*/} 
+        <Route path="/search" element={<Search/>}/>
 
         {/* <Route path="/logout" element={<Login/>}/> */}
         <Route path="/" element={<Landing />} />

@@ -26,8 +26,8 @@ export async function login(data) {
         body: JSON.stringify(data)
     });
     const json = await response.json();
-    console.log('login from login services client' + json)
-    console.log('login token from login services client' + headers.token)
+    // console.log('login from login services client' + json)
+    // console.log('login token from login services client' + headers.token)
     return json;
 }
 

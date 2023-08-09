@@ -17,7 +17,28 @@ import {calculateEditability} from "../services/editManager";
 
   
   function JobForm() {
-    const { jobId } = useParams();
+    // const { linkParameter } = useParams();
+    // const [jobId, setJobId] = useState("");
+    // const [workerID, setWorkerID] = useState("");
+    // const [workerJobID, setWorkerJobID] = useState(localStorage.getItem('workerJobID') || '');
+    // // let workerJobID =  localStorage.getItem('workerJobID')
+    // console.log('workerJobID  ' + workerJobID)
+    // console.log('linkParameter  ' + linkParameter)
+    // if (workerJobID!==0){
+    //   // if set form has been opened from manage worker
+    //   setJobId (workerJobID);
+    //   setWorkerID(linkParameter);
+    // } else{
+    //   setJobId(linkParameter)
+    //   // form has been opened with link from home view
+    // }
+    // console.log('jobid  ' + jobId)
+    // console.log('workerID  ' + workerID)
+    // // const { workerId } = useParams();
+    // // else
+   
+const { jobId } = useParams();
+   
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
@@ -202,21 +223,31 @@ useEffect(() => {
     console.log('jobId'+  jobId+   'fetch jobb called')
     // console.log('preferredJobComplDraftetionDate '  + preferredJobCompletionDate)
   } else{
-
+    setCustomerId(userId);
     console.log('jobId:  '+  jobId)
-
+    setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
 
       fetchUser(userId); 
     
    
   }
-
+  // console.log('userId  ' + userId + 'customerId  ' + customerId)
   
+  // if(jobStatus && userStatus) {
+  //   const visibilityResult = calculateVisibility(jobStatus, userStatus);
+  //   setVisibility(visibilityResult);
+  //   // console.log('visibility' + visibility)
+  //   console.log('userId  ' + userId + 'customerId  ' + customerId)
+  //   if(userId && customerId){
+     
+  //     setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
+      
+  //   }
+  // }
 
 
 
-
-}, []);  // end use effect
+}, [jobStatus, userStatus,]);  // end use effect
 
 
 
@@ -236,7 +267,7 @@ useEffect(() => {
 
 // copyUserData();
 
-}, [jobStatus, userStatus]);
+}, [jobStatus, userStatus, userId, customerId]);
 
 
 
@@ -366,6 +397,7 @@ const incrementJobStatus = () => {
    
   }
 };
+
 const createNewJob = async (jobData) => {
   // to be copied to handleSubmit
 
@@ -411,7 +443,7 @@ const updateJobFormData = async (jobId, jobData) => {
       
       // const newStatus = incrementJobStatus();
       if (jobId === 'New'){
-       
+        
       const jobData = {
         jobStatus: incrementJobStatus(),
         customerId,     // id of logged in user from local memory
@@ -486,7 +518,7 @@ const updateJobFormData = async (jobId, jobData) => {
         workerId: '64c5540169a5213214551fcd'
        
       };
-      updateJobFormData(jobId, jobData);
+      updateJobFormData(jobId, jobData);  // update server
       // sendEmail('worker@example.com', 'New Job Assignment', 'You have a new job');
       // localStorage.setItem('userMessage', "To Worker: you have a new job");
       setUserMessage("To Worker: you have a new job");
@@ -673,7 +705,7 @@ const updateJobFormData = async (jobId, jobData) => {
 <div className="form-row">
             {/*allways be displayed  */}
           <p>Customer Details:</p> 
-          {/* <button disabled={jobStatus !== "Draft"} onClick={copyUserData}>Copy from profile</button> */}
+          {/* {(visibility.assignVisable) &&<button disabled={jobStatus !== "Draft"} onClick={copyUserData}>Copy from profile</button>} */}
           {/* <p>Job status: {jobStatus}</p> */}
           </div>
         
@@ -835,7 +867,7 @@ const updateJobFormData = async (jobId, jobData) => {
         </div>
         ) : (
           <div>
-            {(editability.implementEditable||editability.quotingEditable||editability.assignEditable)&&<button onClick={handleSubmit}>Submit</button> }
+            <button onClick={handleSubmit}>Submit</button> 
             {/* <button onClick={handleSave}>Save</button>  */}
             <button onClick={handleClose}>Close</button>
              

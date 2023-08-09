@@ -4,7 +4,7 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import { getOpenJobs, getAllJobsOpenWorker,getMyJobsOpen  } from "../services/jobsServices";
+import { getOpenJobs, getAllJobsOpenWorker,getMyJobsOpen, getCountOfJobs, getCountOfJobsWorker  } from "../services/jobsServices";
 import {getUser} from '../services/userServices';
 import JobColumns from '../components/jobColumns';
 import { Link } from 'react-router-dom';
@@ -49,105 +49,119 @@ function Home() {
 
 
 
+let usersCache = {}; // Cache for user data
+
 const fetchJobs = useCallback(async () => {
   try {
+    let response;
+    // console.log('get open jobs')
+    // Check the number of jobs based on userStatus
+    if (userStatus === "manager") {
+      // console.log('Marker0 ')
+      response = await getCountOfJobs();
+    } else if (userStatus === "customer") {
+      response = await getCountOfJobs('userId');
+    } else if (userStatus === "worker") {
+      response = await getCountOfJobsWorker(localStorage.getItem('userId'));
+    }
+    // console.log('Marker1 ')
+    let jobsData = JSON.parse(localStorage.getItem('jobsData') || 'null');
+    const numberOfJobs = response.totalJobs;
+    console.log('numberOfJobs '  + numberOfJobs  )
+    // If the number of jobs has increased or jobsData doesn't exist in localStorage, fetch the data
+    // inaddition to that we need to poll and update every 3s. to get job updates
+    console.log('numberOfJobs:  ' + numberOfJobs + '  jobsData.length:  '+ jobsData.length)
+    // console.log('Marker 2 ')
 
-    let jobsData;  // array with all jobs rawdata
-    // increase loading speed
-  // at function call:
-    // if jobsData id empty load data from server and write jobsData into local mamory
-  // else load jobData from local memory
-
-    // check number of jobs  with getCountOfJobs(optional customer ID)
-    // if the number has changed, refresh local memory from server, rerender
-    // while jobsdata are loading setErrorMessage("Jobs Data loading...");
-
-    if(userStatus === "manager"){
-
-      // manager sees all open jobs
-
-      //jobsOpen = getCountOfJobs()
-      jobsData = await getOpenJobs();
-      // console.log('jobsData.dateCreated  ' + jobsData.dateCreated)
-    } else if (userStatus === "customer"){
-       //jobsOpen = getCountOfJobs(customerId)
-      // Get all open jobs for logged in Customer
-      jobsData = await getMyJobsOpen();
-    } else if (userStatus === "worker"){
-      // Get all open jobs for a logged in worker, worker Id gets handled in server
-      //jobsOpen = getCountOfJobsWorker(workerId)
-      jobsData = await getAllJobsOpenWorker();
+    // when page gets loaded: get jobdata from server. if in local storage, get out of local storage
+    if (!jobsData || numberOfJobs > (jobsData.length || 0)) {
+      
+      if (userStatus === "manager") {
+        console.log('Marker1 ')
+        console.log('get open jobs called')
+        jobsData = await getOpenJobs();
+      } else if (userStatus === "customer") {
+        jobsData = await getMyJobsOpen();
+      } else if (userStatus === "worker") {
+        jobsData = await getAllJobsOpenWorker();
+      }
+      localStorage.setItem('jobsData', JSON.stringify(jobsData)); // Save to localStorage
     }
 
-      // Check if jobsData contains 'message404, not found'
-      if (jobsData.hasOwnProperty('message404')) {
-        if (userStatus === "worker"){
-        setErrorMessage("There are  no jobs for you at the moment");
-        } else if (userStatus === "customer"){
-          setErrorMessage("No Jobs yet. Lodge your first job by clicking 'Create New Job' ");
-        } else { setErrorMessage("No jobs recorded yet");}
-        return;
-      }
-
-
-
-
-      // Fetch the user name for each job
-      // can't use this because it returns the number of all jobs,
-      // however jobsData is different for every user
-      // const numberOfJobs = await (getCountOfJobs())
-
-// Fetch the worker names for each job
-for(let job of jobsData) {
-  if(job.workerId) {
-    const workerData = await getUser(job.workerId);
-    job.workerId = workerData.firstName || 'No Name';
-    // job.customer = 'fritz'
-  } else {
-    job.workerId = 'No Data';
-  }
-}
-
-for(let job of jobsData) {
-  //  no if here, every job has a user id
-  console.log('get first name')
-// console.log('job '  + job)
-  if(job.customerId) {
-  const customerData = await getUser(job.customerId)
-  // const customerData = 'fritz'
-    job.customer = customerData.firstName || 'No Name'
-  } else {
-    job.customer = 'No Data';
-  }
-
-}
-    // console.log(jobsData)not availabledateCreated
-    // localStorage.setItem('token', response.token);
-// Filter out the required fields
-const filteredJobs = jobsData.map((job) => ({
-  _id: job._id || 'No Data',  // Last 4 digits of _id
-  workerName: job.workerId || 'No Data',
-// extract this dataset out of each job in jobs.data
-  //  customerName: job.workerId
-  customerName: job.customer,
-  addressOfInstallation: job.addressOfInstallation|| 'No Data',
-  dateIn: job.dateCreated || 'No Data',
-  dateQuoted: job.dateQuoted || 'No Data',
-  workStart: job.workStarted || 'No Data',
-  jobStatus: job.jobStatus || 'No Data',
-  
-}));
-// Set the filtered jobs in state
-setJobs(filteredJobs);
-
-// console.log('job.dateCreated' +  job.dateCreated)
+      // Cache the fetched jobsData
+    //   jobsDataCache = jobsData;
     
-    
+
+    // Handle 'message404, not found'
+    if (jobsData.hasOwnProperty('message404')) {
+      handleErrorMessage(userStatus);
+      return;
+    }
+
+    // Fetch user data in parallel
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const customerPromises = jobsData.map(async job => {
+    if (!usersCache[job.customerId]) {
+        await delay(100);
+        const data = await getUser(job.customerId);
+        usersCache[job.customerId] = data.firstName || 'No Name';
+        job.customer = usersCache[job.customerId];
+    } else {
+        job.customer = usersCache[job.customerId];
+    }
+});
+
+const workerPromises = jobsData.map(async job => {
+    if (job.workerId) {
+        if (!usersCache[job.workerId]) {
+            await delay(100);
+            const data = await getUser(job.workerId);
+            usersCache[job.workerId] = data.firstName || 'No Name';
+            job.workerId = usersCache[job.workerId];
+        } else {
+            job.workerId = usersCache[job.workerId];
+        }
+    } else {
+        job.workerId = 'No Data';
+    }
+});
+
+
+    await Promise.all([...customerPromises, ...workerPromises]);
+
+    // Filter out the required fields
+    const filteredJobs = jobsData.map((job) => ({
+        _id: job._id || 'No Data',  // Last 4 digits of _id
+        workerName: job.workerId || 'No Data',
+      // extract this dataset out of each job in jobs.data
+        //  customerName: job.workerId
+        customerName: job.customer,
+        addressOfInstallation: job.addressOfInstallation|| 'No Data',
+        dateIn: job.dateCreated || 'No Data',
+        dateQuoted: job.dateQuoted || 'No Data',
+        workStart: job.workStarted || 'No Data',
+        jobStatus: job.jobStatus || 'No Data',
+        
+      }));
+
+    setJobs(filteredJobs);
   } catch (error) {
     console.error('Failed to fetch jobs:', error);
     setErrorMessage("could not fetch jobs");
   }
-},[]);
+}, []); // end callback
+
+function handleErrorMessage(userStatus) {
+  if (userStatus === "worker") {
+    setErrorMessage("There are no jobs for you at the moment");
+  } else if (userStatus === "customer") {
+    setErrorMessage("No Jobs yet. Lodge your first job by clicking 'Create New Job'");
+  } else {
+    setErrorMessage("No jobs recorded yet");
+  }
+}
+
 // end fetch jobs
 
 

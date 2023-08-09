@@ -27,6 +27,8 @@ function Navbar({userStatus}) {
      localStorage.removeItem('userMessage')
      localStorage.removeItem('workerID')
      localStorage.removeItem('workerJobID')
+     localStorage.removeItem('jobsData')
+     localStorage.removeItem('userData')
       navigate('/landing');
     
   };

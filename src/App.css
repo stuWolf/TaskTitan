@@ -24,7 +24,7 @@
   vertical-align: middle;
     
   /* font-weight: bold; */
-  font-size: 1em;
+  font-size: .8em;
   
 }
 
@@ -36,14 +36,14 @@
 /* Adjust font size for medium screens */
 @media (max-width: 768px) {
   .progress-bar-item {
-    font-size: 1em; /* Adjust as needed */
+    font-size: .6em; /* Adjust as needed */
   }
 }
 
 /* Adjust font size for smaller screens */
 @media (max-width: 480px) {
   .progress-bar-item {
-    font-size: 0.8em; /* Adjust as needed */
+    font-size: 0.5em; /* Adjust as needed */
   }
 }
 

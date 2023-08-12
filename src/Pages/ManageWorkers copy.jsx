@@ -6,7 +6,7 @@ import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import WorkerColumns from '../components/workerColumns';
 import {  useNavigate} from 'react-router-dom';
-import { getUsers, deleteUser } from "../services/userServices";
+import { getUsers } from "../services/userServices";
 import { Link } from 'react-router-dom';
 function ManageWorkers() {
 
@@ -83,19 +83,11 @@ function ManageWorkers() {
     }
   }; // end format date
 
-
-  const handleDelete = async (workerId) => {
-    try {
-        await deleteUser(workerId);
-        // Remove the deleted worker from the state
-        setWorkers(prevWorkers => prevWorkers.filter(worker => worker._id !== workerId));
-    } catch (error) {
-        console.error('Failed to delete worker:', error);
-        setErrorMessage("Could not delete worker");
-    }
-};
-
   // call API to fetch all workers 
+
+
+
+  
 
   // write all workers documents in an array of workers
   // display each row as a link, 
@@ -118,9 +110,7 @@ function ManageWorkers() {
             {/* go back to job form of ID = jobIdHome  and hand over worker id of selected worker when link on list clicked */}
             {/* <Link to={`/jobForm/${jobIdHome}/${worker._id}`}>{worker._id.slice(-4)}</Link> */}
             {/* workerJobID is the job ID handed back to upen the form in home view. we would to hand over a worker ID as well */}
-             {/* Delete button */}
-             <button onClick={() => handleDelete(worker._id)} style={{ backgroundColor: 'red', color: 'white', margin: '19px' }}>Delete</button>
-
+            
             <p className="job-id">
             {
               localStorage.getItem('workerJobID') 
@@ -134,7 +124,6 @@ function ManageWorkers() {
             {/* <p className="job-id"><Link to={`/jobForm/${jobIdHome }/${worker._id}`}>{worker._id.slice(-4)}</Link></p> */}
 
             <p>{worker.firstName}</p>
-            
             <p>{worker.lastName}</p>
             <p>{worker.address}</p>
             <p>{formatDate(worker.employedSince)}</p>

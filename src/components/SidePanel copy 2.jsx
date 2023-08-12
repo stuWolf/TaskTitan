@@ -3,17 +3,7 @@ import '../App.css';
 
 function Side({ userMessage }) {
   // Get messages from local storage or initialize as an empty array
-  const storedMessages = localStorage.getItem('messages');
-  let initialMessages = [];
-
-  if (storedMessages) {
-    try {
-      initialMessages = JSON.parse(storedMessages);
-    } catch (error) {
-      console.error("Error parsing stored messages:", error);
-    }
-  }
-
+  const initialMessages = JSON.parse(localStorage.getItem('messages')) || [];
 
   const [messages, setMessages] = useState(initialMessages);
 
@@ -24,7 +14,6 @@ function Side({ userMessage }) {
       setMessages(newMessages);
       // Update local storage
       localStorage.setItem('messages', JSON.stringify(newMessages));
-     
     }
   }, [userMessage]);
 

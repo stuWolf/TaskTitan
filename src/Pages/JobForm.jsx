@@ -131,7 +131,7 @@ useEffect(() => {
   const fetchUser = async (customerId) => {
     try {
       const userData = await getUser(customerId);
-      console.log('userData from fetch user:', userData);
+      // console.log('userData from fetch user:', userData);
       setFirstName(userData.firstName);
       setLastName(userData.lastName);
       setPhone(userData.contactNumber);
@@ -257,7 +257,7 @@ useEffect(() => {
     const visibilityResult = calculateVisibility(jobStatus, userStatus);
     setVisibility(visibilityResult);
     // console.log('visibility' + visibility)
-    console.log('userId  ' + userId + 'customerId  ' + customerId)
+    // console.log('userId  ' + userId + 'customerId  ' + customerId)
     if(userId && customerId){
      
       setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));

@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
+import SelectWorker from '../components/selectWorker';
+import ProgressBar from '../components/progressBar';
 // import WorkerColumns from '../components/workerColumns';
 // import {  useNavigate} from 'react-router-dom';
-import { getUsers } from "../services/userServices";
+
 // import { Link } from 'react-router-dom';
 function Search() {
 
@@ -16,16 +18,16 @@ function Search() {
  // Get a reference to the history object
 //  let navigate = useNavigate();
 
- const [errorMessage, setErrorMessage] = useState("");
+
   // const userMessage = localStorage.getItem('userMessage');
   // to get back to jobform of actual job
   // const [jobIdHome, setJobIdHome] = useState(localStorage.getItem('workerJobID'));
   // const jobStatusJobForm = localStorage.getItem('jobStatus');
-  const [workers, setWorkers] = useState([]);
-  const [selectedWorker, setSelectedWorker] = useState(null);
+
+ 
   const statuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
   const [selectedStatus, setSelectedStatus] = useState(statuses[0]);
-
+  const [userMessage, setSetUserMessage] = useState('');
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
   };
@@ -33,52 +35,20 @@ function Search() {
   // console.log(workers)
 
 
-  const fetchWorkers = useCallback(async () => {
-    try {
-      let workerData;  
-      
-      // get all users with status Worker
-      workerData = await getUsers("worker");
-        
-      // Check if workerData contains 'message404, not found'
-      if (workerData.hasOwnProperty('message404')) {
-        setErrorMessage("You have no workers yet")
-        return;
-      }
-    
-      // Filter out the required fields
-      const filteredWorkers = workerData.map((worker) => ({
-        _id: worker._id || 'No Data',  
-        firstName: worker.firstName || 'No Data',
-        lastName: worker.lastName || 'No Data',
-       
-        license: worker.license || 'No Data',
-      }));
-  
-      // Set the filtered workers in state
-      setWorkers(filteredWorkers);
-        
-    } catch (error) {
-      console.error('Failed to fetch workers:', error);
-      setErrorMessage("could not fetch workers");
-    }
-  },[]);
-  // end fetch workers
-  
+ 
+
   useEffect(() => {
-    // Fetch the open jobs when the component mounts
-    fetchWorkers();
-  }, [fetchWorkers]);
-  
+    setSetUserMessage(selectedStatus)
+  }, [selectedStatus]);
  
   // call API to fetch all workers 
 
-  const handleWorkerChange = (event) => {
-    const workerId = event.target.value;
-    const worker = workers.find(w => w._id === workerId);
-    setSelectedWorker(worker);
+  const handleWorkerSelected = (workerId, firstName, license) => {
+    console.log("Selected Worker ID:", workerId);
+    console.log("Selected Worker First Name:", firstName);
+    console.log("Selected Worker License:", license);
+    // You can now use these values in the parent component
   };
-
 
   
   return (
@@ -90,26 +60,7 @@ function Search() {
 <div className="job-form">
        
         
-        {errorMessage && <p>{errorMessage}</p>}
-{/* Dropdown for selecting a worker */}
-<select onChange={handleWorkerChange}>
-          <option value="">Select a worker</option>
-          {workers.map(worker => (
-            <option key={worker._id} value={worker._id}>
-              {worker.firstName} {worker.lastName}
-            </option>
-          ))}
-        </select>
-
-        {/* Display selected worker's details */}
-        {selectedWorker && (
-          <div>
-            <p>Worker ID: {selectedWorker._id}</p>
-            <p>First Name: {selectedWorker.firstName}</p>
-            <p>Last Name: {selectedWorker.lastName}</p>
-            <p>License: {selectedWorker.license}</p>
-          </div>
-        )}
+        
 
  {/* Dropdown for selecting a status */}
  <select value={selectedStatus} onChange={handleStatusChange}>
@@ -120,18 +71,12 @@ function Search() {
         ))}
       </select>
       <h2>  </h2>
-      {/* Progress bar */}
-      <div className="progress-bar">
-        {statuses.map((status, index) => (
-          <div 
-            key={status} 
-            className={`progress-bar-item ${index < statuses.indexOf(selectedStatus) + 1 ? 'active' : ''}`}
-          >
-            {status}
-          </div>
-        ))}
-      </div>
+     
 
+      <SelectWorker onWorkerSelected={handleWorkerSelected} />
+
+
+      <ProgressBar jobStatus = {selectedStatus} />
       
        {/* end main -content */}
 
@@ -140,7 +85,7 @@ function Search() {
         <p>Notifications about new jobs, quotes, assignments, and reviews.</p>
       </div> */}
       </div>
-      <Side/>
+      <Side userMessage = {userMessage} />
       </div>
       <Footer/> 
     </div>

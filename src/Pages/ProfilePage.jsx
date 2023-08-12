@@ -38,6 +38,8 @@ const [employedSince, setEmployedSince] = useState("");
    const fetchUser = async () => {
     try {
       // const response = await getLoggedInUser();
+      console.log('userId  '   + localStorage.getItem('userId'))
+      console.log('token  '   + localStorage.getItem('token'))
       const response = await getUser(localStorage.getItem('userId'))
       console.log('from fetch user', response); // log the entire response object
       setFirstName(response.firstName);

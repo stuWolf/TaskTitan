@@ -99,7 +99,7 @@ const fetchJobs = useCallback(async () => {
       // however jobsData is different for every user
       // const numberOfJobs = await (getCountOfJobs())
 
-// Fetch the worker names for each job
+// Fetch the worker and customer names for each job
 for(let job of jobsData) {
   if(job.workerId) {
     const workerData = await getUser(job.workerId);
@@ -108,23 +108,22 @@ for(let job of jobsData) {
   } else {
     job.workerId = 'No Data';
   }
-}
 
-for(let job of jobsData) {
-  //  no if here, every job has a user id
-  // console.log('get first name')
-// console.log('job '  + job)
+
   if(job.customerId) {
-  const customerData = await getUser(job.customerId)
-  // const customerData = 'fritz'
-    job.customer = customerData.firstName || 'No Name'
-  } else {
-    job.customer = 'No Data';
-  }
+    const customerData = await getUser(job.customerId)
+    // const customerData = 'fritz'
+      job.customer = customerData.firstName || 'No Name'
+    } else {
+      job.customer = 'No Data';
+    }
+
+
+
 
 }
-    // console.log(jobsData)not availabledateCreated
-    // localStorage.setItem('token', response.token);
+
+
 // Filter out the required fields
 const filteredJobs = jobsData.map((job) => ({
   _id: job._id || 'No Data',  // Last 4 digits of _id
@@ -152,11 +151,6 @@ setJobs(filteredJobs);
   setErrorMessage('');
 },[]);
 // end fetch jobs
-
-
-// setTimeout(() => {
-   
-// }, 5000); // 2000 milliseconds = 2 seconds
 
 
 useEffect(() => {
@@ -189,7 +183,7 @@ function getFirstFourWords(str) {
   return str.split(' ').slice(0, 4).join(' ');
 }
 
-console.log('username  ' + localStorage.getItem('userName'))
+// console.log('username  ' + localStorage.getItem('userName'))
   // console.log('home  ' + userStatus)
   return (
     <div className="App">
@@ -225,10 +219,10 @@ console.log('username  ' + localStorage.getItem('userName'))
             // Replace this with your actual UI
             <div key={job._id} className="job-details" style={{ borderBottom: '1px solid #ccc' }}>
 
-              {/* <Link to="/jobForm">SignIn</Link> */}
+           
               {/* open jobform with the jobID */}
               <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job.customerName}</Link></p>  
-              {/* <p className="job-id"><Link to={`/jobForm/${job._id}`}>{job._id.slice(-8)}</Link></p>  job.customerName */}
+              
               {/* Link to the job details page */}
               <p >{job.workerName}</p>
               <p>{getFirstFourWords(job.addressOfInstallation)}</p>

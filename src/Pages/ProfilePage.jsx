@@ -38,10 +38,10 @@ const [employedSince, setEmployedSince] = useState("");
    const fetchUser = async () => {
     try {
       // const response = await getLoggedInUser();
-      console.log('userId  '   + localStorage.getItem('userId'))
-      console.log('token  '   + localStorage.getItem('token'))
+      // console.log('userId  '   + localStorage.getItem('userId'))
+      // console.log('token  '   + localStorage.getItem('token'))
       const response = await getUser(localStorage.getItem('userId'))
-      console.log('from fetch user', response); // log the entire response object
+      // console.log('from fetch user', response); // log the entire response object
       setFirstName(response.firstName);
       setLastName(response.lastName);
       setEmail(response.email);
@@ -60,8 +60,9 @@ const [employedSince, setEmployedSince] = useState("");
       console.error('Failed to fetch user:', error);
     }
   };
+  console.log('fetch user called')
   fetchUser();
-  }, [userStatus]);
+  }, []);
 
   
   const handleUpdate = async () => {

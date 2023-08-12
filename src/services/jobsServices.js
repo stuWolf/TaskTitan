@@ -1,9 +1,9 @@
 const api = process.env.REACT_APP_BACKEND_URL;
 // const token = localStorage.getItem('token');
-const headers = {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': "application/json"
-}
+// const headers = {
+//     'Authorization': `Bearer ${localStorage.getItem('token')}`,
+//     'Content-Type': "application/json"
+// }
 
 // console.log('job services token  '  + token)
 
@@ -11,6 +11,7 @@ const headers = {
 // Used in: manager view
 export async function getOpenJobs() {
     const headers = {
+        
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': "application/json"
     }
@@ -23,6 +24,10 @@ export async function getOpenJobs() {
 // Get all jobs with given status
 // Used in: search
 export async function getStatusJobs(status) {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs/status/${status}`, { headers: headers });
     const json = await response.json();
     return json;
@@ -31,6 +36,10 @@ export async function getStatusJobs(status) {
 // Get all jobs started by logged-in customer
 // Used in: customer view search
 export async function getMyJob() {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs/myjobLogin`, { headers: headers });
     const json = await response.json();
     return json;
@@ -64,6 +73,10 @@ export async function getAllJobsOpenWorker() {
 // Create a job
 // Used in: Manager and customer view
 export async function createJob(data) {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs`, {
         method: "POST",
         headers: headers,
@@ -81,7 +94,12 @@ export async function getCountOfJobs(id = null) {
     if (id) {
         url += `/${id}`;
     }
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(url, { headers: headers });
+    
     // await delay(100);
     const json = await response.json();
     return json;
@@ -91,7 +109,10 @@ export async function getCountOfJobs(id = null) {
 // Used in: home getCountOfJobs
 // needs to be upgraded with parameter userId
 export async function getCountOfJobsWorker(workerId) {
-   
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs/countWorker/${workerId}`, { headers: headers });
     const json = await response.json();
     return json;
@@ -100,6 +121,10 @@ export async function getCountOfJobsWorker(workerId) {
 // Get all jobs
 // Used in: admin getCountOfJobs
 export async function getAllJobs() {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs`, { headers: headers });
     const json = await response.json();
     return json;
@@ -108,6 +133,10 @@ export async function getAllJobs() {
 // Get a job by ID
 // Used in: display form
 export async function getJob(id) {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs/${id}`, { headers: headers });
     const json = await response.json();
     return json;
@@ -116,6 +145,10 @@ export async function getJob(id) {
 // Update a job
 // Used in: job form
 export async function updateJob(id, data) {
+    const headers = {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': "application/json"
+    }
     const response = await fetch(`${api}/jobs/${id}`, {
         method: "PUT",
         headers: headers,

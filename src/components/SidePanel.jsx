@@ -34,7 +34,7 @@ function Side({ userMessage }) {
       <p>Notifications about new jobs, quotes, assignments, and reviews.</p>
       {/* Map over the messages state to display each message with its timestamp */}
       {messages.map((message, index) => (
-        <div key={index}>
+        <div key={index} className="sie-messages">
           <span>{message.time} - {message.text}</span>
         </div>
       ))}

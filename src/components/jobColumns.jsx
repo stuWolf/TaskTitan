@@ -7,7 +7,7 @@ export default function JobColumns() {
       <div className="jobColumns">
         <p>Customer Name</p>
         <p>Worker</p>
-        <p>Address</p>
+        <p>Job Address</p>
         <p>Date in</p>
         <p>Quoted</p>
         <p>Started</p>

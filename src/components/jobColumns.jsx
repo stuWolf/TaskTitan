@@ -12,7 +12,7 @@ export default function JobColumns() {
         <p>Quoted</p>
         <p>Started</p>
         <p>Status</p>
-        <p>Notifications</p>
+        {/* <p>Notifications</p> */}
       </div>
     </div>
   );

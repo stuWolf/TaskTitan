@@ -1,0 +1,25 @@
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.input-wrapper input {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.input-wrapper label {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    pointer-events: none;
+    transition: 0.3s ease;
+    opacity: 0.5;
+}
+
+.input-wrapper.has-value label {
+    top: -20px;
+    left: 0;
+    font-size: 12px;
+    opacity: 1;
+}

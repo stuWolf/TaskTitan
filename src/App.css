@@ -124,10 +124,12 @@
   /* margin-right: 50px; adjust as needed */
 }
 
-.jobColumns a {
-  padding: 20px 56px;
+.jobColumns p {
+  padding: 2px 5px;
   text-decoration: none;
   font-weight: bold;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .jobs-container {

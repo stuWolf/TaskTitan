@@ -15,7 +15,7 @@ function ManageWorkers() {
   
  // Get a reference to the history object
  let navigate = useNavigate();
-const [userMessage, setUserMessage] = useState('')
+
  const [errorMessage, setErrorMessage] = useState("");
   // const userMessage = localStorage.getItem('userMessage');
   // to get back to jobform of actual job
@@ -50,7 +50,7 @@ const [userMessage, setUserMessage] = useState('')
         // _id: worker._id || 'No Data',  
         firstName: worker.firstName || 'No Data',
         lastName: worker.lastName || 'No Data',
-        email: worker.email || 'No Data',
+        address: worker.email || 'No Data',
         employedSince: worker.employedSince || 'No Data',
         license: worker.license || 'No Data',
       }));
@@ -103,43 +103,65 @@ const [userMessage, setUserMessage] = useState('')
   return (
     <div className="App">
       <Header />
-      <Navbar userStatus={userStatus} />
+      <Navbar userStatus = {userStatus} />
 
       <div className="main-content">
         <h2>My Workers</h2>
         <p>User status: {userStatus}</p>
         <button onClick={handleWorker}>Add New Worker</button>
-        
-        <h2>    </h2>
-        <div className="worker-container-and-side-panel">
-          <div className="worker-container">
-          <WorkerColumns/>
-          <h2>    </h2>
-            {workers.map((worker) => (
-              <div key={worker._id} className="worker-details">
-                {/* Delete button */}
-                <button onClick={() => handleDelete(worker._id)} style={{ backgroundColor: 'red', color: 'white', margin: '19px' }}>Delete</button>
+        <WorkerColumns/>
 
-                <p>{worker.firstName}</p>
-                <p>{worker.lastName}</p>
-                {/* Make the email a clickable link */}
-                <p><a href={`mailto:${worker.email}`}>{worker.email}</a></p>
-                <p>{formatDate(worker.employedSince)}</p>
-                <p>{worker.license}</p>
-              </div>
-            ))}
+        <div className="worker-container-and-side-panel">
+        <div className="worker-container">
+        {workers.map((worker) => (
+          <div key={worker._id} className="worker-details">
+            {/* go back to job form of ID = jobIdHome  and hand over worker id of selected worker when link on list clicked */}
+            {/* <Link to={`/jobForm/${jobIdHome}/${worker._id}`}>{worker._id.slice(-4)}</Link> */}
+            {/* workerJobID is the job ID handed back to upen the form in home view. we would to hand over a worker ID as well */}
+             {/* Delete button */}
+             <button onClick={() => handleDelete(worker._id)} style={{ backgroundColor: 'red', color: 'white', margin: '19px' }}>Delete</button>
+
+            {/* <p className="job-id">
+            {
+              // localStorage.getItem('workerJobID') 
+              // if workerJobID is set, make it a link go back to job form and hand over worker ID
+  // ? <Link to={`/jobForm/${localStorage.getItem('workerJobID')}`}>{worker._id.slice(-4)}</Link>
+              // : worker._id.slice(-4)
+              // else only display the id
+            }
+          </p> */}
+
+            {/* <p className="job-id"><Link to={`/jobForm/${jobIdHome }/${worker._id}`}>{worker._id.slice(-4)}</Link></p> */}
+
+            <p>{worker.firstName}</p>
+            
+            <p>{worker.lastName}</p>
+            <p>{worker.address}</p>
+            <p>{formatDate(worker.employedSince)}</p>
+            <p>{worker.license}</p>
           </div>
-          {/* end jobs container */}
-         
-          <Side userMessage = {userMessage} />
-        </div> 
-        {/* end job form and side panel */}
-        {errorMessage && <p>{errorMessage}</p>}
+        ))}
       </div>
-      {/* end main -content */}
+      {/* end jobs container */}
+        {errorMessage && <p>{errorMessage}</p>}
+
+
+        <Side/>
+      </div> 
+  {/* end job form and side panel */}
+
+      </div>
+       {/* end main -content */}
+
+      {/* <div className="side-panel">
+        <h2>Notifications</h2>
+        <p>Notifications about new jobs, quotes, assignments, and reviews.</p>
+      </div> */}
+     
+    
       <Footer/> 
     </div>
-);
+  );
 }
 
 export default ManageWorkers;

@@ -3,9 +3,65 @@
   text-align: left;
 }
 
+/********************************************Manage Worker *****************/
+
+.worker-container-and-side-panel {
+  display: flex;
+  justify-content: space-between;
+}
+
+.worker-container {
+  /* flex: 3; this will take up 3/4 of the parent div's width */
+  flex-direction: column;
+  flex: 3; /* This will take 3 parts of the available space */
+  margin-right: 20px; /* Optional: Add some spacing between the two components */
+  /* flex-direction: row; */
+}
+
+.worker-details{
+
+  display: flex;
+  margin-left: 10px;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: left;
+  width: 1200px;
+  text-align: right;
+  border-bottom: 1px solid #ccc;
+}
 
 
-/*****************************888Playground*****************/
+
+
+.workerColumns {
+  background-color: #F4EB27;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 1200px;
+
+  /* margin-right: 50px; adjust as needed */
+}
+
+.workerColumns a {
+  padding: 20px 56px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.delete-button {
+  background-color: rgb(55, 0, 255);
+  color: white;
+  margin: 2px;
+  border: none;
+  padding: 1px 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/*****************************Playground*****************/
 
 .progress-bar {
   display: flex;
@@ -49,48 +105,22 @@
 
 
 
-/**********************************Worker view **********************************/
-.workerColumns {
-  background-color: #F4EB27;
-  overflow: hidden;
-  display: flex;
-  justify-content: space-between;
-  margin-left: 0px;
-  margin-right: 130px;
 
-  /* margin-right: 50px; adjust as needed */
-}
 
-.workerColumns a {
-  padding: 20px 56px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.delete-button {
-  background-color: rgb(55, 0, 255);
-  color: white;
-  margin: 2px;
-  border: none;
-  padding: 1px 5px;
-  cursor: pointer;
-  border-radius: 5px;
-}
 
 
 /**********************************Home view **********************************/
 
-.job-details {
-  border-bottom: 1px solid #ccc;
-}
+
 
 .jobColumns {
   background-color: #F4EB27;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-  margin-left: 0px;
+  margin-left: 10px;
   margin-right: 0px;
+  max-width: 1320px;
   /* margin-right: 50px; adjust as needed */
 }
 
@@ -101,14 +131,14 @@
 }
 
 .jobs-container {
-  display: flex;
+  flex: 3; /* this will take up 3/4 of the parent div's width */
   flex-direction: column;
+  margin-right: 20px;
 }
 
-.job-details {
-  /* width: 1500px; */
+.jobs-container-and-side-panel {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
 }
 
 .job-details p {
@@ -130,7 +160,7 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     /* margin-right: 20px; */
-    margin-right: 200px;
+    margin-right: 50px;
     margin-left: 0px;
     font-size: .8em;
   }
@@ -139,16 +169,15 @@
     justify-content: space-between;
     flex-direction: row;
     align-items: left;
-    width: 1500px;
+    width: 1200px;
     display: flex;
     text-align: right;
-
- 
- 
-
-  
-
+    border-bottom: 1px solid #ccc;
+    margin-left: 10px;
+    margin-right: 1px;
   }
+
+
 
   .job-details job-id {
     flex: 0 0 auto;   /* This prevents the job-id from growing or shrinking */
@@ -226,7 +255,14 @@
   margin: 20px;
   border-left: 1px solid #ccc; /* This adds a border to the left side of the sidebar */
 }
+.side-panel p{
 
+  margin-left: 10px;
+}
+.sie-messages {
+
+  margin-left: 20px;
+}
 /* Landing page */
 .App-header {
   background-color: #F4EB27;

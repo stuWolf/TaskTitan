@@ -19,7 +19,7 @@ function Home() {
   // let userStatus = location.state.userStatus;
   let navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const userMessage = localStorage.getItem('userMessage');
+  const [userMessage, setUserMessage] = useState('')
   const userStatus = localStorage.getItem('userStatus');
   // State to hold the jobs
   const [jobs, setJobs] = useState([]);
@@ -202,10 +202,8 @@ function getFirstFourWords(str) {
         </div>
         }
       </div>
-      <JobColumns />
 
-
-       
+      <div className="jobs-container-and-side-panel">
           {/* <p>Manager view : List of all jobs with Status, assigned worker, quote, and customer details. Option to add new job or quote.</p>  */}
           {/* // find all open jobs using getOpenJobs(), and filter out  _id ,  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus
 
@@ -214,6 +212,7 @@ function getFirstFourWords(str) {
 //  _id (last 4 digits),  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus */}
 
 <div className="jobs-container">
+<JobColumns />
 {[...jobs].reverse().map((job) => (
             // Display the job details
             // Replace this with your actual UI
@@ -233,20 +232,16 @@ function getFirstFourWords(str) {
             </div>
           ))}
         </div>
-        {errorMessage && <p>{errorMessage}</p>}
-      {/* only displays when there is an error message */}
-
-
+        {/* end jobs container */}
         
-      
-      </div>
-      {/* end main -content */}
-
-      {/* <div className="side-panel">
-        <h2>Notifications</h2>
-        <p>Notifications about new jobs, quotes, assignments, and reviews.</p>
-      </div> */}
+      {/* only displays when there is an error message */}
       <Side userMessage = {userMessage} />
+      
+      </div> 
+        {/* end jobs containerand side panel */}
+        {errorMessage && <p>{errorMessage}</p>}
+      </div>
+      {/* end main -content */}  
 
       <Footer/> 
     </div>

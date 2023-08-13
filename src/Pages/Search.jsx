@@ -7,7 +7,8 @@ import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import SelectWorker from '../components/selectWorker';
 import ProgressBar from '../components/progressBar';
-import InputBox from '../components/inputBox'
+import InputBox from '../components/inputBox';
+import  {validateFields} from '../services/helpFunctions'
 // import WorkerColumns from '../components/workerColumns';
 // import {  useNavigate} from 'react-router-dom';
 
@@ -50,25 +51,18 @@ function Search() {
   // console.log(workers)
 
   const handleSubmit = () => {
-        setIsFormSubmitted(true); // triggers field check on input Box
-        // this is necessary because hasError from input Box is only set when the field value changes
-        if (!(name && surname)) {
+  
 
-          setErrorMessage("Please fill in missing fields");
-          return; // Exit the function early
-        } else {
-          setErrorMessage('')
+        const { isFormSubmitted, errorMessage } = validateFields(name, surname);
+        setIsFormSubmitted(isFormSubmitted);
+        setErrorMessage(errorMessage);
+        if(!errorMessage){
+
           setUserMessage(`Field value:  ${name} ${ surname}`);
-            // setNameError(false);
         }
 
   }
  
-
-
-
-
-
 
  
   // call API to fetch all workers, this is the Interface to the selectWorker element
@@ -105,10 +99,10 @@ function Search() {
       <InputBox 
                 id="nameInput" 
                 label="Name" 
-                setValue={name}
+                setValue={name}  //input for data from fetch
                 isDisabled={false}  // This will make the input box non-editable
-                isSubmitted = {isFormSubmitted}
-                onChange={(value) => { setName(value); }}
+                isSubmitted = {isFormSubmitted} // submit button pushed, triggers the check if all values present
+                onChange={(value) => { setName(value); }}  // output for manual entry
 // handle the change event. can not set has error here because it will not work on first submit
              
 
@@ -140,10 +134,7 @@ function Search() {
       
        {/* end main -content */}
 
-      {/* <div className="side-panel">
-        <h2>Notifications</h2>
-        <p>Notifications about new jobs, quotes, assignments, and reviews.</p>
-      </div> */}
+      
       </div>
       <Side userMessage = {userMessage} />
       </div>

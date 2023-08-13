@@ -19,7 +19,7 @@ function Home() {
   // let userStatus = location.state.userStatus;
   let navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const [userMessage, setUserMessage] = useState('')
+  // const [userMessage, setUserMessage] = useState('')
   const userStatus = localStorage.getItem('userStatus');
   // State to hold the jobs
   const [jobs, setJobs] = useState([]);
@@ -235,7 +235,8 @@ function getFirstFourWords(str) {
         {/* end jobs container */}
         
       {/* only displays when there is an error message */}
-      <Side userMessage = {userMessage} />
+      <Side  />
+      {/* no messages created here */}
       
       </div> 
         {/* end jobs containerand side panel */}

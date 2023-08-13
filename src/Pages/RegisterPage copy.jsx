@@ -105,50 +105,12 @@ export const Register = () => {
     <div className="App">
        <Header/>
        <div className="login-form">
-          <InputBox 
-            id="firstNameInput" 
-            label="First Name" 
-            setValue={firstName} 
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setFirstName(value); }}
-          />
-
-          <InputBox 
-            id="lastNameInput" 
-            label="Last Name" 
-            setValue={lastName} 
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setLastName(value); }}
-          />
-
-          <InputBox 
-            id="emailInput" 
-            label="Email address" 
-            setValue={email} 
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setEmail(value); }}
-          />
-
-          <InputBox 
-            id="passwordInput" 
-            label="Password" 
-            setValue={password} 
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setPassword(value); }}
-          />
-
-          <InputBox 
-            id="confirmPasswordInput" 
-            label="Confirm Password" 
-            setValue={confirmPassword} 
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setConfirmPassword(value); }}
-          />
+        {/* swap to new input fields: id = type; label= placeholder;setValue= value isSubmitted = {isFormSubmitted}; setFunction(value) */}
+       <input type="FirstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" />
+       <input type="LastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" />
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" />
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+          <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm Password" />
           
           <button onClick={handleRegister}>Register</button>
           <button onClick={handleCancel}>Cancel</button>
@@ -156,13 +118,14 @@ export const Register = () => {
           <input type="checkbox" checked={termsAgreed} onChange={e => setTermsAgreed(e.target.checked)} /> I agree with the terms and conditions
           <Link to="/login">Already registered? Login here</Link>
       </div>
+      {/* use the side bar here to track registration, but don't show */}
       <div style={{ position: 'absolute', left: '-9999px' }}>
-          <Side userMessage={userMessage} />
-      </div>
+      <Side userMessage={userMessage} />
+    </div>
       <Footer/>
     </div> 
-);
-
+    
+  );
 };
 
 export default Register;

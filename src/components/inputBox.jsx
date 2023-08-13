@@ -24,6 +24,10 @@ function InputBox({ id, label,  setValue, initialValue = "", isDisabled, onChang
     }, [isSubmitted]);
 
     useEffect(() => {
+        setInternalValue(setValue);
+    }, [setValue]);
+
+    useEffect(() => {
         // Toggle the class based on the internalValue
         if (internalValue && inputRef.current) {
             inputRef.current.parentNode.classList.add('has-value');
@@ -46,6 +50,7 @@ console.log('inputvalue    '  + internalValue)
         } else {
             setHasError(false);
         }
+
         if (onChange) {
             onChange(e.target.value, hasError);
         }

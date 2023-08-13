@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import '../App.css';
+import '../Search.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 import SelectWorker from '../components/selectWorker';
 import ProgressBar from '../components/progressBar';
+import InputBox from '../components/inputBox'
 // import WorkerColumns from '../components/workerColumns';
 // import {  useNavigate} from 'react-router-dom';
 
@@ -24,22 +26,74 @@ function Search() {
   // const [jobIdHome, setJobIdHome] = useState(localStorage.getItem('workerJobID'));
   // const jobStatusJobForm = localStorage.getItem('jobStatus');
 
- 
+ const [errorMessage, setErrorMessage] = useState("");
+ const [userMessage, setUserMessage] = useState('');
   const statuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
   const [selectedStatus, setSelectedStatus] = useState(statuses[0]);
-  const [userMessage, setSetUserMessage] = useState('');
+  
+  const [name, setName] = useState("fritz");
+  // const [surname, setSurname] = useState("");
+  // const [nameError, setNameError] = useState(false);
+  // const [surnameError, setSurnameError] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
   };
+
   
   // console.log(workers)
 
+  const handleSubmit = () => {
 
+    // let hasError = false;
+    setIsFormSubmitted(true);
+    console.log('issubmitted  ' + isFormSubmitted)
+    if (!name) {
+      // setNameError(true);
+      setErrorMessage("Please fill in missing fields");
+      return; // Exit the function early
+  } else {
+    setErrorMessage('')
+    setUserMessage(`Field value:  ${name}`);
+      // setNameError(false);
+  }
+
+
+
+  // if (!surname.current.value) {
+  //     setSurnameError(true);
+  //     hasError = true;
+  // } else {
+  //     setSurnameError(false);
+  // }
+
+// this is necessary because hasError from input Box is only set when the field value changes
+  //   if (hasError) {
+  //     setErrorMessage("Please fill in missing fields");
+  //     return; // Exit the function early
+  // } else{
+  //   setErrorMessage('')
+  //   setUserMessage(`Field value:  ${name}`);
+  // }
+
+
+console.log('issubmitted  ' + isFormSubmitted)
+
+
+
+  }
  
 
   useEffect(() => {
-    setSetUserMessage(selectedStatus)
+    setUserMessage(selectedStatus)
+    // setName(selectedStatus)
   }, [selectedStatus]);
+
+
+
+
  
   // call API to fetch all workers 
 
@@ -71,11 +125,37 @@ function Search() {
         ))}
       </select>
       <h2>  </h2>
-     
 
+      <InputBox 
+                id="nameInput" 
+                label="Name" 
+                setValue={name}
+                onChange={(value) => {
+                    setName(value);
+// handle the change event. can not set has error here because it will not work on first submit
+              }}
+                isDisabled={false}  // This will make the input box non-editable
+                isSubmitted = {isFormSubmitted}
+            />
+            {/* <InputBox 
+                id="surnameInput" 
+                label="Surname" 
+                value={surname}
+                onChange={handleInputChange}
+                 isDisabled={false}  // This will make the input box non-editable
+            /> */}
+            {/* <button onClick={handleSubmit}>Submit</button> */}
+            {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
+      
+
+
+{/* {errorMessage && <p>{errorMessage}</p>} */}
+
+<button onClick={handleSubmit}>Submit</button> 
+<h2>  </h2>
       <SelectWorker onWorkerSelected={handleWorkerSelected} />
 
-
+      <h2>  </h2>
       <ProgressBar jobStatus = {selectedStatus} />
       
        {/* end main -content */}

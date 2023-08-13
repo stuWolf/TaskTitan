@@ -17,9 +17,10 @@ The purpose of this app is to provide a platform for customers and trades people
 ### Main links of the project:
 
 [Deployed version client 1](https://task-titan.netlify.app)
-[Deployed version client 2](https://tasktitan.onrender.com)  Both are working but can't talk to the backend
-[Deployed version server 1](https://task-titan-render.onrender.com)
-[Deployed version server 2](https://tasktitan-2ec5140db0ab.herokuapp.com)  Produces Application error, no error log
+
+
+[Deployed version server 2](https://tasktitan-b07be6d2dd7a.herokuapp.com)
+
 
 [TASK TITAN Full stack application Part B](#task-titan-full-stack-application-part-b)
 

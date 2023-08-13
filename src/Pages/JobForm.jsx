@@ -58,7 +58,7 @@ const { jobId } = useParams();
   const [licenseNr, setLicenseNr] = useState("");
   const [workerName, setWorkerName] = useState("");
   const [isChecked, setChecked] = useState(false);
-  const [maximumDemandInAmps, setMaximumDemand] = useState("");
+  const [maximumDemandInAmps, setMaximumDemandInAmps] = useState("");
   const [consumerMainsCapacity, setConsumerMains] = useState("");
 
   const [electricalRetailer, setEctricalRetailer] = useState("");
@@ -182,7 +182,7 @@ useEffect(() => {
       setQuoteAttachment(jobData.quoteAttachment);
       // setWorkerId(jobData.workerId);
       // setWorkStarted(formatDate(jobData.workStarted));
-      setMaximumDemand(jobData.maximumDemandInAmps);
+      setMaximumDemandInAmps(jobData.maximumDemandInAmps);
       setConsumerMains(jobData.consumerMainsCapacity);
       setEctricalRetailer(jobData.ectricalRetailer);
       setErgyDistributor(jobData.energyDistributor);
@@ -800,7 +800,7 @@ const updateJobFormData = async (jobId, jobData) => {
           </div>
          
          <div className="form-row">
-          <input type="maximumDemand" value={maximumDemandInAmps} onChange={e => setMaximumDemand(e.target.value)} placeholder="Maximum Demand in Amp" 
+          <input type="maximumDemand" value={maximumDemandInAmps} onChange={e => setMaximumDemandInAmps(e.target.value)} placeholder="Maximum Demand in Amp" 
           disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
           <input type="consumerMains" value={consumerMainsCapacity} onChange={e => setConsumerMains(e.target.value)} placeholder="Consumer Mains" 
           disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />

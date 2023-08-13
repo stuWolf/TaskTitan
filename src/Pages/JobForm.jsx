@@ -11,7 +11,7 @@ import {  getUser } from "../services/userServices";
 import { getReview } from "../services/reviewsServices";
 import {calculateVisibility} from "../services/visibilityManager";
 import {calculateEditability} from "../services/editManager";
-import  {validateFields} from '../services/helpFunctions'
+// import  {validateFields} from '../services/helpFunctions'
 // import { useLocalStorage } from 'react-use';
 
 
@@ -20,7 +20,7 @@ import  {validateFields} from '../services/helpFunctions'
     
    
 const { jobId } = useParams();
-const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+// const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");

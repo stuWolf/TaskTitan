@@ -1,11 +1,15 @@
 .input-wrapper {
     position: relative;
     display: inline-block;
+    width: 100%; /* takes up the full width of its parent */
 }
 
 .input-wrapper input {
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border: 1px solid #897979;
+    border-radius: 25px;
+    max-width: 400px;
+    min-width: 200px;
 }
 
 .input-wrapper label {

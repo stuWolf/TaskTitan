@@ -34,6 +34,7 @@ const [userMessage, setUserMessage] = useState('')
 
   const fetchWorkers = useCallback(async () => {
     try {
+      setErrorMessage('Fetching your Workers...');
       let workerData;  
       console.log('fetch worker called')
       // get all users with status Worker
@@ -41,13 +42,13 @@ const [userMessage, setUserMessage] = useState('')
         
       // Check if workerData contains 'message404, not found'
       if (workerData.hasOwnProperty('message404')) {
-        setErrorMessage("You have no workers yet")
+        setErrorMessage("You have no workers yet. Register your workers with Add new Worker")
         return;
       }
     
       // Filter out the required fields
       const filteredWorkers = workerData.map((worker) => ({
-        // _id: worker._id || 'No Data',  
+        _id: worker._id || 'No Data',  
         firstName: worker.firstName || 'No Data',
         lastName: worker.lastName || 'No Data',
         email: worker.email || 'No Data',
@@ -86,9 +87,11 @@ const [userMessage, setUserMessage] = useState('')
 
   const handleDelete = async (workerId) => {
     try {
+      console.log('workerId  '+ workerId)
         await deleteUser(workerId);
         // Remove the deleted worker from the state
         setWorkers(prevWorkers => prevWorkers.filter(worker => worker._id !== workerId));
+        setUserMessage('A worker got deleted')
     } catch (error) {
         console.error('Failed to delete worker:', error);
         setErrorMessage("Could not delete worker");

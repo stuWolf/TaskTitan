@@ -5,8 +5,8 @@ import { updateUser, getUser} from "../services/userServices";
 import Header from '../components/header';
 import Footer from '../components/footer';
 import Side from '../components/SidePanel';
-import InputBox from '../components/inputBox';
-import  {validateFields} from '../services/helpFunctions'
+
+
 
 const Profile = () => {
   const [userMessage, setUserMessage] = useState('')
@@ -18,7 +18,6 @@ const Profile = () => {
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 // additional state variables for worker
 const [dob, setDob] = useState("");
 const [license, setLicense] = useState("");
@@ -68,10 +67,6 @@ const [employedSince, setEmployedSince] = useState("");
 
   
   const handleUpdate = async () => {
-    const { isFormSubmitted, errorMessage } = validateFields(firstName, lastName,email,password,confirmPassword);
-    setIsFormSubmitted(isFormSubmitted);
-    
-    if(!errorMessage){
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");
       return;
@@ -83,12 +78,6 @@ const [employedSince, setEmployedSince] = useState("");
     setErrorMessage("Please enter a valid email address");
     return;
   }
-
-}else{
-
-  setErrorMessage(errorMessage);
-  return;
-}
     const data = {
       firstName,
       lastName,
@@ -140,124 +129,46 @@ const [employedSince, setEmployedSince] = useState("");
        <div className="login-form-and-side-panel">
        <div className="login-form">
 
+         
       <p>You are logged in as: {userStatus}</p>
-      <h2>Update your profile here</h2>
 
-      <InputBox 
-        id="firstNameInput" 
-        label="First Name" 
-        setValue={firstName}
-        isDisabled={false}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setFirstName(value); }}
-      />
-{/* {firstName && <p>{firstName}</p>} */}
-      <InputBox 
-        id="lastNameInput" 
-        label="Last Name" 
-        setValue={lastName}
-        isDisabled={false}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setLastName(value); }}
-      />
-{/* {lastName && <p>{lastName}</p>} */}
-      <InputBox 
-        id="emailInput" 
-        label="Email address" 
-        setValue={email}
-        isDisabled={false}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setEmail(value); }}
-      />
+     
+        <h2>Update your profile here</h2>
+       <input type="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" />
+       <input type="fastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" />
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" />
+          <input type="text" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+          <input type="text" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm Password" />
+          <input type="address" value={address} onChange={e => setAddress(e.target.value)} placeholder="Address" />
+          <input type="contactNumber" value={contactNumber} onChange={e => setContactNumber(e.target.value)} placeholder="Contact Number" />
 
-      <InputBox 
-        id="passwordInput" 
-        label="Password" 
-        setValue={password}
-        isDisabled={false}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setPassword(value); }}
-      />
-
-      <InputBox 
-        id="confirmPasswordInput" 
-        label="Confirm Password" 
-        setValue={confirmPassword}
-        isDisabled={false}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setConfirmPassword(value); }}
-      />
-
-      <InputBox 
-        id="addressInput" 
-        label="Address" 
-        setValue={address}
-        isDisabled={false}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setAddress(value); }}
-      />
-
-      <InputBox 
-        id="contactNumberInput" 
-        label="Contact Number" 
-        setValue={contactNumber}
-        isDisabled={false}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setContactNumber(value); }}
-      />
-
-      {userStatus === 'worker' && (
-        <>
-          <InputBox 
-            id="dobInput" 
-            label="Date of Birth" 
-            setValue={dob}
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setDob(value); }}
-          />
-
-          <InputBox 
-            id="licenseInput" 
-            label="License" 
-            setValue={license}
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setLicense(value); }}
-          />
-
-          <InputBox 
-            id="licenseNoInput" 
-            label="License Number" 
-            setValue={licenseNo}
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setLicenseNo(value); }}
-            
-          />
-{licenseNo && <p>{licenseNo}</p>}
-          <InputBox 
-            id="employedSinceInput" 
-            label="Employed Since" 
-            setValue={employedSince}
-            isDisabled={false}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setEmployedSince(value); }}
-          />
-        </>
-      )}
-
-      <button onClick={handleUpdate}>Update</button>
-      <button onClick={handleCancel}>Cancel</button>
+          {/* additional input fields for worker */}
+        {userStatus === 'worker' && (
+          <>
+            <input type="date" value={dob} onChange={e => setDob(e.target.value)} placeholder="Date of Birth" />
+            <input type="text" value={license} onChange={e => setLicense(e.target.value)} placeholder="License" />
+            <input type="text" value={licenseNo} onChange={e => setLicenseNo(e.target.value)} placeholder="License Number" />
+            <input type="date" value={employedSince} onChange={e => setEmployedSince(e.target.value)} placeholder="Employed Since" />
+          </>
+        )}
+          {/* <input type="status" value={status} onChange={e => setStatus(e.target.value)} placeholder="Status" /> */}
       
+         
+          <button onClick={handleUpdate}>Update</button>
+          <button onClick={handleCancel}>Cancel</button>
+        
+          
       </div>
-      <Side userMessage={userMessage} />
-      </div>
+
+       {/* end login form  */}
+       <Side userMessage = {userMessage} />
+       </div>
+{/* end login form  and side panel */}
       {errorMessage && <p>{errorMessage}</p>}
       <Footer/>
     </div> 
-);
-
+    
+  );
 };
 
 export default Profile;

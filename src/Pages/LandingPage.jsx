@@ -13,7 +13,7 @@ export default function Landing(){
 
   const handleQuote = () => {
     // Handle login
-    navigate('/login');
+    navigate('/register');
   };
   return (
 

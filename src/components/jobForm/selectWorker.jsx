@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback} from "react";
-import '../App.css';
-import { getUsers } from "../services/userServices";
+import '../../App.css';
+import { getUsers } from "../../services/userServices";
 
 export default function SelectWorker(props){
     const [workers, setWorkers] = useState([]);

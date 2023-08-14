@@ -21,17 +21,22 @@ export async function getOpenJobs() {
     return json;
 }
 
-// Get all jobs with given status
+// Get all jobs with given jobStatus, userId and userStatus
 // Used in: search
-export async function getStatusJobs(status) {
+//call: const result = await getStatusJobs('12345', 'Worker', 'Active');
+
+export async function getStatusJobs(user_id, userStatus, jobStatus) {
+    const url = `${api}/jobs/${user_id}/${userStatus}/${jobStatus}`;
+    
     const headers = {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': "application/json"
     }
-    const response = await fetch(`${api}/jobs/status/${status}`, { headers: headers });
+    const response = await fetch(url, { headers: headers });
     const json = await response.json();
     return json;
 }
+
 
 // Get all jobs started by logged-in customer
 // Used in: customer view search
@@ -89,11 +94,11 @@ export async function createJob(data) {
 // Count all jobs, optional for a specific user
 // Used in: home getCountOfJobs
 // needs to be upgraded with parameter userId
-export async function getCountOfJobs(id = null) {
-    let url = `${api}/jobs/count`;
-    if (id) {
-        url += `/${id}`;
-    }
+// call: const result = await getCountOfJobs('12345', 'Worker', 'Closed');
+
+export async function getCountOfJobs(user_id, userStatus, jobStatus) {
+    let url = `${api}/jobs/count/${user_id}/${userStatus}/${jobStatus}`;
+    
     const headers = {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': "application/json"
@@ -108,15 +113,15 @@ export async function getCountOfJobs(id = null) {
 // Count all jobs, optional for a specific worker
 // Used in: home getCountOfJobs
 // needs to be upgraded with parameter userId
-export async function getCountOfJobsWorker(workerId) {
-    const headers = {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': "application/json"
-    }
-    const response = await fetch(`${api}/jobs/countWorker/${workerId}`, { headers: headers });
-    const json = await response.json();
-    return json;
-}
+// export async function getCountOfJobsWorker(workerId) {
+//     const headers = {
+//         'Authorization': `Bearer ${localStorage.getItem('token')}`,
+//         'Content-Type': "application/json"
+//     }
+//     const response = await fetch(`${api}/jobs/countWorker/${workerId}`, { headers: headers });
+//     const json = await response.json();
+//     return json;
+// }
 
 // Get all jobs
 // Used in: admin getCountOfJobs

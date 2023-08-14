@@ -5,8 +5,8 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import SelectWorker from '../components/selectWorker';
-import ProgressBar from '../components/progressBar';
+import SelectWorker from '../components/jobForm/selectWorker';
+import ProgressBar from '../components/jobForm/progressBar';
 import InputBox from '../components/inputBox';
 import  {validateFields} from '../services/helpFunctions'
 // import WorkerColumns from '../components/workerColumns';

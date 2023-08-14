@@ -35,7 +35,7 @@ const { jobId } = useParams();
   const [amountQuoted, setQuoteAmmount] = useState("");
   const [quoteAttachment, setQuoteAttachment] = useState("");
   const [customerId, setCustomerId] = useState("");
-  // const [workerId, setWorkerId] = useState("");
+  const [workerId, setWorkerId] = useState("");
   // const [workStarted, setWorkStarted] = useState("");
   const [licenseNr, setLicenseNr] = useState("");
   const [workerName, setWorkerName] = useState("");
@@ -100,6 +100,7 @@ const { jobId } = useParams();
     }
   };
 
+ 
   
 useEffect(() => {
   // Fetch the job details when the component mounts
@@ -162,7 +163,7 @@ useEffect(() => {
       setDateQuoted(formatDate(jobData.dateQuoted));
       setQuoteAmmount(jobData.amountQuoted);
       setQuoteAttachment(jobData.quoteAttachment);
-      // setWorkerId(jobData.workerId);
+      setWorkerId(jobData.workerId);
       // setWorkStarted(formatDate(jobData.workStarted));
       setMaximumDemandInAmps(jobData.maximumDemandInAmps);
       setConsumerMains(jobData.consumerMainsCapacity);
@@ -222,23 +223,7 @@ useEffect(() => {
 
 
 
-useEffect(() => {
-  
-  if(jobStatus && userStatus) {
-    const visibilityResult = calculateVisibility(jobStatus, userStatus);
-    setVisibility(visibilityResult);
-    // console.log('visibility' + visibility)
-    // console.log('userId  ' + userId + 'customerId  ' + customerId)
-    if(userId && customerId){
-     
-      setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
-      
-    }
-  }
 
-// copyUserData();
-
-}, [jobStatus, userStatus, userId, customerId]);
 
 
 

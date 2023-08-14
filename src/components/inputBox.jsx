@@ -41,7 +41,7 @@ function InputBox({ id, label,  setValue, initialValue = "", isDisabled, onChang
     const handleChange = (e) => {
         // const inputValue = e.target.value;
         setInternalValue(e.target.value);
-console.log('inputvalue    '  + internalValue)
+// console.log('inputvalue    '  + internalValue)
        // You can set your error conditions here. 
         
         // this is needed for the style element

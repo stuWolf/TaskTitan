@@ -50,7 +50,7 @@ const { jobId } = useParams();
   const [mainsPhases, setPhasesMains] = useState("");
   // const [jobStatus, setJobStatus] = useState("Draft");
     // This state determines whether the form is visible or not
-  const [errorMessage, setErrorMessage] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
 
  
     // const[dateCompleted, setDateCompleted]= useState("");
@@ -76,7 +76,7 @@ const { jobId } = useParams();
     const [visibility, setVisibility] = useState({quotingVisable: false, assignVisable: false, implementVisable: false, reviewVisable: false,});
     const [editability, setEditability] = useState("");
     const userId = localStorage.getItem('userId');
-    const [today, setToday] = useState( new Date().toISOString());
+    const [today, setToday] = useState("");
     
     // console.log('Jobid from JobForm: '  + jobId)
     // setuserMessage
@@ -106,101 +106,6 @@ const { jobId } = useParams();
     }
   };
 
-
-// functions to fill in form with user data customerId either from job DB (fetchJob ) or from logged in user:
-const fetchUser = async (customerId) => {
-  try {
-    const userData = await getUser(customerId);
-    // console.log('userData from fetch user:', userData);
-    setFirstName(userData.firstName);
-    setLastName(userData.lastName);
-    setPhone(userData.contactNumber);
-    setEmail(userData.email);
-    setAddress(userData.address); // add this line to update user data once it's fetched
-    // setDateCreated(userData.dateCreated);
-  } catch (error) {
-    console.error('Failed to fetch data from logged in customer:', error);
-  }
-};
-
-const fetchReview = async (reviewId) => {
-  try {
-    const reviewData = await getReview(reviewId);
-    console.log('review from fetch review:', reviewData);
-    if (reviewData.hasOwnProperty('message404')){
-      setReview('no review yet')
-
-    }else{
-      setReviewStars(reviewData.stars);
-      setReview(reviewData.review );
-      setCompletionDate(reviewData.endDate );
-
-    }
-
-    
-  } catch (error) {
-    console.error('Failed to fetch data from review ID:', error);
-  }
-};  
-
-
-const fetchJob = async () => {
-  try {
-    // console.log('fetch jobb called')
-    const jobData = await getJob(jobId);
-    // console.log("(job.jobStatus from fetch job)  "  + jobStatus);
-    // console.log('Job data:', jobData);
-    // setJob(jobData);
-    setCustomerId(jobData.customerId);  // load existing job
-    setJobStatus(jobData.jobStatus);
-    setaddressOfInstallation(jobData.addressOfInstallation);
-    setScopeOfWork(jobData.scopeOfWork);
-    setpreferredJobCompletionDate(formatDate(jobData.preferredJobCompletionDate));
-    setDateCreated(formatDate(jobData.dateCreated));
-    setDateQuoted(formatDate(jobData.dateQuoted));
-    setQuoteAmmount(jobData.amountQuoted);
-    setQuoteAttachment('https://example.com/quote2.pdf');
-    // setQuoteAttachment(jobData.quoteAttachment);
-    setWorkerId(jobData.workerId);
-    setWorkStarted(formatDate(jobData.workStarted));
-    setMaximumDemandInAmps(jobData.maximumDemandInAmps);
-    setConsumerMains(jobData.consumerMainsCapacity);
-    setEctricalRetailer(jobData.ectricalRetailer);
-    setErgyDistributor(jobData.energyDistributor);
-    setPhasesMains(jobData.mainsPhases);
-    setReviewId(jobData.reviewId);
-    // setCompletionDate(jobData.setCompletionDate); // comes from review
-    // setDateQ
-    // set
-    console.log('marker 1' )
-    // Fetch user data after job data is successfully fetched, update fields in customer header
-    // if(!email){
-      if(jobData){
-      fetchUser(jobData.customerId); 
-    }
- 
-
-    // fetch worker info and write license nr and name 
-    // if (visibility.implementVisable) {
-      if (workerId) {
-      console.log('marker 2' )
-      console.log('fetchWorker(workerId);' + workerId)
-      fetchWorker(workerId);
-    }
-    // fetch review data and put them in to form
-    if (reviewId) {
-      fetchReview(jobData.reviewId);
-    }
-  } catch (error) {
-    console.error('Failed to fetch job:', error);
-  }
-
- 
-
-};// end fetch job
-
-
-
   useEffect(() => {
   
     
@@ -217,7 +122,7 @@ const fetchJob = async () => {
   
   // copyUserData();
   
-  }, []);
+  }, [jobStatus, userStatus, userId, customerId]);
   
 useEffect(() => {
   // Fetch the job details when the component mounts
@@ -227,56 +132,119 @@ useEffect(() => {
   // load jobdata
   // localStorage.setItem('jobStatus', jobStatus)
 
-
-  //  if(userId && customerId&&jobStatus && userStatus){
-       
-  //       setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
-  //       setVisibility(calculateVisibility(jobStatus, userStatus,userId, customerId));
-  //       console.log('editVisability set')
-  //     }
-
+// functions to fill in form with user data customerId either from job DB (fetchJob ) or from logged in user:
+  const fetchUser = async (customerId) => {
+    try {
+      const userData = await getUser(customerId);
+      // console.log('userData from fetch user:', userData);
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setPhone(userData.contactNumber);
+      setEmail(userData.email);
+      setAddress(userData.address); // add this line to update user data once it's fetched
+      // setDateCreated(userData.dateCreated);
+    } catch (error) {
+      console.error('Failed to fetch data from logged in customer:', error);
+    }
+  };
   
+
+  const fetchReview = async (reviewId) => {
+    try {
+      const reviewData = await getReview(reviewId);
+      console.log('review from fetch review:', reviewData);
+      if (reviewData.hasOwnProperty('message404')){
+        setReview('no review yet')
+
+      }else{
+        setReviewStars(reviewData.stars);
+        setReview(reviewData.review );
+        setCompletionDate(reviewData.endDate );
+
+      }
+  
+      
+    } catch (error) {
+      console.error('Failed to fetch data from review ID:', error);
+    }
+  };  
 // this runs when job is selected from form . fetch all values, render form according to status
-  
+  const fetchJob = async () => {
+    try {
+      // console.log('fetch jobb called')
+      const jobData = await getJob(jobId);
+      // console.log("(job.jobStatus from fetch job)  "  + jobStatus);
+      // console.log('Job data:', jobData);
+      // setJob(jobData);
+      setCustomerId(jobData.customerId);  // load existing job
+      setJobStatus(jobData.jobStatus);
+      setaddressOfInstallation(jobData.addressOfInstallation);
+      setScopeOfWork(jobData.scopeOfWork);
+      setpreferredJobCompletionDate(formatDate(jobData.preferredJobCompletionDate));
+      setDateCreated(formatDate(jobData.dateCreated));
+      setDateQuoted(formatDate(jobData.dateQuoted));
+      setQuoteAmmount(jobData.amountQuoted);
+      setQuoteAttachment(jobData.quoteAttachment);
+      setWorkerId(jobData.workerId);
+      setWorkStarted(formatDate(jobData.workStarted));
+      setMaximumDemandInAmps(jobData.maximumDemandInAmps);
+      setConsumerMains(jobData.consumerMainsCapacity);
+      setEctricalRetailer(jobData.ectricalRetailer);
+      setErgyDistributor(jobData.energyDistributor);
+      setPhasesMains(jobData.mainsPhases);
+      setReviewId(jobData.reviewId);
+      // setCompletionDate(jobData.setCompletionDate); // comes from review
+      // setDateQ
+      // set
+      console.log('marker 1' )
+      // Fetch user data after job data is successfully fetched, update fields in customer header
+      if(!email){
+
+        fetchUser(jobData.customerId); 
+      }
+   
+
+      // fetch worker info and write license nr and name 
+      if (visibility.implementVisable) {
+        console.log('marker 2' )
+        console.log('fetchWorker(workerId);' + workerId)
+        fetchWorker(workerId);
+      }
+      // fetch review data and put them in to form
+      if (visibility.reviewVisable) {
+        fetchReview(jobData.reviewId);
+      }
+    } catch (error) {
+      console.error('Failed to fetch job:', error);
+    }
+
+   
+
+  };// end fetch job
 
   // console.log('visibility.assignVisable' + visibility.assignVisable)
 
 
 
-  if (jobId === 'New') {
-    
+  if (jobId !== 'New') {
+    fetchJob();  // get jobdata from server if existing job, this fills the form
     // console.log('jobId'+  jobId+   'fetch jobb called')
     // console.log('preferredJobComplDraftetionDate '  + preferredJobCompletionDate)
+  } else{
     setCustomerId(userId);
     console.log('jobId:  '+  jobId)
-    // setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
-  // get variables of logged in user and fill in the status variables for the form
-  if(userId &&jobStatus && userStatus ){
-       
-    setEditability (calculateEditability(jobStatus, userStatus, userId, userId));
-    setVisibility(calculateVisibility(jobStatus, userStatus,userId, userId));
-    console.log('editVisability set')
-  }
-  
-  fetchUser(userId); 
-  } else{
-    
-    fetchJob(visibility);  // get jobdata from server if existing job, this fills the form
-    console.log('jobId:  '+  jobId)
+    setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
 
-    if(userId && customerId&&jobStatus && userStatus){
-       
-      setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
-      setVisibility(calculateVisibility(jobStatus, userStatus,userId, customerId));
-      console.log('editVisability set')
-    }
+      fetchUser(userId); 
+    
+   
   }
   // console.log('userId  ' + userId + 'customerId  ' + customerId)
   
 
 
 
-}, [jobStatus]);  // end use effect
+}, [jobStatus, userStatus,]);  // end use effect
 
 
 
@@ -454,8 +422,8 @@ const handleWorkerSelected = (workerId, firstName, license) => {
 
   const handleSubmit = async () => {
 
-    // setToday( new Date().toISOString());  // get today's date in ISO format
-    // console.log('setToday  ' +  new Date().toISOString())
+    setToday( new Date().toISOString());  // get today's date in ISO format
+    // console.log('handleSubmit jobstat  ' + jobStatus)
     if (jobStatus === "Draft") {
       
       // const newStatus = incrementJobStatus();
@@ -476,19 +444,16 @@ const handleWorkerSelected = (workerId, firstName, license) => {
     createNewJob(jobData);
     }else{
       const jobData = {
-        jobStatus: incrementJobStatus(),
-        dateCreated: today
+        jobStatus: incrementJobStatus()
       }
       updateJobFormData(jobId, jobData); // update with new status
 
     }
-      
+      //if (userStatus === "Customer" && jobStatus === "Draft") {
       // sendEmail('manager@example.com', 'New Quote Request', 'A new quote request has arrived');
- 
-      // if (userStatus === 'manager'){
-      //   localStorage.setItem('userMessage', " a new quote request has arrived");
-      // }
-     
+      // localStorage.setItem('userMessage', "To Manager: a new quote request has arrived");
+      localStorage.setItem('userMessage', "To Manager: a new quote request has arrived");
+      // incrementJobStatus();
     } else if (jobStatus === "Quoting") {
 
       // const newStatus = incrementJobStatus();
@@ -499,8 +464,7 @@ const handleWorkerSelected = (workerId, firstName, license) => {
         jobStatus: incrementJobStatus(),
         dateQuoted: today,   // today's date when manager submit quote
         amountQuoted,
-        quoteAttachment,
-        dateQuoted: today
+        quoteAttachment
         
       };
 
@@ -510,25 +474,30 @@ const handleWorkerSelected = (workerId, firstName, license) => {
       
 
       // update job with form data
-  
+      //} else if (userStatus === "Manager" && jobStatus === "Quoting") {
       // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
-     
-      if (userStatus === 'customer'){
-      localStorage.setItem('userMessage', " your quote has arrived");
-      }
+      // localStorage.setItem('userMessage', "To Customer: your quote has arrived");
+      localStorage.setItem('userMessage', "To Customer: your quote has arrived");
       // incrementJobStatus();
     } else if (jobStatus === "Customer Approval") {
       //not needed, done in accept quote handler
       
       
         // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
-      
-      if (userStatus === 'manager'){
-      localStorage.setItem('userMessage', " your quote was approved");
-      }
+      // localStorage.setItem('userMessage', "To Manager: your quote was approved");
+      localStorage.setItem('userMessage', "To Manager: your quote was approved");
       // incrementJobStatus();
     } else if (jobStatus === "Worker Assignment") {
-      
+      // const newStatus = incrementJobStatus();
+      // form goes to manager
+      // manager assigns worker
+      // handle assignWorker
+      // fetch license, name and surname from Worker
+      // try{
+      //   fetchWorker(localStorage.getItem('workerID'));
+      //     }  catch (error) {
+      //   console.error('Failed to fetch worker in worker assign:', error);
+      //     }
 
       const jobData = {
         jobStatus: incrementJobStatus(),
@@ -537,10 +506,8 @@ const handleWorkerSelected = (workerId, firstName, license) => {
       };
       updateJobFormData(jobId, jobData);  // update server
       // sendEmail('worker@example.com', 'New Job Assignment', 'You have a new job');
-      
-      if (userStatus === 'worker'){
-      localStorage.setItem('userMessage', " you have a new job");
-      }
+      // localStorage.setItem('userMessage', "To Worker: you have a new job");
+      localStorage.setItem('userMessage', "To Worker: you have a new job");
       // incrementJobStatus();
     } else if (jobStatus === "Job Implementation") {
       //} else if (userStatus === "Worker" && jobStatus === "Job Implementation") {
@@ -558,22 +525,13 @@ const handleWorkerSelected = (workerId, firstName, license) => {
       };
 
       updateJobFormData(jobId, jobData);
-
-          if (userStatus === 'manager'){
-            localStorage.setItem('userMessage', " your job has been completed");
-          }else if(userStatus === 'customer'){
-
-            localStorage.setItem('userMessage', " your job has been completed, please leave a review");
-
-          }
-      
-       
+      localStorage.setItem('userMessage', "To Manager: your job has been completed");
+      localStorage.setItem('userMessage', "To Customer: your job has been completed, please leave a review");
         // incrementJobStatus();
       } else {
         // localStorage.setItem('userMessage', "To Worker: Compliance box must be checked first");
         // setUserMessage("To Worker: Compliance box must be checked first");
-        // alert("Compliance box must be checked first");
-        setErrorMessage("Compliance box must be checked first");
+        alert("Compliance box must be checked first");
         return;
       }
     } else if (jobStatus === "Customer Review") {
@@ -695,17 +653,16 @@ const reviewData = {
       <Header />
       <Navbar userStatus = {userStatus} />
 
-      <div className="main-content">
-      <p>You are logged in as: {userStatus}</p>
+      
+
 
 <div className="job-form-and-side-panel">
 <div className="job-form">
     {/* <div className="job-form"> */}
         <h2>Job Profile</h2>
-        <ProgressBar jobStatus = {jobStatus} />
         <div className="form-row">
-        
-        {/* <p>Job status: {jobStatus}</p> */}
+        <p>User status: {userStatus}</p>
+        <p>Job status: {jobStatus}</p>
         </div>
     {/* </div> */}
 {/***************************  Job Status DRAFT ******************************888*/}
@@ -747,32 +704,16 @@ const reviewData = {
        
          <input type="addressOfInstallation" value={addressOfInstallation} onChange={e => setaddressOfInstallation(e.target.value)} placeholder="Installation Address" disabled={jobStatus !== "Draft"} />
          {(editability.draftEditable)&&<button disabled={jobStatus !== "Draft"} onClick={handleCustomerData}>Copy from Customer</button>}
-     {/* <p>draftEditable {editability.draftEditable } </p>      */}
      </div>
-     <p>Scope of Work:  draftEditable {editability.draftEditable }{visibility.quotingVisable}</p> 
+     <p>Scope of Work:</p> 
         <div className="form-row">
             <textarea value={scopeOfWork} onChange={e => setScopeOfWork(e.target.value)} placeholder="Scope of Work" disabled={jobStatus !== "Draft"} />
             </div>
             
-           
-
-            {preferredJobCompletionDate? (
-          <div>
-            <div className="form-row">
-            <p>Prefered completion date:     {preferredJobCompletionDate}</p> 
-            </div>
-            </div>
-              ) : (
-            <div>
             <div className="form-row">
             <p>Prefered completion date:</p> 
             <input type="date" value={preferredJobCompletionDate} onChange={e => setpreferredJobCompletionDate(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} />
             </div>
-           
-            </div>
-        )}  
-            
-            {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
             </div>
       )} 
 
@@ -784,7 +725,8 @@ const reviewData = {
     
         {/* <input className="date-input" type="date" value={preferredJobCompletionDate} onChange={e => setpreferredJobCompletionDate(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} /> */}
     
- 
+      </div>
+        <div className="form-row">
           
         {dateQuoted && !isNaN(new Date(dateQuoted).getTime()) && <p>Date Quoted by manager: {dateQuoted} </p>}
 
@@ -795,10 +737,8 @@ const reviewData = {
         <div className="form-row">
         <p>Ammount Quoted AUD </p>
         <input type="quoteAmmount" value={amountQuoted} onChange={e => setQuoteAmmount(e.target.value)} placeholder="Quote Ammount" disabled={jobStatus !== "Quoting"} />
-        <a href={quoteAttachment}target="_blank"rel="noopener noreferrer">Quote attached</a>
-
+        <p>Quote attached </p>
         </div>
-        {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
         {/* <input type="date" value={completion} onChange={e => setCompletion(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} /> */}
         </div> }
 
@@ -825,7 +765,6 @@ const reviewData = {
           {(!editability.assignEditable)&&<input type="workerName" value={workerName} onChange={e => setWorkerName(e.target.value)} placeholder="Worker Name" disabled={true} />}
          
           </div>
-          {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
           </div>} 
           {/* end assignVisable */}
 {/***************************  Job Status Job Implementation ******************************888*/}
@@ -860,11 +799,11 @@ const reviewData = {
 
           <input type="checkbox"checked={isChecked}onChange={handleOnChange}disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")}/>
           <label>I, the electrical worker certify that the electrical installation work above complies to the electrical safety standards</label>
-          {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
+        
 
         
         </div>} 
-        {/* end implement visable */}
+        {/* end implement visavle */}
 {/***************************  Job Customer Review ******************************888*/}
         {(visibility.reviewVisable) &&
          <div className="job-form">
@@ -902,7 +841,6 @@ const reviewData = {
           <p>Date work completed</p>
           <input type="text" value={completionDate} onChange={e => setCompletionDate(e.target.value)} placeholder= "Completion Date" disabled={jobStatus !== "Customer Review"} />
           </div>
-          {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
         </div>}
         {/* end job form */}
         {/* {errorMessage && <p>{errorMessage}</p>} */}
@@ -932,7 +870,6 @@ const reviewData = {
       {/* Show side pannel */}
       <Side />
       </div>  {/* "job-form-and-side-panel" */}
-      </div>
       <Footer/> 
     </div>  
     // end app

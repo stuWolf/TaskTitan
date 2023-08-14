@@ -125,7 +125,7 @@
   justify-content: space-between;
   margin-left: 10px;
   margin-right: 0px;
-  max-width: 1320px;
+  max-width: 1220px;
   /* margin-right: 50px; adjust as needed */
 }
 
@@ -138,15 +138,18 @@
 }
 
 .jobs-container {
+  max-height: 800px;
   flex: 3; /* this will take up 3/4 of the parent div's width */
   flex-direction: column;
-  margin-right: 20px;
+  margin-right: 80px;
+  overflow-y: auto;
+  max-width: 1250px;
 }
 
 .jobs-container-and-side-panel {
   display: flex;
   justify-content: space-between;
-  max-height: 950px;
+  max-height: 750px;
 }
 
 .job-details p {
@@ -429,7 +432,7 @@
 .job-form-and-side-panel {
   display: flex;
 
-  max-height: 950px;
+  max-height: 850px;
   
 }
 
@@ -452,7 +455,7 @@
 /* Side panel*/
 /* Job Form */
 .job-form {
-  max-height: 900px;  /* Adjust this as needed */
+  max-height: 800px;  /* Adjust this as needed */
   overflow-y: auto;
   max-width: 600px;
   margin-left: 0px;

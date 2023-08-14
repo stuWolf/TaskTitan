@@ -4,7 +4,7 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import WorkerColumns from '../components/workerColumns';
+import WorkerColumns from '../components/myWorkers/workerColumns';
 import {  useNavigate} from 'react-router-dom';
 import { getUsers } from "../services/userServices";
 import { Link } from 'react-router-dom';

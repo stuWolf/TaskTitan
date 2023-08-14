@@ -104,6 +104,7 @@ export const Register = () => {
   return (
     <div className="App">
        <Header/>
+       <h3> Please sign up first</h3>
        <div className="login-form">
           <InputBox 
             id="firstNameInput" 

@@ -4,12 +4,10 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import {getStatusJobs  } from "../services/jobsServices";
-// import {getCountOfJobs, getOpenJobs,getMyJobsOpen, getAllJobsOpenWorker  } from "../services/jobsServices";
+import {getCountOfJobs,getStatusJobs  } from "../services/jobsServices";
 import {getUser} from '../services/userServices';
-import JobColumns from '../components/home/jobColumns';
+import JobColumns from '../components/jobColumns';
 import { Link } from 'react-router-dom';
-import DisplayJobs from "../components/home/displayJob";
 
 
 // import JobForm from '../Pages/JobForm';
@@ -21,10 +19,8 @@ function Home() {
   // let userStatus = location.state.userStatus;
   let navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  // const [userMessage, setUserMessage] = useState('');
-  // const [closedJobCount, setClosedJobCount] = useState('');
-  // const [previousJobCount, setPreviousJobCount] = useState(0); // Add this state variable at the top of your component
-  const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
+  const [userMessage, setUserMessage] = useState('');
+  const [closedJobCount, setClosedJobCount] = useState('');
   // const [userMessage, setUserMessage] = useState('')
   const userStatus = localStorage.getItem('userStatus');
   // State to hold the jobs
@@ -54,12 +50,6 @@ function Home() {
 // link to job clicked -> job form opens -> call API to fetch data from Job collection-> fill form -> user updates form -> update job when form submit 
 
 
-// interface for Displayjobs
-const handleUserMessageChange = (message) => {
-  setUserMessage(message);
-  // Now, sidebarUserMessage contains the userMessage from DisplayJobs
-  // You can use it as input for the sidebar or wherever you need it
-};
 
 const fetchJobs = useCallback(async () => {
   try {
@@ -67,9 +57,31 @@ const fetchJobs = useCallback(async () => {
     let jobsData;  // array with all jobs rawdata
     // console.log('fetch jobs called')
     
-   
+    // increase loading speed
+  // at function call:
+    // if jobsData id empty load data from server and write jobsData into local mamory
+  // else load jobData from local memory
 
+    // check number of jobs  with getCountOfJobs(optional customer ID)
+    // if the number has changed, refresh local memory from server, rerender
+    // while jobsdata are loading setErrorMessage("Jobs Data loading...");
 
+    // if(userStatus === "manager"){
+
+    //   // manager sees all open jobs
+
+    //   //jobsOpen = getCountOfJobs()
+    //   jobsData = await getOpenJobs();
+    //   // console.log('jobsData.dateCreated  ' + jobsData.dateCreated)
+    // } else if (userStatus === "customer"){
+    //    //jobsOpen = getCountOfJobs(customerId)
+    //   // Get all open jobs for logged in Customer
+    //   jobsData = await getMyJobsOpen();
+    // } else if (userStatus === "worker"){
+    //   // Get all open jobs for a logged in worker, worker Id gets handled in server
+    //   //jobsOpen = getCountOfJobsWorker(workerId)
+    //   jobsData = await getAllJobsOpenWorker();
+    // }
 
     jobsData = await getStatusJobs(localStorage.getItem('userId'), userStatus, '!Closed');
 
@@ -86,16 +98,8 @@ const fetchJobs = useCallback(async () => {
         return;
       }
 
-    // jobsData = await getStatusJobs(localStorage.getItem('userId'), userStatus, '!Closed');
 
-    // const currentClosedJobCount = await getCountOfJobs(localStorage.getItem('userId'), userStatus, 'Closed');
-    // // setClosedJobCount(currentClosedJobCount);
 
-    // // Check if the new counter is greater than the previous counter
-    // if (currentClosedJobCount > previousJobCount) {
-    //   setUserMessage('Another Job Closed!');
-    //   setPreviousJobCount(currentClosedJobCount); // Update the previous job count
-    // }
 
       // Fetch the user name for each job
       // can't use this because it returns the number of all jobs,
@@ -197,18 +201,15 @@ function getFirstFourWords(str) {
       <p>Welcome back {localStorage.getItem('userName')},  you are logged in as {userStatus}</p>
 
       <div className="form-row">
-        <h2>My Jobs </h2>
+        <h2>My Jobs</h2>
         
         {(userStatus === "manager"||userStatus === "customer" )&&
         <div>
-<div className="form-row">
         <button onClick={handleNewJob}>Create New Job</button>
-        {errorMessage && <p>{errorMessage}</p>}
-        </div>
         </div>
         }
       </div>
-      <JobColumns />
+
       <div className="jobs-container-and-side-panel">
           {/* <p>Manager view : List of all jobs with Status, assigned worker, quote, and customer details. Option to add new job or quote.</p>  */}
           {/* // find all open jobs using getOpenJobs(), and filter out  _id ,  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus
@@ -217,12 +218,8 @@ function getFirstFourWords(str) {
 // display this array with the following columns:
 //  _id (last 4 digits),  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus */}
 
-
-
-
-
 <div className="jobs-container">
-
+<JobColumns />
 {[...jobs].reverse().map((job) => (
             // Display the job details
             // Replace this with your actual UI
@@ -241,17 +238,8 @@ function getFirstFourWords(str) {
               <p>{job.jobStatus}</p>
             </div>
           ))}
-<h2>Closed Jobs</h2>
-<DisplayJobs 
-                user_id={localStorage.getItem('userId')} 
-                userStatus={userStatus} 
-                jobStatus={'Closed'} 
-                onUserMessageChange={handleUserMessageChange} 
-            />
         </div>
         {/* end jobs container */}
-
-       
         
       {/* only displays when there is an error message */}
        {/* Show side pannel */}
@@ -260,10 +248,10 @@ function getFirstFourWords(str) {
       
       </div> 
         {/* end jobs containerand side panel */}
-        
+        {errorMessage && <p>{errorMessage}</p>}
       </div>
       {/* end main -content */}  
-      {/* {errorMessage && <p>{errorMessage}</p>} */}
+
       <Footer/> 
     </div>
   );

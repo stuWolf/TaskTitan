@@ -5,12 +5,12 @@ import {getCountOfJobs,getStatusJobs  } from "../../services/jobsServices";
 import {getUser} from '../../services/userServices';
 import { Link } from 'react-router-dom';
 
-export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessageChange}) {
+export default function DisplayJobs({user_id, userStatus, jobStatus}) {
   
     const [errorMessage, setErrorMessage] = useState("");
      const [previousJobCount, setPreviousJobCount] = useState(0); // Add this state variable at the top of your component
     // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
-    const [userMessage, setUserMessage] = useState('')
+    // const [userMessage, setUserMessage] = useState('')
     // const userStatus = localStorage.getItem('userStatus');
     // State to hold the jobs
     const [jobs, setJobs] = useState([]);
@@ -26,7 +26,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
       
       
           jobsData = await getStatusJobs(user_id, userStatus, jobStatus);
-      
+       console.log(jobStatus)
           // console.log('userId:  ' + localStorage.getItem('userId') + 'userStatus:  ' + userStatus + '')
             // Check if jobsData contains 'message404, not found'
             if (jobsData.hasOwnProperty('message404')) {
@@ -40,16 +40,16 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
       
           // jobsData = await getStatusJobs(localStorage.getItem('userId'), userStatus, '!Closed');
       
-          const currentClosedJobCount = await getCountOfJobs(localStorage.getItem('userId'), userStatus, jobStatus);
-          // setClosedJobCount(currentClosedJobCount);
+          // const currentClosedJobCount = await getCountOfJobs(localStorage.getItem('userId'), userStatus, jobStatus);
+          // // setClosedJobCount(currentClosedJobCount);
       
-          // Check if the new counter is greater than the previous counter
-          if (currentClosedJobCount > previousJobCount) {
-            setUserMessage('Another Job Closed!');
+          // // Check if the new counter is greater than the previous counter
+          // if (currentClosedJobCount > previousJobCount) {
+          //   setUserMessage('Another Job Closed!');
 
-            // update jobs
-            setPreviousJobCount(currentClosedJobCount); // Update the previous job count
-          }
+          //   // update jobs
+          //   setPreviousJobCount(currentClosedJobCount); // Update the previous job count
+          // }
       
             // Fetch the user name for each job
             // can't use this because it returns the number of all jobs,
@@ -108,37 +108,37 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
       
       
       useEffect(() => {
-       // Fetch the open jobs when the component mounts
-      //  fetchJobs();
-      
-       // Set up an interval to fetch jobs every 3 seconds
-       const interval = setInterval(() => {
-
-
-
-
-
-
-
-
-
-         fetchJobs();
-
-
-         
-       }, 5000); // 3000 milliseconds = 3 seconds
-      
-       // Clean up function to clear the interval when the component is unmounted
-       return () => clearInterval(interval);
-      }, []);
+        const fetchAndUpdateJobs = async () => {
+          const response = await getCountOfJobs(user_id, userStatus, jobStatus);
+          const currentCount = response.totalJobs; // Access the totalJobs property from the response
+            console.log('currentCount: ' + currentCount)
+            if (currentCount > previousJobCount) {
+                // setUserMessage('Another Job Closed!');
+                fetchJobs();
+                setPreviousJobCount(currentCount);
+            }
+        };
+    
+        // Fetch the open jobs when the component mounts
+        fetchJobs();
+    
+        // Set up an interval to fetch jobs every 5 seconds
+        const interval = setInterval(() => {
+            fetchAndUpdateJobs();
+        }, 5000); // 5000 milliseconds = 5 seconds
+    
+        // Clean up function to clear the interval when the component is unmounted
+        return () => clearInterval(interval);
+    }, [previousJobCount, userStatus, jobStatus]); // Added dependencies to the dependency array
+    
 
 
  // Whenever userMessage changes, inform the parent component
- useEffect(() => {
-    if (onUserMessageChange) {
-        onUserMessageChange(userMessage);
-    }
-}, [userMessage, onUserMessageChange]);
+//  useEffect(() => {
+//     if (onUserMessageChange) {
+//         onUserMessageChange(userMessage);
+//     }
+// }, [userMessage, onUserMessageChange]);
 
       
       // Function to format the date
@@ -166,7 +166,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
       
       {/* <div className="jobs-container"> */}
       <div className="form-row">
-      <h2> Jobs in status {jobStatus   }</h2>
+      <h3> Jobs in status {jobStatus   }</h3>
 {errorMessage && <p>{  errorMessage}</p>}
       </div>
 {[...jobs].reverse().map((job) => (

@@ -5,16 +5,19 @@ import {getCountOfJobs,getStatusJobs  } from "../../services/jobsServices";
 import {getUser} from '../../services/userServices';
 import { Link } from 'react-router-dom';
 
-export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessageChange}) {
+export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessageChange }) {
   
     const [errorMessage, setErrorMessage] = useState("");
      const [previousJobCount, setPreviousJobCount] = useState(0); // Add this state variable at the top of your component
-    // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
+    //  const [currentCount, setCurrentCount] = useState(0);
+     
+     // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
     const [userMessage, setUserMessage] = useState('')
     // const userStatus = localStorage.getItem('userStatus');
     // State to hold the jobs
     const [jobs, setJobs] = useState([]);
-  
+    // const [isFirstRun, setIsFirstRun] = useState(true);
+    const [initializationPhase, setInitializationPhase] = useState(true);
  
 
     const fetchJobs = useCallback(async () => {
@@ -26,7 +29,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
       
       
           jobsData = await getStatusJobs(user_id, userStatus, jobStatus);
-       console.log(jobStatus)
+      //  console.log(jobStatus)
           // console.log('userId:  ' + localStorage.getItem('userId') + 'userStatus:  ' + userStatus + '')
             // Check if jobsData contains 'message404, not found'
             if (jobsData.hasOwnProperty('message404')) {
@@ -106,31 +109,66 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
       },[]);
       // end fetch jobs
       
-      
-      useEffect(() => {
-        const fetchAndUpdateJobs = async () => {
-          const response = await getCountOfJobs(localStorage.getItem('userId'), userStatus, jobStatus);
-          const currentCount = response.totalJobs; // Access the totalJobs property from the response
-            console.log('currentCount' + currentCount)
-            if (currentCount > previousJobCount) {
-                setUserMessage('Another Job Closed!');
-                fetchJobs();
-                setPreviousJobCount(currentCount);
-            }
-        };
-    
-        // Fetch the open jobs when the component mounts
-        fetchJobs();
-    
-        // Set up an interval to fetch jobs every 5 seconds
-        const interval = setInterval(() => {
-            fetchAndUpdateJobs();
-        }, 5000); // 5000 milliseconds = 5 seconds
-    
-        // Clean up function to clear the interval when the component is unmounted
-        return () => clearInterval(interval);
-    }, [previousJobCount, userStatus, jobStatus]); // Added dependencies to the dependency array
-    
+      const messageMapping = {
+        "Quoting": {
+            "manager": "You have a new job for quoting"
+        },
+        "Customer Approval": {
+            "customer": "Your quote just arrived"
+        },
+        "Work Assignment": {
+            "manager": "Please assign a worker"
+        },
+        "Job Implementation": {
+            "worker": "You received a new job for processing"
+        },
+        "Customer Review": {
+            "customer": "Your job has been completed, please write a review",
+            "manager": "Another job has been completed, time to write an invoice"
+        },
+        "Closed": {
+            "manager": "Another job closed"
+        }
+    };
+    useEffect(() => {
+      const fetchAndUpdateJobs = async () => {
+          const response = await getCountOfJobs(user_id, userStatus, jobStatus);
+          const currentCount = response.totalJobs;
+          console.log('jobStatus ' + jobStatus);
+          console.log('currentCount: ' + currentCount);
+          console.log('previousJobCount: ' + previousJobCount);
+          console.log('initializationPhase: ' + initializationPhase);
+  
+          if ( currentCount > previousJobCount) {
+              const message = messageMapping[jobStatus] && messageMapping[jobStatus][userStatus];
+              if (!initializationPhase  &&message) {
+                  setUserMessage(message);
+                  console.log('jobStatus: ' + jobStatus);
+                  console.log('message: ' + message);
+                  console.log('userStatus: ' + userStatus);
+                  console.log('jobStatus: ' + jobStatus);
+              }
+              // setPreviousJobCount(currentCount);
+              
+              fetchJobs();
+          } // Update the previousJobCount and end the initialization phase
+          setPreviousJobCount(currentCount);
+          if (initializationPhase) {
+              setInitializationPhase(false);
+          }
+      };
+  
+      // Fetch the open jobs when the component mounts
+      fetchJobs();
+      console.log('fetch Job')
+      // Set up an interval to fetch jobs every 5 seconds
+      const interval = setInterval(() => {
+          fetchAndUpdateJobs();
+      }, 5000);
+  
+      // Clean up function to clear the interval when the component is unmounted
+      return () => clearInterval(interval);
+  }, [previousJobCount, userStatus, jobStatus, initializationPhase]); // Added isFirstRun to the dependency array
 
 
  // Whenever userMessage changes, inform the parent component

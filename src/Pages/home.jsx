@@ -5,11 +5,12 @@ import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
 // import {getStatusJobs  } from "../services/jobsServices";
-// import {getCountOfJobs, getOpenJobs,getMyJobsOpen, getAllJobsOpenWorker  } from "../services/jobsServices";
+// import {getCountOfJobs  } from "../services/jobsServices";
 // import {getUser} from '../services/userServices';
 import JobColumns from '../components/home/jobColumns';
 // import { Link } from 'react-router-dom';
 import DisplayJobs from "../components/home/displayJob";
+// import {useUserMessaging} from "../services/userMessaging.js";
 
 
 // import JobForm from '../Pages/JobForm';
@@ -64,8 +65,6 @@ const handleUserMessageChange = (message) => {
 
 
 
-
-// console.log('username  ' + localStorage.getItem('userName'))
   // console.log('home  ' + userStatus)
   return (
     <div className="App">
@@ -86,7 +85,7 @@ const handleUserMessageChange = (message) => {
         </div>
         }
       </div>
-      <JobColumns />
+     
       <div className="jobs-container-and-side-panel">
           {/* <p>Manager view : List of all jobs with Status, assigned worker, quote, and customer details. Option to add new job or quote.</p>  */}
           {/* // find all open jobs using getOpenJobs(), and filter out  _id ,  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus
@@ -101,7 +100,7 @@ const handleUserMessageChange = (message) => {
 
 <div className="jobs-container">
 
-
+<JobColumns />
 {/* <h2>Closed Jobs</h2> */}
 <DisplayJobs 
                 user_id={localStorage.getItem('userId')} 
@@ -112,13 +111,26 @@ const handleUserMessageChange = (message) => {
 <DisplayJobs 
                 user_id={localStorage.getItem('userId')} 
                 userStatus={userStatus} 
+                jobStatus={'Customer Approval'} 
+                onUserMessageChange={handleUserMessageChange} 
+            />
+
+<DisplayJobs 
+                user_id={localStorage.getItem('userId')} 
+                userStatus={userStatus} 
                 jobStatus={'Worker Assignment'} 
                 onUserMessageChange={handleUserMessageChange} 
             />
 <DisplayJobs 
                 user_id={localStorage.getItem('userId')} 
                 userStatus={userStatus} 
-                jobStatus={'Customer Approval'} 
+                jobStatus={'Job Implementation'} 
+                onUserMessageChange={handleUserMessageChange} 
+            />
+<DisplayJobs 
+                user_id={localStorage.getItem('userId')} 
+                userStatus={userStatus} 
+                jobStatus={'Customer Review'} 
                 onUserMessageChange={handleUserMessageChange} 
             />
 <DisplayJobs 

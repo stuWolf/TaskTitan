@@ -23,33 +23,33 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
           let jobsData;  // array with all jobs rawdata
           // console.log('fetch jobs called')
         
-          const currentClosedJobCount = await getCountOfJobs(localStorage.getItem('userId'), userStatus, jobStatus);
-          // setClosedJobCount(currentClosedJobCount);
       
-          // Check if the new counter is greater than the previous counter
-          if (currentClosedJobCount > previousJobCount) {
-            setUserMessage('Another Job Closed!');
       
-              jobsData = await getStatusJobs(user_id, userStatus, jobStatus);
-          
-              // console.log('userId:  ' + localStorage.getItem('userId') + 'userStatus:  ' + userStatus + '')
-                // Check if jobsData contains 'message404, not found'
-                if (jobsData.hasOwnProperty('message404')) {
-                  if (userStatus === "worker"){
-                  setErrorMessage("There are  no jobs for you at the moment");
-                  } else if (userStatus === "customer"){
-                    setErrorMessage("No Jobs yet. Lodge your first job by clicking 'Create New Job' ");
-                  } else { setErrorMessage("No jobs recorded yet");}
-                  return;
-                }
-          
+          jobsData = await getStatusJobs(user_id, userStatus, jobStatus);
+       console.log(jobStatus)
+          // console.log('userId:  ' + localStorage.getItem('userId') + 'userStatus:  ' + userStatus + '')
+            // Check if jobsData contains 'message404, not found'
+            if (jobsData.hasOwnProperty('message404')) {
+              if ((userStatus === "worker")||(jobStatus !== 'Closed')){
+              setErrorMessage("There are  no jobs for you at the moment");
+              } else if ((userStatus === "customer")||(jobStatus !== 'Closed')){
+                setErrorMessage("No Jobs yet. Lodge your first job by clicking 'Create New Job' ");
+              } else { setErrorMessage("No jobs recorded yet");}
+              return;
+            }
+      
+          // jobsData = await getStatusJobs(localStorage.getItem('userId'), userStatus, '!Closed');
+      
+          // const currentClosedJobCount = await getCountOfJobs(localStorage.getItem('userId'), userStatus, jobStatus);
+          // // setClosedJobCount(currentClosedJobCount);
+      
+          // // Check if the new counter is greater than the previous counter
+          // if (currentClosedJobCount > previousJobCount) {
+          //   setUserMessage('Another Job Closed!');
 
-      
-         
-
-            // update jobs
-            setPreviousJobCount(currentClosedJobCount); // Update the previous job count
-          }
+          //   // update jobs
+          //   setPreviousJobCount(currentClosedJobCount); // Update the previous job count
+          // }
       
             // Fetch the user name for each job
             // can't use this because it returns the number of all jobs,
@@ -103,39 +103,34 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
           setErrorMessage("could not fetch jobs");
         }
         setErrorMessage('');
-
-
-
-
-        
       },[]);
       // end fetch jobs
       
       
       useEffect(() => {
-       // Fetch the open jobs when the component mounts
-       fetchJobs();
-      
-       // Set up an interval to fetch jobs every 3 seconds
-       const interval = setInterval(() => {
-
-
-
-
-
-
-
-
-
-         fetchJobs();
-
-
-         
-       }, 5000); // 3000 milliseconds = 3 seconds
-      
-       // Clean up function to clear the interval when the component is unmounted
-       return () => clearInterval(interval);
-      }, []);
+        const fetchAndUpdateJobs = async () => {
+          const response = await getCountOfJobs(localStorage.getItem('userId'), userStatus, jobStatus);
+          const currentCount = response.totalJobs; // Access the totalJobs property from the response
+            console.log('currentCount' + currentCount)
+            if (currentCount > previousJobCount) {
+                setUserMessage('Another Job Closed!');
+                fetchJobs();
+                setPreviousJobCount(currentCount);
+            }
+        };
+    
+        // Fetch the open jobs when the component mounts
+        fetchJobs();
+    
+        // Set up an interval to fetch jobs every 5 seconds
+        const interval = setInterval(() => {
+            fetchAndUpdateJobs();
+        }, 5000); // 5000 milliseconds = 5 seconds
+    
+        // Clean up function to clear the interval when the component is unmounted
+        return () => clearInterval(interval);
+    }, [previousJobCount, userStatus, jobStatus]); // Added dependencies to the dependency array
+    
 
 
  // Whenever userMessage changes, inform the parent component
@@ -170,7 +165,10 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
     <div className="App">
       
       {/* <div className="jobs-container"> */}
-      {/* <h2>Closed Jobs</h2> */}
+      <div className="form-row">
+      <h3> Jobs in status {jobStatus   }</h3>
+{errorMessage && <p>{  errorMessage}</p>}
+      </div>
 {[...jobs].reverse().map((job) => (
             // Display the job details
             // Replace this with your actual UI
@@ -191,7 +189,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessa
           ))}
         {/* </div> */}
         {/* end jobs container */}
-        {/* {errorMessage && <p>{errorMessage}</p>} */}
+        
     </div>
   );
 }

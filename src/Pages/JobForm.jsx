@@ -719,14 +719,14 @@ const reviewData = {
       
 {/***************************  Job Status DRAFT ******************************888*/}
 
-<div className="form-row">
+  <div className="form-row">
             {/*allways be displayed  */}
           <p>Customer Details:</p> 
           {/* {(visibility.assignVisable) &&<button disabled={jobStatus !== "Draft"} onClick={copyUserData}>Copy from profile</button>} */}
           {/* <p>Job status: {jobStatus}</p> */}
-          </div>
+    </div>
         
-          <div className="form-row">
+  <div className="form-row">
          
          <input type="FirstName" value={FirstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" disabled={jobStatus !== "Draft"} />
          <input type="LastName" value={LastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" disabled={jobStatus !== "Draft"} />
@@ -749,6 +749,8 @@ const reviewData = {
          {(editability.draftEditable)&&<button disabled={jobStatus !== "Draft"} onClick={handleCustomerData}>Copy from Customer</button>}
      {/* <p>draftEditable {editability.draftEditable } </p>      */}
      </div>
+
+
      <p>Scope of Work:  draftEditable {editability.draftEditable }{visibility.quotingVisable}</p> 
         <div className="form-row">
             <textarea value={scopeOfWork} onChange={e => setScopeOfWork(e.target.value)} placeholder="Scope of Work" disabled={jobStatus !== "Draft"} />
@@ -762,6 +764,7 @@ const reviewData = {
             <p>Prefered completion date:     {preferredJobCompletionDate}</p> 
             </div>
             </div>
+
               ) : (
             <div>
             <div className="form-row">
@@ -771,10 +774,13 @@ const reviewData = {
            
             </div>
         )}  
+        {/* end preferredJobCompletionDate */}
             
             {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
-            </div>
+            </div> 
+            
       )} 
+      {/* end isform visible */}
 
    {/*************************** End Job Status DRAFT ******************************888*/}         
 {/***************************  Job Status Quoting ******************************888*/}
@@ -801,7 +807,7 @@ const reviewData = {
         {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
         {/* <input type="date" value={completion} onChange={e => setCompletion(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} /> */}
         </div> }
-
+{/* end quoting visible */}
 {/***************************  end Job Status Quoting ******************************888*/}
 
 
@@ -827,6 +833,7 @@ const reviewData = {
           </div>
           {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
           </div>} 
+
           {/* end assignVisable */}
 {/***************************  Job Status Job Implementation ******************************888*/}
         {visibility.implementVisable &&
@@ -903,8 +910,8 @@ const reviewData = {
           <input type="text" value={completionDate} onChange={e => setCompletionDate(e.target.value)} placeholder= "Completion Date" disabled={jobStatus !== "Customer Review"} />
           </div>
           {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
-        </div>}
-        {/* end job form */}
+          </div>}
+{/* end review visible */}
         {/* {errorMessage && <p>{errorMessage}</p>} */}
 
         {/* visibility.quotingVisable */}
@@ -925,14 +932,16 @@ const reviewData = {
         </div>
         )}  
         {/* end Job Status */}
-           
-      {/* </div>   */}
-      {/* end div sub job form */}
-      </div>
+
+
+ 
+            </div>
+      {/* end job form top */}
       {/* Show side pannel */}
       <Side />
       </div>  {/* "job-form-and-side-panel" */}
       </div>
+      {/* end main content */}
       <Footer/> 
     </div>  
     // end app

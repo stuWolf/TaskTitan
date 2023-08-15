@@ -21,7 +21,7 @@ export function calculateVisibility(jobStatus, userStatus,userId, customerId) {
     const submitVisable = (userStatus === "manager" && ["Draft", "Quoting", "Worker Assignment", "Customer Review"].includes(jobStatus)) ||
                           (userStatus === "customer" && ["Draft", "Customer Review"].includes(jobStatus)) ||
                           (userStatus === "worker" && jobStatus === "Job Implementation");
-console.log(jobStatus+ userStatus+  userId+  customerId)
+// console.log(jobStatus+ userStatus+  userId+  customerId)
     console.log('quotingVisable ' + quotingVisable +'  assignVisable ' +assignVisable+ '  implementVisable '
     + implementVisable +"  reviewVisable "+ reviewVisable + "  submitVisable " + submitVisable);
 

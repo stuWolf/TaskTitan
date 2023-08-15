@@ -76,7 +76,7 @@ const { jobId } = useParams();
     const [visibility, setVisibility] = useState({quotingVisable: false, assignVisable: false, implementVisable: false, reviewVisable: false,});
     const [editability, setEditability] = useState("");
     const userId = localStorage.getItem('userId');
-    const [today, setToday] = useState( new Date().toISOString());
+    const [today] = useState( new Date().toISOString());
     
     // console.log('Jobid from JobForm: '  + jobId)
     // setuserMessage
@@ -499,8 +499,8 @@ const handleWorkerSelected = (workerId, firstName, license) => {
         jobStatus: incrementJobStatus(),
         dateQuoted: today,   // today's date when manager submit quote
         amountQuoted,
-        quoteAttachment,
-        dateQuoted: today
+        quoteAttachment
+        
         
       };
 

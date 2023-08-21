@@ -1,5 +1,5 @@
 import  { useState, useEffect}from 'react';
-import {getCountOfJobs } from "../services/jobsServices";
+import {getCountOfJobs } from "./jobsServices";
 
     // count raises of		userStatus	Message
     // Quoting		        manager	    You have a new job for quoting

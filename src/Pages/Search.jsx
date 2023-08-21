@@ -8,6 +8,7 @@ import Side from '../components/SidePanel';
 import SelectWorker from '../components/jobForm/selectWorker';
 import ProgressBar from '../components/jobForm/progressBar';
 import InputBox from '../components/inputBox';
+import SSEComponent from '../components/home/SSEC';
 import  {validateFields} from '../services/helpFunctions'
 // import WorkerColumns from '../components/workerColumns';
 // import {  useNavigate} from 'react-router-dom';
@@ -116,7 +117,7 @@ function Search() {
                 onChange={(value) => { setSurname(value); }}
             />
          
-
+<SSEComponent/>
 
 
 {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}

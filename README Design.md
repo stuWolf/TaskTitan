@@ -6,36 +6,10 @@ The purpose of this app is to provide a platform for customers and trades people
 ![Screenshot Landing](./docs/screenshotsfrontend/ScreenshoLanding.jpg)
 
 
-# The 2 biggest problems to implement this app:
-
-1: Create a messaging system to inform users of all 3 rolls which are Manager, Customer and worker when there is a new item for them to process.
-when we think about it every app around communication has this service.
-This is alsoo the entry point to trigger an email service
-
-2: Get the logic of the job form under controll and test for all job statuses and all 3 rolls and than make sure that the correct user messages are sent to all parties during transition between the job statuses. Including closed a job has 7 statuses ()
-we have the following 7 job statuses :
-```js
-const statuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
-```
-and this times 3 user rolls, so there are already 21 cases we need to test
-The following messages will be sent:
-
-count raises of		userStatus	Message
-Quoting		         Manager	   You have a new job for quoting
-Approval		         Customer	   Your quote just arrived
-Work assignment		Manager	   Please assign a worker
-Job Implementation	Worker	   You received a new job for processing
-Review		         Customer	   Your job has been completed, please write 
-                                 a  review
-		               Manager	   Another job has been completed, time to write an invoice
-Closed		         Manager	   Another job closed
 
 
-in a first attempt I tried to implement the messaging with a method called long polling:
-at start every 5 seconds I call an API that counts the jobs with the 3 parameters jobStatus, userStatus and user_ID, than if the count has increased
-a message is triggered. this methid did not work reliably for 2 reasons:
-1. The asynchronous nature of react
-2. 
+
+
 ## TASK TITAN Full stack application Part A
 
 

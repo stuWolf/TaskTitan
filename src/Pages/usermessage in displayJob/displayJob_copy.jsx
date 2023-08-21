@@ -1,19 +1,23 @@
 import React , { useState, useEffect, useCallback }from 'react';
 import '../../App.css';
 import {getCountOfJobs,getStatusJobs  } from "../../services/jobsServices";
+// import {getCountOfJobs, getOpenJobs,getMyJobsOpen, getAllJobsOpenWorker  } from "../services/jobsServices";
 import {getUser} from '../../services/userServices';
 import { Link } from 'react-router-dom';
 
-export default function DisplayJobs({user_id, userStatus, jobStatus}) {
+export default function DisplayJobs({user_id, userStatus, jobStatus, onUserMessageChange }) {
   
     const [errorMessage, setErrorMessage] = useState("");
      const [previousJobCount, setPreviousJobCount] = useState(0); // Add this state variable at the top of your component
-     const [pollingInterval, setPollingInterval] = useState(5000); // Start with 5 seconds
-     const [noChangeCount, setNoChangeCount] = useState(0); // Count how many times no change is detected
- 
+    //  const [currentCount, setCurrentCount] = useState(0);
+     
+     // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
+    const [userMessage, setUserMessage] = useState('')
+    // const userStatus = localStorage.getItem('userStatus');
     // State to hold the jobs
     const [jobs, setJobs] = useState([]);
-  
+    // const [isFirstRun, setIsFirstRun] = useState(true);
+    const [initializationPhase, setInitializationPhase] = useState(true);
  
 
     const fetchJobs = useCallback(async () => {
@@ -30,16 +34,30 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
             // Check if jobsData contains 'message404, not found'
             if (jobsData.hasOwnProperty('message404')) {
               if ((userStatus === "worker")||(jobStatus !== 'Closed')){
-              setErrorMessage(`No jobs need ${jobStatus} at the moment`);
-              setJobs([])
-              // delete displayed jobs
+              setErrorMessage("There are  no jobs for you at the moment");
               } else if ((userStatus === "customer")||(jobStatus !== 'Closed')){
                 setErrorMessage("No Jobs yet. Lodge your first job by clicking 'Create New Job' ");
               } else { setErrorMessage("No jobs recorded yet");}
               return;
             }
       
-          
+          // jobsData = await getStatusJobs(localStorage.getItem('userId'), userStatus, '!Closed');
+      
+          // const currentClosedJobCount = await getCountOfJobs(localStorage.getItem('userId'), userStatus, jobStatus);
+          // // setClosedJobCount(currentClosedJobCount);
+      
+          // // Check if the new counter is greater than the previous counter
+          // if (currentClosedJobCount > previousJobCount) {
+          //   setUserMessage('Another Job Closed!');
+
+          //   // update jobs
+          //   setPreviousJobCount(currentClosedJobCount); // Update the previous job count
+          // }
+      
+            // Fetch the user name for each job
+            // can't use this because it returns the number of all jobs,
+            // however jobsData is different for every user
+            // const numberOfJobs = await (getCountOfJobs())
       
       // Fetch the worker and customer names for each job
       for(let job of jobsData) {
@@ -91,41 +109,74 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
       },[]);
       // end fetch jobs
       
-      
-      useEffect(() => {
-        const fetchAndUpdateJobs = async () => {
-            const response = await getCountOfJobs(user_id, userStatus, jobStatus);
-            const currentCount = response.totalJobs;
-            console.log('jobStatus ' + jobStatus)
-            console.log('currentCount ' + currentCount)
+      const messageMapping = {
+        "Quoting": {
+            "manager": "You have a new job for quoting"
+        },
+        "Customer Approval": {
+            "customer": "Your quote just arrived"
+        },
+        "Work Assignment": {
+            "manager": "Please assign a worker"
+        },
+        "Job Implementation": {
+            "worker": "You received a new job for processing"
+        },
+        "Customer Review": {
+            "customer": "Your job has been completed, please write a review",
+            "manager": "Another job has been completed, time to write an invoice"
+        },
+        "Closed": {
+            "manager": "Another job closed"
+        }
+    };
+    useEffect(() => {
+      const fetchAndUpdateJobs = async () => {
+          const response = await getCountOfJobs(user_id, userStatus, jobStatus);
+          const currentCount = response.totalJobs;
+          console.log('jobStatus ' + jobStatus);
+          console.log('currentCount: ' + currentCount);
+          console.log('previousJobCount: ' + previousJobCount);
+          console.log('initializationPhase: ' + initializationPhase);
+  
+          if ( currentCount > previousJobCount) {
+              const message = messageMapping[jobStatus] && messageMapping[jobStatus][userStatus];
+              if (!initializationPhase  &&message) {
+                  setUserMessage(message);
+                  console.log('jobStatus: ' + jobStatus);
+                  console.log('message: ' + message);
+                  console.log('userStatus: ' + userStatus);
+                  console.log('jobStatus: ' + jobStatus);
+              }
+              // setPreviousJobCount(currentCount);
+              
+              fetchJobs();
+          } // Update the previousJobCount and end the initialization phase
+          setPreviousJobCount(currentCount);
+          if (initializationPhase) {
+              setInitializationPhase(false);
+          }
+      };
+  
+      // Fetch the open jobs when the component mounts
+      fetchJobs();
+      console.log('fetch Job')
+      // Set up an interval to fetch jobs every 5 seconds
+      const interval = setInterval(() => {
+          fetchAndUpdateJobs();
+      }, 5000);
+  
+      // Clean up function to clear the interval when the component is unmounted
+      return () => clearInterval(interval);
+  }, [previousJobCount, userStatus, jobStatus, initializationPhase]); // Added isFirstRun to the dependency array
 
-            if (currentCount > previousJobCount) {
-                // Reset the polling interval and no change count when a change is detected
-                setPollingInterval(5000);
-                setNoChangeCount(0);
-                fetchJobs();
-                setPreviousJobCount(currentCount);
-            } else {
-                // Increase the no change count
-                setNoChangeCount(prevCount => prevCount + 1);
 
-                // If no changes are detected for 3 consecutive polls, double the polling interval
-                if (noChangeCount >= 3) {
-                    setPollingInterval(prevInterval => prevInterval * 2);
-                    setNoChangeCount(0); // Reset the no change count
-                }
-            }
-        };
-
-        fetchJobs();
-
-        const interval = setInterval(() => {
-            fetchAndUpdateJobs();
-        }, pollingInterval);
-
-        return () => clearInterval(interval);
-    }, [previousJobCount, userStatus, jobStatus, pollingInterval, noChangeCount]);
-    
+ // Whenever userMessage changes, inform the parent component
+ useEffect(() => {
+    if (onUserMessageChange) {
+        onUserMessageChange(userMessage);
+    }
+}, [userMessage, onUserMessageChange]);
 
       
       // Function to format the date
@@ -146,42 +197,16 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
       }
       
       // console.log('username  ' + localStorage.getItem('userName'))
-      console.log('jobStatus  '+jobStatus)
-        console.log('jobs  ' + jobs)
-        console.log('jobs.length ' + jobs.length)
+        // console.log('home  ' + userStatus)
   
     return (
     <div className="App">
       
       {/* <div className="jobs-container"> */}
-      {/* <div className="form-row"> */}
-       
-            {errorMessage && <p>{  errorMessage}</p>}
-
-         
-
-
-
-      
-{jobs && jobs.length > 0  && 
-
-  <div>
-    {
-  (jobStatus === '!Closed') ? 
-    <h3> Active Jobs: </h3> 
-  : 
-    (jobStatus === 'Closed') ? 
-      <h3> Closed Jobs: </h3> 
-    : 
-      <h3> Jobs for {jobStatus}</h3>
-}
-
-
-      
-      {/* don't display if there are no jobs */}
-
-{/* {errorMessage && <p>{  errorMessage}</p>} */}
-      {/* </div> */}
+      <div className="form-row">
+      <h3> Jobs in status {jobStatus   }</h3>
+{errorMessage && <p>{  errorMessage}</p>}
+      </div>
 {[...jobs].reverse().map((job) => (
             // Display the job details
             // Replace this with your actual UI
@@ -202,8 +227,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
           ))}
         {/* </div> */}
         {/* end jobs container */}
-        </div>}
-
+        
     </div>
   );
 }

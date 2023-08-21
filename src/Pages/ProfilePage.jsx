@@ -31,7 +31,22 @@ const [employedSince, setEmployedSince] = useState("");
   const userStatus = localStorage.getItem('userStatus');
 
 
+// Function to format the date
 
+const formatDate = (dateString) => {
+  if(dateString === 'No Data'){
+  return 'No Data';
+  
+  }else{
+    
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
+    const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
+    return `${day}/${month}/${year}`;
+  }
+   
+  }; // end format date
 
 
 
@@ -53,10 +68,10 @@ const [employedSince, setEmployedSince] = useState("");
       // note that the property is 'contactNumber' in your response, not 'phone'
       // if user is a worker, set additional fields
     if (userStatus === 'worker') {
-      setDob(response.dob);
+      setDob(formatDate(response.dob));
       setLicense(response.license);
       setLicenseNo(response.licenseNo);
-      setEmployedSince(response.employedSince);
+      setEmployedSince(formatDate(response.employedSince));
     }
     } catch (error) {
       console.error('Failed to fetch user:', error);
@@ -235,7 +250,7 @@ const [employedSince, setEmployedSince] = useState("");
             onChange={(value) => { setLicenseNo(value); }}
             
           />
-{licenseNo && <p>{licenseNo}</p>}
+{/* {licenseNo && <p>{licenseNo}</p>} */}
           <InputBox 
             id="employedSinceInput" 
             label="Employed Since" 

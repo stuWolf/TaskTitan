@@ -32,8 +32,8 @@ function Home() {
 });
   
   
-  
-  const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
+const [userMessage, setUserMessage] = useState("")
+  // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
   // const [userMessage, setUserMessage] = useState('')
   const userStatus = localStorage.getItem('userStatus');
   const [pollingInterval, setPollingInterval] = useState(5000); // Start with 5 seconds
@@ -84,7 +84,7 @@ const messageMapping = {
       "customer": "Your quote just arrived"
   },
   "Worker Assignment": {
-      "manager": "Please assign a worker"
+      "manager": "Your quote was approved, Please assign a worker"
   },
   "Job Implementation": {
       "worker": "You received a new job for processing"
@@ -103,7 +103,7 @@ let jobStatuses = [];
     if (userStatus === "manager") {
         jobStatuses = ["Quoting", "Worker Assignment", "Closed"];
     } else if (userStatus === "customer") {
-        jobStatuses = ["Customer Approval", "Review"];
+        jobStatuses = ["Customer Approval", "Customer Review"];
     } else if (userStatus === "worker") {
         jobStatuses = ["Job Implementation"];
     }
@@ -132,7 +132,7 @@ let jobStatuses = [];
               // console.log('status ' + status)
               // console.log('currentCount ' + currentCount)
        
-              console.log('previousCount ' + previousCount)
+              // console.log('previousCount ' + previousCount)
 
               if (!initializationPhase && currentCount > previousCount) {
                   changeDetected = true;
@@ -246,6 +246,19 @@ let jobStatuses = [];
                 jobStatus={'Customer Approval'} 
                 // onUserMessageChange={handleUserMessageChange} 
             />
+
+            
+
+            ) : null}
+
+{(userStatus === 'customer'  )? ( 
+<DisplayJobs 
+                user_id={localStorage.getItem('userId')} 
+                userStatus={userStatus} 
+                jobStatus={'Customer Review'} 
+                // onUserMessageChange={handleUserMessageChange} 
+            />  
+
             ) : null}
         {userStatus === 'manager' ? (    
 <DisplayJobs 

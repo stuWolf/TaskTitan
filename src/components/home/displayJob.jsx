@@ -96,8 +96,8 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
         const fetchAndUpdateJobs = async () => {
             const response = await getCountOfJobs(user_id, userStatus, jobStatus);
             const currentCount = response.totalJobs;
-            console.log('jobStatus ' + jobStatus)
-            console.log('currentCount ' + currentCount)
+            // console.log('jobStatus ' + jobStatus)
+            // console.log('currentCount ' + currentCount)
 
             if (currentCount > previousJobCount) {
                 // Reset the polling interval and no change count when a change is detected
@@ -146,9 +146,9 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
       }
       
       // console.log('username  ' + localStorage.getItem('userName'))
-      console.log('jobStatus  '+jobStatus)
-        console.log('jobs  ' + jobs)
-        console.log('jobs.length ' + jobs.length)
+      // console.log('jobStatus  '+jobStatus)
+        // console.log('jobs  ' + jobs)
+        // console.log('polling interval ' + pollingInterval)
   
     return (
     <div className="App">
@@ -173,7 +173,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
     (jobStatus === 'Closed') ? 
       <h3> Closed Jobs: </h3> 
     : 
-      <h3> Jobs for {jobStatus}</h3>
+      <h3> Jobs need {jobStatus}</h3>
 }
 
 

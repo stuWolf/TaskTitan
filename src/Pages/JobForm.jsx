@@ -48,12 +48,10 @@ const { jobId } = useParams();
   const [electricalRetailer, setEctricalRetailer] = useState("");
   const [energyDistributor, setErgyDistributor] = useState("");
   const [mainsPhases, setPhasesMains] = useState("");
-  // const [jobStatus, setJobStatus] = useState("Draft");
-    // This state determines whether the form is visible or not
+
   const [errorMessage, setErrorMessage] = useState("");
 
- 
-    // const[dateCompleted, setDateCompleted]= useState("");
+
     const [startDate, setStartDate] = useState("");
     const [review, setReview] = useState("");
     const [reviewId, setReviewId] = useState("");
@@ -64,24 +62,19 @@ const { jobId } = useParams();
     const userStatus = localStorage.getItem('userStatus');
 
     let navigate = useNavigate();
-    // const [userMessage, setUserMessage] = useState('');
-    // const userMessage = localStorage.getItem('userMessage');
+
+    const [userMessage, setUserMessage] = useState("")
     // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
     const jobStatuses = ["Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
     // const [jobStatus, setJobStatus] = useState (localStorage.getItem('jobStatus') );  // initialises jobStatus with what's in local storage
     const [jobStatus, setJobStatus] = useState("Draft");
-    // const jobStatus = localStorage.getItem("jobStatus");Draft
-    // const jobStatus= localStorage.getItem('userMessage');
-    // const userMessage = localStorage.getItem('userMessage');
+ 
     const [visibility, setVisibility] = useState({quotingVisable: false, assignVisable: false, implementVisable: false, reviewVisable: false,});
     const [editability, setEditability] = useState("");
     const userId = localStorage.getItem('userId');
     const [today] = useState( new Date().toISOString());
     
-    // console.log('Jobid from JobForm: '  + jobId)
-    // setuserMessage
-
-  // localStorage.setItem('userMessage', "It is a wonderfull day today");
+    
 
   // **** logic of the form
 
@@ -133,7 +126,7 @@ const fetchReview = async (reviewId) => {
     }else{
       setReviewStars(reviewData.stars);
       setReview(reviewData.review );
-      setCompletionDate(reviewData.endDate );
+      setCompletionDate(formatDate(reviewData.endDate ));
 
     }
 
@@ -146,11 +139,9 @@ const fetchReview = async (reviewId) => {
 
 const fetchJob = async () => {
   try {
-    // console.log('fetch jobb called')
+   
     const jobData = await getJob(jobId);
-    // console.log("(job.jobStatus from fetch job)  "  + jobStatus);
-    // console.log('Job data:', jobData);
-    // setJob(jobData);
+
     setCustomerId(jobData.customerId);  // load existing job
     setJobStatus(jobData.jobStatus);
     setaddressOfInstallation(jobData.addressOfInstallation);
@@ -206,8 +197,7 @@ const fetchJob = async () => {
   useEffect(() => {
   
     
-      // const visibilityResult = calculateVisibility(jobStatus, userStatus,userId, customerId);
-      // setVisibility(calculateVisibility(jobStatus, userStatus,userId, customerId));
+
       // console.log('visibility' + visibility)
       // console.log('userId  ' + userId + 'customerId  ' + customerId)
       if(userId && customerId&&jobStatus && userStatus){
@@ -230,12 +220,6 @@ useEffect(() => {
   // localStorage.setItem('jobStatus', jobStatus)
 
 
-  //  if(userId && customerId&&jobStatus && userStatus){
-       
-  //       setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
-  //       setVisibility(calculateVisibility(jobStatus, userStatus,userId, customerId));
-  //       console.log('editVisability set')
-  //     }
 
   
 // this runs when job is selected from form . fetch all values, render form according to status
@@ -292,7 +276,7 @@ useEffect(() => {
       // copy customer address to job address
       setaddressOfInstallation(address)
       // alert("TODO");
-      // console.log('loginpage' + {status})
+    
     };
 
 
@@ -330,12 +314,14 @@ useEffect(() => {
     };
     
     updateJobFormData(jobId, jobData);
-
+    const newMessage = " Quote Accepted";
+    setUserMessage(newMessage);
 
       // go back to home view of role who edited the form
-      navigate('/home',{ state: { userStatus } });
-    // alert("TODO");
-    // console.log('loginpage' + {status})
+      setTimeout(() => {
+        navigate('/home', { state: { userStatus } });
+      }, 1000); // 2000 milliseconds = 2 seconds
+
 
 
     
@@ -352,7 +338,12 @@ useEffect(() => {
    // update job with new status
    // save new status inn server
     // go back to home view of role who edited the form
-    navigate('/home',{ state: { userStatus } });
+    const newMessage = " Quote Rejected";
+    setUserMessage(newMessage);
+    setTimeout(() => {
+      navigate('/home', { state: { userStatus } });
+    }, 1000); // 2000 milliseconds = 2 seconds
+ 
     // console.log('loginpage' + {status})
   };
 // *** for handle submit
@@ -381,7 +372,7 @@ const incrementJobStatus = () => {
   if (currentIndex < jobStatuses.length - 1) {
     const newStatus = jobStatuses[currentIndex + 1];
     setJobStatus(newStatus);
-    // localStorage.setItem('jobStatus', newStatus);
+
     console.log("jobStatus incremented, new status is: "+ newStatus);
     return newStatus
   } else {
@@ -393,18 +384,27 @@ const incrementJobStatus = () => {
   }
 };
 
-const createNewReview = async (reviewData) => {
-  // to be copied to handleSubmit
-
+const createNewReview = async (reviewData, jobId, newStatus) => {
   try {
-    const response = await createReview(reviewData); 
-    console.log("New Review created:", response );
-    return response.review_ID
-  } catch (error) {
-    console.error("Failed to create new review:", error );
-  }
+    const reviewResponse = await createReview(reviewData); 
+    console.log("Review id:", reviewResponse._id);
+    const jobData ={
+      jobStatus: newStatus,
+      reviewId: reviewResponse._id
+    }
 
-};//
+
+    const newJob = await updateJob(jobId, jobData); 
+    console.log("Job updated with new review:", newJob);
+
+    return { reviewId: reviewResponse._id, updatedJob: newJob };
+  } catch (error) {
+    console.error("Error in createNewReview:", error);
+    throw error;  // re-throwing the error if you want to handle it outside this function
+  }
+};
+
+
 const createNewJob = async (jobData) => {
   // to be copied to handleSubmit
 
@@ -420,15 +420,10 @@ const createNewJob = async (jobData) => {
 const updateJobFormData = async (jobId, jobData) => {
   // to be copied to handleSubmit
   
-  // if(jobId === 0){
-// if this is a new job
-// console.log('create new jobstatus  ' + jobStatus)
 
-  console.log('jobData from updateJobFormData    job:'+ jobId, 'customer:'+ customerId,
-  jobStatus,     // id of logged in user from local memory
-  scopeOfWork,
-  addressOfInstallation,
-  preferredJobCompletionDate )
+  // scopeOfWork,
+  // addressOfInstallation,
+  // preferredJobCompletionDate )
 
 
 
@@ -448,9 +443,7 @@ const handleWorkerSelected = (workerId, firstName, license) => {
   setLicenseNr(license);
   setWorkerId(workerId);
   
-      console.log("Selected Worker ID:", workerId);
-      console.log("Selected Worker First Name:", firstName);
-      console.log("Selected Worker License:", license);
+
       // You can now use these values in the parent component
     };
 
@@ -460,11 +453,11 @@ const handleWorkerSelected = (workerId, firstName, license) => {
     // console.log('setToday  ' +  new Date().toISOString())
     if (jobStatus === "Draft") {
       
-      // const newStatus = incrementJobStatus();
+      const newStatus = incrementJobStatus();
       if (jobId === 'New'){
         
       const jobData = {
-        jobStatus: incrementJobStatus(),
+        jobStatus: newStatus,
         customerId,     // id of logged in user from local memory
         scopeOfWork,
         addressOfInstallation,
@@ -473,12 +466,12 @@ const handleWorkerSelected = (workerId, firstName, license) => {
         // here later job date raised by customer  -> Not needed, created by server
       };
 // get job data from form and create new job
-  // console.log('handle Submit next status  ' + newStatus);
-  localStorage.setItem('userMessage', 'New job Created')
+  
+  // console.log('usermessage', userMessage)
     createNewJob(jobData);
     }else{
       const jobData = {
-        jobStatus: incrementJobStatus(),
+        jobStatus: newStatus,
         dateCreated: today
       }
       updateJobFormData(jobId, jobData); // update with new status
@@ -487,25 +480,31 @@ const handleWorkerSelected = (workerId, firstName, license) => {
       
       // sendEmail('manager@example.com', 'New Quote Request', 'A new quote request has arrived');
  
-      // if (userStatus === 'manager'){
-      //   localStorage.setItem('userMessage', " a new quote request has arrived");
-      // }
+
+      const newMessage = 'New job Created';
+      setUserMessage(newMessage);
+ 
+      // console.log('usermessage', newMessage)
+      // console.log('handle Submit next status  ' + newStatus);
      
     } else if (jobStatus === "Quoting") {
 
-      // const newStatus = incrementJobStatus();
+      const newStatus = incrementJobStatus();
       
 
       const jobData = {
   
-        jobStatus: incrementJobStatus(),
+        // jobStatus: incrementJobStatus(),
+        jobStatus: newStatus,
         dateQuoted: today,   // today's date when manager submit quote
         amountQuoted,
         quoteAttachment
         
         
       };
-
+      const newMessage = " Quote sent";
+      setUserMessage(newMessage);
+     
       console.log('handle Submit next status  ' + jobData.jobStatus);
 
       updateJobFormData(jobId, jobData);
@@ -515,41 +514,42 @@ const handleWorkerSelected = (workerId, firstName, license) => {
   
       // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
      
-      if (userStatus === 'customer'){
-      localStorage.setItem('userMessage', " your quote has arrived");
-      }
-      // incrementJobStatus();
+    
+      // ************************************************  END QUoting *****************************
     } else if (jobStatus === "Customer Approval") {
       //not needed, done in accept quote handler
       
       
         // sendEmail('customer@example.com', 'Your Quote Has Arrived', 'Your quote has arrived');
       
-      if (userStatus === 'manager'){
-      localStorage.setItem('userMessage', " your quote was approved");
-      }
+ 
+      const newMessage = " You approved your job";
+      setUserMessage(newMessage);
+      
       // incrementJobStatus();
+      // ************************************************  Customer Approval *****************************
     } else if (jobStatus === "Worker Assignment") {
       
-
+      const newStatus = incrementJobStatus();
       const jobData = {
-        jobStatus: incrementJobStatus(),
+        jobStatus: newStatus,
         workerId: workerId
        
       };
       updateJobFormData(jobId, jobData);  // update server
       // sendEmail('worker@example.com', 'New Job Assignment', 'You have a new job');
       
-      if (userStatus === 'worker'){
-      localStorage.setItem('userMessage', " you have a new job");
-      }
-      // incrementJobStatus();
+
+      const newMessage = " Worker Assigned";
+      setUserMessage(newMessage);
+
+    // ************************************************ END Worker Assignment *******************
     } else if (jobStatus === "Job Implementation") {
       //} else if (userStatus === "Worker" && jobStatus === "Job Implementation") {
-        
+        const newStatus = incrementJobStatus();
       if (isChecked) {
         const jobData = {
-        jobStatus: incrementJobStatus(),
+        jobStatus: newStatus,
         // workStarted: today,   // today's date when worker accept job  in handleAcceptJob
         maximumDemandInAmps,
         consumerMainsCapacity,
@@ -561,83 +561,74 @@ const handleWorkerSelected = (workerId, firstName, license) => {
 
       updateJobFormData(jobId, jobData);
 
-          if (userStatus === 'manager'){
-            localStorage.setItem('userMessage', " your job has been completed");
-          }else if(userStatus === 'customer'){
+      //     if (userStatus === 'manager'){
+      //       const newMessage = " your job has been completed";
+      //       setUserMessage(newMessage);
+            
+      //     }else if(userStatus === 'customer'){
 
-            localStorage.setItem('userMessage', " your job has been completed, please leave a review");
+      //       localStorage.setItem('userMessage', " your job has been completed, please leave a review");
 
-          }
+      //     }
       
        
         // incrementJobStatus();
       } else {
-        // localStorage.setItem('userMessage', "To Worker: Compliance box must be checked first");
-        // setUserMessage("To Worker: Compliance box must be checked first");
-        // alert("Compliance box must be checked first");
+    
+      
         setErrorMessage("Compliance box must be checked first");
         return;
       }
+      const newMessage = " Job Comp[leted";
+      setUserMessage(newMessage);
+
+
+
+// ******************************************** END Job implementation
     } else if (jobStatus === "Customer Review") {
-      // const newStatus = incrementJobStatus();
+      const newStatus = incrementJobStatus();
 
-// greate new review with 
-const reviewData = {
-  jobId,
-  userId,
-  workerId,
-  startDate: startDate, // from jobData.workStarted
-  endDate:today,
-  stars: reviewStars,
-  review
-
-
-}
+        // greate new review with 
+        const reviewData = {
+          jobId,
+          userId,
+          workerId,
+          startDate: startDate, // from jobData.workStarted
+          endDate:today,
+          stars: reviewStars,
+          review
 
 
-setReviewId (createNewReview (reviewData))
+        }
 
-console.log('startDate  ', workStarted,  'endDate  ',today )
-console.log('reviewData' + reviewData)
-      const jobData = {
-        jobStatus: incrementJobStatus(),  // set jobstatus to closed
-        reviewId: reviewId
-        // reviewId:createNewReview (reviewData) // need to fetch from new created review
-      // dateCompleted: today // does not exist in job shcema, stored in review, endDate
-      };
-      updateJobFormData(jobId, jobData);
-      //} else if (userStatus === "Customer" && jobStatus === "Customer Review") {
+
+         createNewReview (reviewData, jobId,newStatus)
+
+        
       // sendEmail('manager@example.com', 'New Review', 'A new review has arrived');
       // localStorage.setItem('userMessage', "To Manager: a new review has arrived");
       // setUserMessage("To Manager: a new review has arrived");
 
       // create new review,  review ID from response just created review
 
-      // localStorage.setItem('jobStatus', "Closed");
-      // localStorage.setItem('userMessage', "no messages");
-      // navigate('/home', { state: { userStatus } });
-      return;
-    }
+      
+
+      const newMessage = " Review submitted";
+      setUserMessage(newMessage);
+
+      // return;
+    } // end if jobstatus = customer review
+
+
     // allways increment, gets decremented when customer rejects quote or worker rejects job
-    // incrementJobStatus();
-    // incrementJobStatus();
-    // localStorage.setItem('jobStatus', 'Quoting');
-    console.log('handle Submit next status  ' + jobStatus)
-    if (jobId === 'New'){
-      // I am a new form, hurey!!!
-      // setJobStatus("Quoting")
-      // createNewJob();
-    }else{
 
-      //updateJob(id, data)
-        //  update job with form data
-    }
+    console.log('End handle Submit next status  ' + jobStatus)  // this is not updated yet
+      
 
-
+    setTimeout(() => {
+      navigate('/home', { state: { userStatus } });
+    }, 1000); // 2000 milliseconds = 2 seconds
     
-
-
-    navigate('/home', { state: { userStatus } });
     
   }; // end handle submit
   
@@ -655,8 +646,13 @@ console.log('reviewData' + reviewData)
     };
     updateJobFormData(jobId, jobData);
     
+    const newMessage = " Job Accepted";
+      setUserMessage(newMessage);
     
-    navigate('/home',{ state: { userStatus } });
+      setTimeout(() => {
+        navigate('/home', { state: { userStatus } });
+      }, 1000); // 2000 milliseconds = 2 seconds
+      
     // console.log('loginpage' + {userStatus})
   };
 
@@ -665,8 +661,13 @@ console.log('reviewData' + reviewData)
     // send email or message to manager: "assigned worker recected the job"
     // Go back to previous process step
     decrementJobStatus();
-    
-    navigate('/home',{ state: { userStatus } });
+    const newMessage = " Job Rejected";
+    setUserMessage(newMessage);
+
+
+    setTimeout(() => {
+        navigate('/home', { state: { userStatus } });
+      }, 1000); // 2000 milliseconds = 2 seconds
     
     // go back to home view of worker
     // console.log('loginpage' + {status})
@@ -754,14 +755,14 @@ console.log('reviewData' + reviewData)
      </div>
 
 
-     <p>Scope of Work:  draftEditable {editability.draftEditable }{visibility.quotingVisable}</p> 
+     <p>Scope of Work: </p> 
         <div className="form-row">
             <textarea value={scopeOfWork} onChange={e => setScopeOfWork(e.target.value)} placeholder="Scope of Work" disabled={jobStatus !== "Draft"} />
             </div>
             
            
 
-            {preferredJobCompletionDate? (
+            {!editability.draftEditable? (
           <div>
             <div className="form-row">
             <p>Prefered completion date:     {preferredJobCompletionDate}</p> 
@@ -828,8 +829,7 @@ console.log('reviewData' + reviewData)
           <div className="form-row">
           
           <input type="licenseNr" value={licenseNr} onChange={e => setLicenseNr(e.target.value)} placeholder="License Number" disabled={true} />
-          {/* <input type="workerName" value={workerName} onChange={e => setWorkerName(e.target.value)} placeholder="Worker Name" disabled={true} /> */}
-          {/* {(editability.assignEditable)&&<button disabled={jobStatus !== "Worker Assignment"} onClick={handleAssignWorker}>Assign Electrical Worker</button>} */}
+         
           {(editability.assignEditable)&&<SelectWorker onWorkerSelected={handleWorkerSelected} />}
           {(!editability.assignEditable)&&<input type="workerName" value={workerName} onChange={e => setWorkerName(e.target.value)} placeholder="Worker Name" disabled={true} />}
          
@@ -843,8 +843,9 @@ console.log('reviewData' + reviewData)
          <div className="job-form">
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
           <p>Job Implementation</p>
-          
-          <div className="form-row">  
+          {(editability.implementEditable)&&<p style={{color: 'red'}}>Please accept job before you start !</p>}
+          <div className="form-row"> 
+
           {(editability.implementEditable)&&<button disabled={jobStatus !== "Job Implementation"} onClick={handleAcceptJob}>Accept Job</button>}
           {(editability.implementEditable)&&<button disabled={jobStatus !== "Job Implementation"} onClick={handleRejectJob}>Reject Job</button>}
           </div>
@@ -882,29 +883,35 @@ console.log('reviewData' + reviewData)
           
           <div className="form-row">
           {workStarted &&  <p>Date work started {workStarted}</p>}
-          {/* {workStarted && !isNaN&&{workStarted }} */}
-           {/* <p>Date Quoted : {dateQuoted} </p> */}
-           {/* {dateQuoted && !isNaN(new Date(dateQuoted).getTime()) && <p>Date Quoted by manager: {dateQuoted} </p>} */}
+         
           {dateQuoted  && <p>Date Quoted: {dateQuoted} </p>} 
 
           {/* <input type="date" value={workStarted} onChange={e => setStartDate(e.target.value)} placeholder="Start Date" disabled={jobStatus !== "Customer Review"} /> */}
           </div>
+          {editability.reviewEditable ? (
           <div className="form-row">
-          <p>Please rate your work</p>
-          <select value={reviewStars} onChange={e => setReviewStars(e.target.value)}disabled={(jobStatus !== "Customer Review"|| userStatus === "manager")} >
-              {/* <option value="">JobStatus</option> */}
-              <option value="1 Star" >1 Star</option>
-              <option value="2 Star">2 Star</option>
-              <option value="3 Star">3 Star</option>
-              <option value="4 Star">4 Star</option>
-              <option value="5 Star">5 Star</option>
-              
-          </select>
-          </div>
 
-          <p>Review</p> 
+              <p>Please rate your work</p>
+              <select value={reviewStars} onChange={e => setReviewStars(e.target.value)} >
+                  <option value="">Rating</option>
+                  <option value="1 Star" >1 Star</option>
+                  <option value="2 Star">2 Star</option>
+                  <option value="3 Star">3 Star</option>
+                  <option value="4 Star">4 Star</option>
+                  <option value="5 Star">5 Star</option>
+              </select>
+
+
+          </div>
+        ) : ( <p>Review: {reviewStars}</p>    )}
+
+
+
+
+          <p>Review </p> 
             <div className="form-row">
-            <textarea value={review} onChange={e => setReview(e.target.value)} placeholder="Please write a review" disabled={(jobStatus !== "Customer Review"|| userStatus === "manager")} />
+            {/* <textarea value={review} onChange={e => setReview(e.target.value)} placeholder="Please write a review" disabled={(jobStatus !== "Customer Review"|| userStatus === "manager")} /> */}
+            <textarea value={review} onChange={e => setReview(e.target.value)} placeholder="Please write a review" disabled={!editability.reviewEditable} /> 
             </div>
 
 
@@ -916,10 +923,10 @@ console.log('reviewData' + reviewData)
           {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
           </div>}
 {/* end review visible */}
-        {/* {errorMessage && <p>{errorMessage}</p>} */}
+      
 
         {/* visibility.quotingVisable */}
-        {/* <p>{jobStatus}</p> */}
+
         {jobStatus === "Customer Approval"? (
           <div>
             {(visibility.quotingVisable)&&  <p>For approval please confirm Clicking ACCEPT</p>}
@@ -942,7 +949,7 @@ console.log('reviewData' + reviewData)
             </div>
       {/* end job form top */}
       {/* Show side pannel */}
-      <Side />
+      <Side userMessage = {userMessage} />
       </div>  {/* "job-form-and-side-panel" */}
       </div>
       {/* end main content */}

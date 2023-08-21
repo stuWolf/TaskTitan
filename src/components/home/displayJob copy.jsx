@@ -1,7 +1,6 @@
 import React , { useState, useEffect, useCallback }from 'react';
 import '../../App.css';
 import {getCountOfJobs,getStatusJobs  } from "../../services/jobsServices";
-// import {getCountOfJobs, getOpenJobs,getMyJobsOpen, getAllJobsOpenWorker  } from "../services/jobsServices";
 import {getUser} from '../../services/userServices';
 import { Link } from 'react-router-dom';
 
@@ -9,9 +8,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
   
     const [errorMessage, setErrorMessage] = useState("");
      const [previousJobCount, setPreviousJobCount] = useState(0); // Add this state variable at the top of your component
-    // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
-    // const [userMessage, setUserMessage] = useState('')
-    // const userStatus = localStorage.getItem('userStatus');
+    
     // State to hold the jobs
     const [jobs, setJobs] = useState([]);
   
@@ -26,7 +23,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
       
       
           jobsData = await getStatusJobs(user_id, userStatus, jobStatus);
-       console.log(jobStatus)
+      //  console.log(jobStatus)
           // console.log('userId:  ' + localStorage.getItem('userId') + 'userStatus:  ' + userStatus + '')
             // Check if jobsData contains 'message404, not found'
             if (jobsData.hasOwnProperty('message404')) {
@@ -38,23 +35,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
               return;
             }
       
-          // jobsData = await getStatusJobs(localStorage.getItem('userId'), userStatus, '!Closed');
-      
-          // const currentClosedJobCount = await getCountOfJobs(localStorage.getItem('userId'), userStatus, jobStatus);
-          // // setClosedJobCount(currentClosedJobCount);
-      
-          // // Check if the new counter is greater than the previous counter
-          // if (currentClosedJobCount > previousJobCount) {
-          //   setUserMessage('Another Job Closed!');
-
-          //   // update jobs
-          //   setPreviousJobCount(currentClosedJobCount); // Update the previous job count
-          // }
-      
-            // Fetch the user name for each job
-            // can't use this because it returns the number of all jobs,
-            // however jobsData is different for every user
-            // const numberOfJobs = await (getCountOfJobs())
+          
       
       // Fetch the worker and customer names for each job
       for(let job of jobsData) {
@@ -111,7 +92,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
         const fetchAndUpdateJobs = async () => {
           const response = await getCountOfJobs(user_id, userStatus, jobStatus);
           const currentCount = response.totalJobs; // Access the totalJobs property from the response
-            console.log('currentCount: ' + currentCount)
+            // console.log('currentCount: ' + currentCount)
             if (currentCount > previousJobCount) {
                 // setUserMessage('Another Job Closed!');
                 fetchJobs();
@@ -131,14 +112,6 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
         return () => clearInterval(interval);
     }, [previousJobCount, userStatus, jobStatus]); // Added dependencies to the dependency array
     
-
-
- // Whenever userMessage changes, inform the parent component
-//  useEffect(() => {
-//     if (onUserMessageChange) {
-//         onUserMessageChange(userMessage);
-//     }
-// }, [userMessage, onUserMessageChange]);
 
       
       // Function to format the date

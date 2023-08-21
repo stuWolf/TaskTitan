@@ -25,14 +25,7 @@ function Home() {
   // const [errorMessage, setErrorMessage] = useState("");
   // const [userMessage, setUserMessage] = useState('');
   // const [closedJobCount, setClosedJobCount] = useState('');
-  const [previousJobCounts, setPreviousJobCounts] = useState(() => {
-    // Retrieve from localStorage when initializing the state
-    const savedCounts = localStorage.getItem('previousJobCounts');
-    return savedCounts ? JSON.parse(savedCounts) : {};
-});
-  
-  
-  
+  // const [previousJobCount, setPreviousJobCount] = useState(0); // Add this state variable at the top of your component
   const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
   // const [userMessage, setUserMessage] = useState('')
   const userStatus = localStorage.getItem('userStatus');
@@ -99,7 +92,7 @@ const messageMapping = {
 };
 // const jobStatuses = ["Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
 let jobStatuses = [];
-// this defines the jobs of what status are momnitored, this are also the jobs that are displayed
+
     if (userStatus === "manager") {
         jobStatuses = ["Quoting", "Worker Assignment", "Closed"];
     } else if (userStatus === "customer") {
@@ -107,75 +100,61 @@ let jobStatuses = [];
     } else if (userStatus === "worker") {
         jobStatuses = ["Job Implementation"];
     }
-    // const [previousJobCounts, setPreviousJobCounts] = useState({});
+    const [previousJobCounts, setPreviousJobCounts] = useState({});
 
     useEffect(() => {
-      const countJobs = async () => {
-          const responses = await Promise.all(jobStatuses.map(status => getCountOfJobs(localStorage.getItem('userId'), userStatus, status)));
-          const counts = responses.map(response => response.totalJobs);
-          const saveAndSetPreviousJobCounts = (updatedCounts) => {
-            // Save to localStorage
-            localStorage.setItem('previousJobCounts', JSON.stringify(updatedCounts));
-            // Update the state
-            setPreviousJobCounts(updatedCounts);
-        };
-        
-
-          let updatedCounts = { ...previousJobCounts };
-          let changeDetected = false;
-
-          for (let i = 0; i < jobStatuses.length; i++) {
-              const currentCount = counts[i];
-              const status = jobStatuses[i];
+      const eventSources = []; // To keep track of all SSE connections
+  
+      jobStatuses.forEach(status => {
+          const onDataReceived = (data) => {
+              const currentCount = data.totalJobs;
               const previousCount = previousJobCounts[status] || 0;
-
-              // console.log('status ' + status)
-              // console.log('currentCount ' + currentCount)
-       
-              console.log('previousCount ' + previousCount)
-
+              let updatedCounts = { ...previousJobCounts };
+              let changeDetected = false;
+  
               if (!initializationPhase && currentCount > previousCount) {
                   changeDetected = true;
                   const message = messageMapping[status] && messageMapping[status][userStatus];
-                 
                   if (message) {
                       setUserMessage(message);
-                      // console.log('message' + message)
                   }
               }
-
+  
               updatedCounts[status] = currentCount;
-          }
-
-          if (changeDetected) {
-              // Reset the polling interval and no change count when a change is detected
-              setPollingInterval(5000);
-              setNoChangeCount(0);
-          } else {
-              // Increase the no change count
-              setNoChangeCount(prevCount => prevCount + 1);
-
-              // If no changes are detected for 3 consecutive polls, double the polling interval
-              if (noChangeCount >= 3) {
-                console.log('pollingInterval ' + pollingInterval )
-                  setPollingInterval(prevInterval => prevInterval * 2);
-                  setNoChangeCount(0); // Reset the no change count
+  
+              if (changeDetected) {
+                  // Reset the polling interval and no change count when a change is detected
+                  setPollingInterval(5000);
+                  setNoChangeCount(0);
+              } else {
+                  // Increase the no change count
+                  setNoChangeCount(prevCount => prevCount + 1);
+  
+                  // If no changes are detected for 3 consecutive polls, double the polling interval
+                  if (noChangeCount >= 3) {
+                      setPollingInterval(prevInterval => prevInterval * 2);
+                      setNoChangeCount(0); // Reset the no change count
+                  }
               }
-          }
-
-          saveAndSetPreviousJobCounts (updatedCounts);
-
-          if (initializationPhase) {
-              setInitializationPhase(false);
-          }
+  
+              setPreviousJobCounts(updatedCounts);
+  
+              if (initializationPhase) {
+                  setInitializationPhase(false);
+              }
+          };
+  
+          // Establish an SSE connection for the current job status
+          const eventSource = getCountOfJobs(localStorage.getItem('userId'), userStatus, status, onDataReceived);
+          eventSources.push(eventSource);
+      });
+  
+      // Clean up: close all SSE connections when the component is unmounted
+      return () => {
+          eventSources.forEach(es => es.close());
       };
-
-      const interval = setInterval(() => {
-          countJobs();
-      }, pollingInterval);
-
-      return () => clearInterval(interval);
   }, [previousJobCounts, userStatus, initializationPhase, pollingInterval, noChangeCount]);
+  
     
 
 
@@ -239,7 +218,7 @@ let jobStatuses = [];
           // onUserMessageChange={handleUserMessageChange} 
         />
       ) : null}
-     {(userStatus === 'customer'  )? ( 
+     {userStatus === 'customer' ? ( 
 <DisplayJobs 
                 user_id={localStorage.getItem('userId')} 
                 userStatus={userStatus} 
@@ -263,18 +242,14 @@ let jobStatuses = [];
                 // onUserMessageChange={handleUserMessageChange} 
             />
             ) : null}
-
-{(userStatus === 'customer' || userStatus === 'manager')? (
+{userStatus === 'customer' ? (
 <DisplayJobs 
                 user_id={localStorage.getItem('userId')} 
                 userStatus={userStatus} 
                 jobStatus={'!Closed'} 
                 // onUserMessageChange={handleUserMessageChange} 
-                
             />
             ) : null}
-
-
 <DisplayJobs 
                 user_id={localStorage.getItem('userId')} 
                 userStatus={userStatus} 

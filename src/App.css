@@ -252,13 +252,13 @@
   margin-top: 10px;
   display: inline-block;
   background-color: green; /* Green background */
-  color: black; /* Black text */
-  padding: 10px 20px; /* Add some padding */
+  color: rgb(10, 10, 10); /* Black text */
+  padding: 8px 10px; /* Add some padding */
   font-family: Arial, sans-serif; /* Change the font */
   margin-right: 15px; /* Add some space between buttons */
-  border-radius:10%;
-  margin-right: 10px;
-  margin-left: 30px;
+  border-radius: 25px;
+    max-width: 150px;
+    min-width: 50px;
 }
 
 .side-panel {
@@ -279,7 +279,7 @@
 .App-header {
   background-color: #F4EB27;
   padding: 20px;
-  height: 100px
+  height: 80px
   /* color: white; */
 }
 
@@ -287,6 +287,18 @@
   font-size: 56px;
   font-weight: bold;
   font-style: italic;
+
+}
+
+/* Adjust font size for medium screens */
+@media (max-width: 768px) {
+  .App-header h1  {
+    font-size: 30px; /* Adjust as needed */
+  }
+  .App-header {
+    height: 50px
+
+  }
 }
 
 .landing-page {
@@ -533,9 +545,9 @@
   margin-bottom: 20px;
   margin-left: 20px; 
   margin-right: 20px;
-  /* padding: 20px; */
+  /* padding: 5px 10px; */
   align-items: center; /* this will vertically align the items in the center */
-
+  gap: 10px; /* adjust this value to your preference */
 }
 
 .form-row input{

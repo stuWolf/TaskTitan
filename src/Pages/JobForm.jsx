@@ -54,7 +54,7 @@ const { jobId } = useParams();
 
  
     // const[dateCompleted, setDateCompleted]= useState("");
-    // const [startDate, setStartDate] = useState("");
+    const [startDate, setStartDate] = useState("");
     const [review, setReview] = useState("");
     const [reviewId, setReviewId] = useState("");
     const [reviewStars, setReviewStars] = useState("");
@@ -162,7 +162,8 @@ const fetchJob = async () => {
     setQuoteAttachment('https://example.com/quote2.pdf');
     // setQuoteAttachment(jobData.quoteAttachment);
     setWorkerId(jobData.workerId);
-    setWorkStarted(formatDate(jobData.workStarted));
+    setWorkStarted(formatDate(jobData.workStarted)); // for display
+    setStartDate(jobData.workStarted); // for later creation of review
     setMaximumDemandInAmps(jobData.maximumDemandInAmps);
     setConsumerMains(jobData.consumerMainsCapacity);
     setEctricalRetailer(jobData.ectricalRetailer);
@@ -172,7 +173,7 @@ const fetchJob = async () => {
     // setCompletionDate(jobData.setCompletionDate); // comes from review
     // setDateQ
     // set
-    console.log('marker 1' )
+    // console.log('marker 1' )
     // Fetch user data after job data is successfully fetched, update fields in customer header
     // if(!email){
       if(jobData){
@@ -183,13 +184,14 @@ const fetchJob = async () => {
     // fetch worker info and write license nr and name 
     // if (visibility.implementVisable) {
       if (workerId) {
-      console.log('marker 2' )
-      console.log('fetchWorker(workerId);' + workerId)
+      // console.log('marker 2' )
+      // console.log('fetchWorker(workerId);' + workerId)
       fetchWorker(workerId);
     }
     // fetch review data and put them in to form
     if (reviewId) {
       fetchReview(jobData.reviewId);
+      console.log('fetchReview(jobData.reviewId)' + reviewId)
     }
   } catch (error) {
     console.error('Failed to fetch job:', error);
@@ -584,7 +586,7 @@ const reviewData = {
   jobId,
   userId,
   workerId,
-  startDate: workStarted,
+  startDate: startDate, // from jobData.workStarted
   endDate:today,
   stars: reviewStars,
   review
@@ -593,14 +595,15 @@ const reviewData = {
 }
 
 
-// createNewReview (reviewData)
+setReviewId (createNewReview (reviewData))
 
-
-
+console.log('startDate  ', workStarted,  'endDate  ',today )
+console.log('reviewData' + reviewData)
       const jobData = {
         jobStatus: incrementJobStatus(),  // set jobstatus to closed
-      reviewId:createNewReview (reviewData), // need to fetch from new created review
-      dateCompleted: today // today's date when customer submit review
+        reviewId: reviewId
+        // reviewId:createNewReview (reviewData) // need to fetch from new created review
+      // dateCompleted: today // does not exist in job shcema, stored in review, endDate
       };
       updateJobFormData(jobId, jobData);
       //} else if (userStatus === "Customer" && jobStatus === "Customer Review") {
@@ -878,7 +881,7 @@ const reviewData = {
           {/* <button onClick={handleNewJob}>Create New Job</button>  */}
           
           <div className="form-row">
-          {dateQuoted  &&  <p>Date work started {workStarted}</p>}
+          {workStarted &&  <p>Date work started {workStarted}</p>}
           {/* {workStarted && !isNaN&&{workStarted }} */}
            {/* <p>Date Quoted : {dateQuoted} </p> */}
            {/* {dateQuoted && !isNaN(new Date(dateQuoted).getTime()) && <p>Date Quoted by manager: {dateQuoted} </p>} */}
@@ -906,8 +909,9 @@ const reviewData = {
 
 
           <div className="form-row">
-          <p>Date work completed</p>
-          <input type="text" value={completionDate} onChange={e => setCompletionDate(e.target.value)} placeholder= "Completion Date" disabled={jobStatus !== "Customer Review"} />
+          {completionDate && <p>Date work completed: {completionDate} </p>} 
+          {/* <p>Date work completed</p> */}
+          {/* <input type="text" value={completionDate} onChange={e => setCompletionDate(e.target.value)} placeholder= "Completion Date" disabled={jobStatus !== "Customer Review"} /> */}
           </div>
           {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
           </div>}

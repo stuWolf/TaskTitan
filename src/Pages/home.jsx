@@ -76,7 +76,22 @@ const [userMessage, setUserMessage] = useState("")
 //   // You can use it as input for the sidebar or wherever you need it
 // };
 
+
+
 const messageMapping = {
+
+
+
+// count raises of		userStatus	Message
+    // Quoting		        manager	    You have a new job for quoting
+    // Customer Approval    customer	Your quote just arrived
+    // Work Assignment		manager	    Please assign a worker
+    // Job Implementation	worker	    You received a new job for processing
+    // Customer Review		customer	Your job has been completed, please write a review
+    //                      Manager	    Another job has been completed, time to write an invoice
+    // Closed		        Manager	    Another job closed
+
+
   "Quoting": {
       "manager": "You have a new job for quoting"
   },

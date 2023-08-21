@@ -12,8 +12,8 @@ export function calculateEditability(jobStatus, userStatus, userId, customerId) 
     const reviewEditable = (userId  === customerId && jobStatus === "Customer Review");
 
 
-    console.log('quotingEditable ' + quotingEditable +'  approvalEditable ' +approvalEditable+ '  assignEditable '+ assignEditable +"  implementEditable "+ implementEditable +
-'  reviewEditable '+ reviewEditable+ '  draftEditable  '+ draftEditable)
+    // console.log('quotingEditable ' + quotingEditable +'  approvalEditable ' +approvalEditable+ '  assignEditable '+ assignEditable +"  implementEditable "+ implementEditable +
+// '  reviewEditable '+ reviewEditable+ '  draftEditable  '+ draftEditable)
     
 return { draftEditable,quotingEditable , approvalEditable,assignEditable , implementEditable , reviewEditable  };
 }

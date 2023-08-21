@@ -22,8 +22,8 @@ export function calculateVisibility(jobStatus, userStatus,userId, customerId) {
                           (userStatus === "customer" && ["Draft", "Customer Review"].includes(jobStatus)) ||
                           (userStatus === "worker" && jobStatus === "Job Implementation");
 // console.log(jobStatus+ userStatus+  userId+  customerId)
-    console.log('quotingVisable ' + quotingVisable +'  assignVisable ' +assignVisable+ '  implementVisable '
-    + implementVisable +"  reviewVisable "+ reviewVisable + "  submitVisable " + submitVisable);
+    // console.log('quotingVisable ' + quotingVisable +'  assignVisable ' +assignVisable+ '  implementVisable '
+    // + implementVisable +"  reviewVisable "+ reviewVisable + "  submitVisable " + submitVisable);
 
     return { quotingVisable, assignVisable, implementVisable, reviewVisable, submitVisable };
 }

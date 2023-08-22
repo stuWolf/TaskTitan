@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login } from "../services/loginServices";
 import Header from '../components/header';
 import Footer from '../components/footer';
-import { login } from "../services/loginServices";
+// import { login } from "../services/loginServices";
 
 const Login = () => {
   const [email, setEmail] = useState("");

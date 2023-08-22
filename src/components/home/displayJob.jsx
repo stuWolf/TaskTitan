@@ -8,19 +8,25 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
   
     const [errorMessage, setErrorMessage] = useState("");
      const [previousJobCount, setPreviousJobCount] = useState(0); // Add this state variable at the top of your component
-     const [pollingInterval, setPollingInterval] = useState(5000); // Start with 5 seconds
+     const [pollingInterval, setPollingInterval] = useState(10000); // Start with 5 seconds
+    //  const pollingIntervalRef = useRef(10000);
+     
      const [noChangeCount, setNoChangeCount] = useState(0); // Count how many times no change is detected
  
     // State to hold the jobs
     const [jobs, setJobs] = useState([]);
   
- 
+//  console.log('display jobs called')
 
-    const fetchJobs = useCallback(async () => {
+    const fetchJobs = useCallback(async (flag) => {
         try {
-          setErrorMessage('Fetching your Jobs...');
+          if (flag === 'first'){
+            // console.log(flag)
+            setErrorMessage('Fetching your Jobs...');
+          }
+          
           let jobsData;  // array with all jobs rawdata
-          // console.log('fetch jobs called')
+          
         
       
       
@@ -29,13 +35,20 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
           // console.log('userId:  ' + localStorage.getItem('userId') + 'userStatus:  ' + userStatus + '')
             // Check if jobsData contains 'message404, not found'
             if (jobsData.hasOwnProperty('message404')) {
-              if ((userStatus === "worker")||(jobStatus !== 'Closed')){
-              setErrorMessage(`No jobs need ${jobStatus} at the moment`);
-              setJobs([])
+              if ((userStatus === "worker")&&(jobStatus === 'Job Implementation')){
+              setErrorMessage(`No jobs for you at the moment`);
+              
               // delete displayed jobs
-              } else if ((userStatus === "customer")||(jobStatus !== 'Closed')){
-                setErrorMessage("No Jobs yet. Lodge your first job by clicking 'Create New Job' ");
-              } else { setErrorMessage("No jobs recorded yet");}
+            } else if ((userStatus === "customer")&&(jobStatus === 'Customer Approval')){
+              setErrorMessage(`No jobs for you at the moment`);
+              
+
+              } else if ((userStatus === "manager")&&(jobStatus === 'Quoting')){
+                setErrorMessage("No jobs to Quote on at the moment ");
+              // } else if ((userStatus === "manager")&&(jobStatus === 'Quoting')){
+              //   setErrorMessage("No jobs to Quote on at teh moment ");
+              } else { setErrorMessage("");}
+              setJobs([])
               return;
             }
       
@@ -88,7 +101,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
           setErrorMessage("could not fetch jobs");
         }
         setErrorMessage('');
-      },[]);
+      },[jobStatus]);
       // end fetch jobs
       
       
@@ -98,12 +111,12 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
             const currentCount = response.totalJobs;
             // console.log('jobStatus ' + jobStatus)
             // console.log('currentCount ' + currentCount)
-
+            console.log('pollingInterval display ' + pollingInterval )
             if (currentCount > previousJobCount) {
                 // Reset the polling interval and no change count when a change is detected
-                setPollingInterval(5000);
+                setPollingInterval(10000);
                 setNoChangeCount(0);
-                fetchJobs();
+                fetchJobs('2nd');
                 setPreviousJobCount(currentCount);
             } else {
                 // Increase the no change count
@@ -117,16 +130,19 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
             }
         };
 
-        fetchJobs();
-
+        fetchJobs('first');
+        // console.log('  fetchJobs(first); called')
+// fetch jobs the first time
         const interval = setInterval(() => {
             fetchAndUpdateJobs();
+            // console.log('// fetch jobs and update counter')
+   // fetch jobs and update counter
         }, pollingInterval);
 
         return () => clearInterval(interval);
-    }, [previousJobCount, userStatus, jobStatus, pollingInterval, noChangeCount]);
+    }, [previousJobCount]);
     
-
+//[previousJobCount, userStatus, jobStatus, pollingInterval, noChangeCount]
       
       // Function to format the date
       const formatDate = (dateString) => {

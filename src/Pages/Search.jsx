@@ -80,7 +80,11 @@ function Search() {
     <div className="App">
       <Header />
       <Navbar userStatus = {userStatus} />
-      <h2>Playground</h2>
+      <h2>What we are planning to do here</h2>
+      <p>Search all reviews from a customer</p>
+      <p>Search all reviews about a worker</p>
+      <p>Many more ...</p>
+      <p>For now just test ground for some cool stuff to integrate ...</p>
       <div className="job-form-and-side-panel">
 <div className="job-form">
        
@@ -137,7 +141,7 @@ function Search() {
 
       
       </div>
-      <Side userMessage = {userMessage} />
+      <Side userMessage={userMessage} updateUserMessage={setUserMessage}/>
       </div>
       <Footer/> 
     </div>

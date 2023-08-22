@@ -41,12 +41,16 @@ function Navbar({userStatus}) {
         {/* <button onClick={() => handleNavigation('/quotes')}>Quotes</button> */}
         <button onClick={() => handleNavigation('/completed')}>Completed Jobs</button>
         {userStatus === "manager" && 
+        <div>
           <button onClick={() => handleNavigation('/managerWorkers')}>My Workers</button>
-        }
-        <button onClick={() => handleNavigation('/reviews')}>Reviews</button>
-        <div className="navbar-right">
           <button onClick={() => handleNavigation('/search')}>Search</button>
-          <button onClick={() => handleNavigation('/profile')}>Profile</button>
+          </div> 
+        }
+        
+        <div className="navbar-right">
+        <button onClick={() => handleNavigation('/profile')}>Profile</button>
+          <button onClick={() => handleNavigation('/about')}>About</button>
+          
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>

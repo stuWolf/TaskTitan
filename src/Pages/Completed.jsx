@@ -1,147 +1,132 @@
-import React, { useState, useEffect, useCallback } from "react";
+// import React from "react";
+import React, { useState} from "react";
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import WorkerColumns from '../components/myWorkers/workerColumns';
-import {  useNavigate} from 'react-router-dom';
-import { getUsers } from "../services/userServices";
-import { Link } from 'react-router-dom';
+// import {getCountOfJobs } from "../services/jobsServices";
+// import {getStatusJobs  } from "../services/jobsServices";
+// import {getCountOfJobs  } from "../services/jobsServices";
+// import {getUser} from '../services/userServices';
+import JobColumns from '../components/home/jobColumns';
+// import { Link } from 'react-router-dom';
+import DisplayJobs from "../components/home/displayJob";
+// import {useUserMessaging} from "../services/userMessaging.js";
+
+
+// import JobForm from '../Pages/JobForm';
+import {   useNavigate} from 'react-router-dom';
+
 function Completed() {
 
-
+  
+  let navigate = useNavigate();
+  
+  const [userMessage, setUserMessage] = useState('')
   const userStatus = localStorage.getItem('userStatus');
-  
- // Get a reference to the history object
- let navigate = useNavigate();
-
- const [errorMessage, setErrorMessage] = useState("");
-  // const userMessage = localStorage.getItem('userMessage');
-  // to get back to jobform of actual job
-  // const [jobIdHome, setJobIdHome] = useState(localStorage.getItem('workerJobID'));
-  // const jobStatusJobForm = localStorage.getItem('jobStatus');
-    // State to hold the workers
-    const [workers, setWorkers] = useState([]);
-  
-  const handleWorker = () => {
-    // Add new Worker button
-    navigate('/addWorker');
-    // could be signup with status 'new worker', just has extra fields
-//  registerWorker(data)
+ 
+  const handleNewJob = () => {
+// Create new job button pressed
+// localStorage.setItem('jobStatus', "Draft");
+    navigate('/jobForm/New');
+    // Handle login
+    // console.log('loginpage' + {userStatus})
   };
 
+//  on the API side: 
 
-  const fetchWorkers = useCallback(async () => {
-    try {
-      let workerData;  
-      
-      // get all users with status Worker
-      workerData = await getUsers("worker");
-        
-      // Check if workerData contains 'message404, not found'
-      if (workerData.hasOwnProperty('message404')) {
-        setErrorMessage("You have no workers yet")
-        return;
-      }
-    
-      // Filter out the required fields
-      const filteredWorkers = workerData.map((worker) => ({
-        _id: worker._id || 'No Data',  
-        firstName: worker.firstName || 'No Data',
-        lastName: worker.lastName || 'No Data',
-        address: worker.address || 'No Data',
-        employedSince: worker.employedSince || 'No Data',
-        license: worker.license || 'No Data',
-      }));
-  
-      // Set the filtered workers in state
-      setWorkers(filteredWorkers);
-        
-    } catch (error) {
-      console.error('Failed to fetch workers:', error);
-      setErrorMessage("could not fetch workers");
-    }
-  },[]);
-  // end fetch workers
-  
-  useEffect(() => {
-    // Fetch the open jobs when the component mounts
-    fetchWorkers();
-  }, [fetchWorkers]);
-  
-  // Function to format the date
-  const formatDate = (dateString) => {
-    if(dateString === 'No Data'){
-      return 'No Data';
-    }else{
-      const date = new Date(dateString);
-      const day = date.getDate();
-      const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
-      const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
-      return `${day}/${month}/${year}`;
-    }
-  }; // end format date
+// find all open jobs using getOpenJobs(), and filter out  _id ,  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus
 
-  // call API to fetch all workers 
+//  put all filtered jobs in an array local memory.
+// display this array with the following columns:
+//  _id (last 4 digits),  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus
 
-  // write all workers documents in an array of workers
-  // display each row as a link, 
-  // if (job in jobStatus = work assignment) when click assign worker to job
+
+// the manager sees all open jobs, the customer sees all jobs originated by him, 
+// the worker sees all jobs assigned to him
+// each row should be a link to the corresponding job. when clicked, display Job form, using search job by ID with corresponding status and user roll
+// manager should be able to see the whole form for review (the visability of the form is according to job status -> visibilityManager.js)
+// link to job clicked -> job form opens -> call API to fetch data from Job collection-> fill form -> user updates form -> update job when form submit 
+
+
+// interface for Displayjobs
+// const handleUserMessageChange = (message) => {
+//   setUserMessage(message);
+//   // Now, sidebarUserMessage contains the userMessage from DisplayJobs
+//   // You can use it as input for the sidebar or wherever you need it
+// };
+
+console.log('rerender Home  ')
+
+  // console.log('home  ' + userStatus)
   return (
     <div className="App">
       <Header />
       <Navbar userStatus = {userStatus} />
-
+     
       <div className="main-content">
-        <h2>My Workers</h2>
-        <p>User status: {userStatus}</p>
-        <button onClick={handleWorker}>Add New Worker</button>
-        <WorkerColumns/>
+      
 
+      <div className="form-row">
+      
+        <h2>My Jobs </h2>
+        
+        {(userStatus === "manager"||userStatus === "customer" )&&
+        <div>
 
-        <div className="jobs-container">
-        {workers.map((worker) => (
-          <div key={worker._id} className="job-details">
-            {/* go back to job form of ID = jobIdHome  and hand over worker id of selected worker when link on list clicked */}
-            {/* <Link to={`/jobForm/${jobIdHome}/${worker._id}`}>{worker._id.slice(-4)}</Link> */}
-            {/* workerJobID is the job ID handed back to upen the form in home view. we would to hand over a worker ID as well */}
-            
-            <p className="job-id">
-            {
-              localStorage.getItem('workerJobID') 
-              // if workerJobID is set, make it a link go back to job form and hand over worker ID
-  ? <Link to={`/jobForm/${localStorage.getItem('workerJobID')}`}>{worker._id.slice(-4)}</Link>
-              : worker._id.slice(-4)
-              // else only display the id
-            }
-          </p>
-
-            {/* <p className="job-id"><Link to={`/jobForm/${jobIdHome }/${worker._id}`}>{worker._id.slice(-4)}</Link></p> */}
-
-            <p>{worker.firstName}</p>
-            <p>{worker.lastName}</p>
-            <p>{worker.address}</p>
-            <p>{formatDate(worker.employedSince)}</p>
-            <p>{worker.license}</p>
-          </div>
-        ))}
+        <button onClick={handleNewJob}>Create New Job</button>
+        
+        </div>
+        }
+        <p>Welcome back {localStorage.getItem('userName')},  you are logged in as {userStatus}</p> 
       </div>
-        {errorMessage && <p>{errorMessage}</p>}
+     
+      <div className="jobs-container-and-side-panel">
+          {/* <p>Manager view : List of all jobs with Status, assigned worker, quote, and customer details. Option to add new job or quote.</p>  */}
+          {/* // find all open jobs using getOpenJobs(), and filter out  _id ,  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus
+
+//  put all filtered jobs in an array local memory.
+// display this array with the following columns:
+//  _id (last 4 digits),  workerID, addressOfInstallation, dateQuoted, workStart, jobStatus */}
 
 
 
 
 
+<div className="jobs-container">
+
+<JobColumns />
+{/* <h2>Closed Jobs</h2> */}
+
+
+
+<DisplayJobs 
+                user_id={localStorage.getItem('userId')} 
+                userStatus={userStatus} 
+                jobStatus={'Closed'} 
+                // onUserMessageChange={handleUserMessageChange} 
+            />
+
+
+
+        </div>
+        {/* end jobs container */}
+
+       
+        
+      {/* only displays when there is an error message */}
+       {/* Show side pannel */}
+       {/* <Side userMessage = {userMessage} /> */}
+       <Side userMessage={userMessage} updateUserMessage={setUserMessage} />
+      {/* no messages created here */}
+      
+      </div> 
+        {/* end jobs containerand side panel */}
+        
       </div>
-       {/* end main -content */}
-
-      {/* <div className="side-panel">
-        <h2>Notifications</h2>
-        <p>Notifications about new jobs, quotes, assignments, and reviews.</p>
-      </div> */}
-      <Side/>
-
+      {/* end main -content */}  
+      {/* {errorMessage && <p>{errorMessage}</p>} */}
       <Footer/> 
     </div>
   );

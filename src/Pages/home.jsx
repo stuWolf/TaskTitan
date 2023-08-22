@@ -1,10 +1,11 @@
-import React, { useState,useEffect} from "react";
+// import React from "react";
+import React, { useState} from "react";
 import '../App.css';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import {getCountOfJobs } from "../services/jobsServices";
+// import {getCountOfJobs } from "../services/jobsServices";
 // import {getStatusJobs  } from "../services/jobsServices";
 // import {getCountOfJobs  } from "../services/jobsServices";
 // import {getUser} from '../services/userServices';
@@ -19,32 +20,12 @@ import {   useNavigate} from 'react-router-dom';
 
 function Home() {
 
-  // let location = useLocation();
-  // let userStatus = location.state.userStatus;
+  
   let navigate = useNavigate();
-  // const [errorMessage, setErrorMessage] = useState("");
-  // const [userMessage, setUserMessage] = useState('');
-  // const [closedJobCount, setClosedJobCount] = useState('');
-  const [previousJobCounts, setPreviousJobCounts] = useState(() => {
-    // Retrieve from localStorage when initializing the state
-    const savedCounts = localStorage.getItem('previousJobCounts');
-    return savedCounts ? JSON.parse(savedCounts) : {};
-});
   
-  
-const [userMessage, setUserMessage] = useState("")
-  // const [userMessage, setUserMessage] = useState(localStorage.getItem('userMessage') || "");
-  // const [userMessage, setUserMessage] = useState('')
+  const [userMessage, setUserMessage] = useState('')
   const userStatus = localStorage.getItem('userStatus');
-  const [pollingInterval, setPollingInterval] = useState(5000); // Start with 5 seconds
-    const [noChangeCount, setNoChangeCount] = useState(0); // Count how many times no change is detected
-  // State to hold the jobs
-  // const [jobs, setJobs] = useState([]);
-  
-  // const previousJobCountRef = useRef(0);
-
-  // const [previousJobCounts, setPreviousJobCounts] = useState(0); // Add this state variable at the top of your component
-  const [initializationPhase, setInitializationPhase] = useState(true);
+ 
   const handleNewJob = () => {
 // Create new job button pressed
 // localStorage.setItem('jobStatus', "Draft");
@@ -76,135 +57,7 @@ const [userMessage, setUserMessage] = useState("")
 //   // You can use it as input for the sidebar or wherever you need it
 // };
 
-
-
-const messageMapping = {
-
-
-
-// count raises of		userStatus	Message
-    // Quoting		        manager	    You have a new job for quoting
-    // Customer Approval    customer	Your quote just arrived
-    // Work Assignment		manager	    Please assign a worker
-    // Job Implementation	worker	    You received a new job for processing
-    // Customer Review		customer	Your job has been completed, please write a review
-    //                      Manager	    Another job has been completed, time to write an invoice
-    // Closed		        Manager	    Another job closed
-
-
-  "Quoting": {
-      "manager": "You have a new job for quoting"
-  },
-  "Customer Approval": {
-      "customer": "Your quote just arrived"
-  },
-  "Worker Assignment": {
-      "manager": "Your quote was approved, Please assign a worker"
-  },
-  "Job Implementation": {
-      "worker": "You received a new job for processing"
-  },
-  "Customer Review": {
-      "customer": "Your job has been completed, please write a review",
-      "manager": "Another job has been completed, time to write an invoice"
-  },
-  "Closed": {
-      "manager": "Another job closed"
-  }
-};
-// const jobStatuses = ["Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
-let jobStatuses = [];
-// this defines the jobs of what status are momnitored, this are also the jobs that are displayed
-    if (userStatus === "manager") {
-        jobStatuses = ["Quoting", "Worker Assignment", "Closed"];
-    } else if (userStatus === "customer") {
-        jobStatuses = ["Customer Approval", "Customer Review"];
-    } else if (userStatus === "worker") {
-        jobStatuses = ["Job Implementation"];
-    }
-    // const [previousJobCounts, setPreviousJobCounts] = useState({});
-
-    useEffect(() => {
-      const countJobs = async () => {
-          const responses = await Promise.all(jobStatuses.map(status => getCountOfJobs(localStorage.getItem('userId'), userStatus, status)));
-          const counts = responses.map(response => response.totalJobs);
-          const saveAndSetPreviousJobCounts = (updatedCounts) => {
-            // Save to localStorage
-            localStorage.setItem('previousJobCounts', JSON.stringify(updatedCounts));
-            // Update the state
-            setPreviousJobCounts(updatedCounts);
-        };
-        
-
-          let updatedCounts = { ...previousJobCounts };
-          let changeDetected = false;
-
-          for (let i = 0; i < jobStatuses.length; i++) {
-              const currentCount = counts[i];
-              const status = jobStatuses[i];
-              const previousCount = previousJobCounts[status] || 0;
-
-              // console.log('status ' + status)
-              // console.log('currentCount ' + currentCount)
-       
-              // console.log('previousCount ' + previousCount)
-
-              if (!initializationPhase && currentCount > previousCount) {
-                  changeDetected = true;
-                  const message = messageMapping[status] && messageMapping[status][userStatus];
-                 
-                  if (message) {
-                      setUserMessage(message);
-                      // console.log('message' + message)
-                  }
-              }
-
-              updatedCounts[status] = currentCount;
-          }
-
-          if (changeDetected) {
-              // Reset the polling interval and no change count when a change is detected
-              setPollingInterval(5000);
-              setNoChangeCount(0);
-          } else {
-              // Increase the no change count
-              setNoChangeCount(prevCount => prevCount + 1);
-
-              // If no changes are detected for 3 consecutive polls, double the polling interval
-              if (noChangeCount >= 3) {
-                console.log('pollingInterval ' + pollingInterval )
-                  setPollingInterval(prevInterval => prevInterval * 2);
-                  setNoChangeCount(0); // Reset the no change count
-              }
-          }
-
-          saveAndSetPreviousJobCounts (updatedCounts);
-
-          if (initializationPhase) {
-              setInitializationPhase(false);
-          }
-      };
-
-      const interval = setInterval(() => {
-          countJobs();
-      }, pollingInterval);
-
-      return () => clearInterval(interval);
-  }, [previousJobCounts, userStatus, initializationPhase, pollingInterval, noChangeCount]);
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
+console.log('rerender Home  ')
 
   // console.log('home  ' + userStatus)
   return (
@@ -245,7 +98,7 @@ let jobStatuses = [];
 
 <JobColumns />
 {/* <h2>Closed Jobs</h2> */}
-
+{/* <p> {userStatus}   </p> */}
 {userStatus === 'manager' ? (
         <DisplayJobs 
           user_id={localStorage.getItem('userId')} 
@@ -303,15 +156,6 @@ let jobStatuses = [];
             ) : null}
 
 
-<DisplayJobs 
-                user_id={localStorage.getItem('userId')} 
-                userStatus={userStatus} 
-                jobStatus={'Closed'} 
-                // onUserMessageChange={handleUserMessageChange} 
-            />
-
-
-
         </div>
         {/* end jobs container */}
 
@@ -319,7 +163,8 @@ let jobStatuses = [];
         
       {/* only displays when there is an error message */}
        {/* Show side pannel */}
-       <Side userMessage = {userMessage} />
+       {/* <Side userMessage = {userMessage} /> */}
+       <Side userMessage={userMessage} updateUserMessage={setUserMessage} />
       {/* no messages created here */}
       
       </div> 

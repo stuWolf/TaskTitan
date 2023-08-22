@@ -8,7 +8,7 @@ import Profile from './Pages/ProfilePage';
 import AddWorker from './Pages/AddWorker';
 import ManageWorkers from './Pages/ManageWorkers';
 import JobForm from './Pages/JobForm';
-import Reviews from './Pages/Reviews';
+import About from './Pages/About';
 import Search from './Pages/Search';
 import Completed from './Pages/Completed';
 
@@ -45,7 +45,7 @@ function App() {
        <Route path="/completed" element={<Completed/>} />
        {/* <Route path="/openjobs" element={<ManageWorkers/>} /> */}
         <Route path="/quotes" element={<h1>TODO</h1>}/>  {/*displays list of all quotes*/}
-        <Route path="/reviews" element={<Reviews/>}/>  {/*displays list of all reviews*/} 
+        <Route path="/about" element={<About/>}/>  {/*displays list of all reviews*/} 
         <Route path="/search" element={<Search/>}/>
 
         {/* <Route path="/logout" element={<Login/>}/> */}

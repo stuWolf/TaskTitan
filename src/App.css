@@ -1,15 +1,50 @@
 .App {
   font-family: Arial, sans-serif;
   text-align: left;
+  max-height: 100vh; 
+  /* viewport height */
+  overflow-y: auto;  /* make it scrollable vertically */
 }
-/**********************************Worker view **********************************/
+
+/********************************************Manage Worker *****************/
+
+.worker-container-and-side-panel {
+  display: flex;
+  justify-content: space-between;
+  max-height: 850px;
+}
+
+.worker-container {
+  /* flex: 3; this will take up 3/4 of the parent div's width */
+  flex-direction: column;
+  flex: 3; /* This will take 3 parts of the available space */
+  margin-right: 20px; /* Optional: Add some spacing between the two components */
+  /* flex-direction: row; */
+}
+
+.worker-details{
+
+  display: flex;
+  margin-left: 10px;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: left;
+  width: 1200px;
+  text-align: right;
+  border-bottom: 1px solid #ccc;
+}
+
+
+
+
 .workerColumns {
   background-color: #F4EB27;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-  margin-left: 0px;
-  margin-right: 130px;
+  margin-left: 20px;
+  margin-right: 20px;
+  width: 1200px;
 
   /* margin-right: 50px; adjust as needed */
 }
@@ -20,32 +55,101 @@
   font-weight: bold;
 }
 
+.delete-button {
+  background-color: rgb(55, 0, 255);
+  color: white;
+  margin: 2px;
+  border: none;
+  
+  cursor: pointer;
+  border-radius:25px;
+  padding: 10px 20px; /* Add some padding */
+}
+
+/*****************************Playground*****************/
+
+.progress-bar {
+  display: flex;
+  gap: 2px;
+  max-width: 400px;
+  
+}
+
+.progress-bar-item {
+  flex: 1;
+  padding: 1px;
+  border: 0px solid #ccc;
+  background-color: #f5f5f5;
+  text-align: center;
+  /* display: table-cell; */
+  vertical-align: middle;
+    
+  /* font-weight: bold; */
+  font-size: .8em;
+  
+}
+
+.progress-bar-item.active {
+  background-color: green;
+  color: white;
+}
+
+/* Adjust font size for medium screens */
+@media (max-width: 768px) {
+  .progress-bar-item {
+    font-size: .6em; /* Adjust as needed */
+  }
+}
+
+/* Adjust font size for smaller screens */
+@media (max-width: 480px) {
+  .progress-bar-item {
+    font-size: 0.5em; /* Adjust as needed */
+  }
+}
+
+
+
+
+
+
+
 /**********************************Home view **********************************/
+
+
+
 .jobColumns {
   background-color: #F4EB27;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-  margin-left: 0px;
+  margin-left: 10px;
   margin-right: 0px;
+  max-width: 1220px;
   /* margin-right: 50px; adjust as needed */
 }
 
-.jobColumns a {
-  padding: 20px 56px;
+.jobColumns p {
+  padding: 2px 5px;
   text-decoration: none;
   font-weight: bold;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .jobs-container {
-  display: flex;
+  max-height: 500px;
+  flex: 3; /* this will take up 3/4 of the parent div's width */
   flex-direction: column;
+  margin-right: 80px;
+  overflow-y: auto;
+  max-width: 1250px;
 }
 
-.job-details {
-  /* width: 1500px; */
+.jobs-container-and-side-panel {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  max-height: 750px;
 }
 
 .job-details p {
@@ -59,32 +163,32 @@
   width: 50px;     /* Adjust as needed */
   text-align: left;
 }
-/* for everything greater than 500px */
-@media (min-width: 500px) {
+/* Adjust font size for pc screens, everything larger than  */
+@media (min-width: 768px) {
   .jobs-container {
     /* justify-content: space-between; */
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-end;
     /* margin-right: 20px; */
-    margin-right: 180px;
+    margin-right: 10px;
     margin-left: 0px;
+    font-size: .8em;
   }
   
   .job-details  {
     justify-content: space-between;
     flex-direction: row;
-    /* align-items: right; */
-    width: 1500px;
+    align-items: left;
+    /* width: 1200px; */
     display: flex;
     text-align: right;
-
- 
- 
-
-  
-
+    border-bottom: 1px solid #ccc;
+    margin-left: 10px;
+    margin-right: 1px;
   }
+
+
 
   .job-details job-id {
     flex: 0 0 auto;   /* This prevents the job-id from growing or shrinking */
@@ -108,6 +212,7 @@
 /************************************ Main view*************************************88 */
 .main-content {
   margin: 20px;
+  max-height: 900px;
 }
 
 .navbar {
@@ -147,13 +252,13 @@
   margin-top: 10px;
   display: inline-block;
   background-color: green; /* Green background */
-  color: black; /* Black text */
-  padding: 10px 20px; /* Add some padding */
+  color: rgb(10, 10, 10); /* Black text */
+  padding: 8px 10px; /* Add some padding */
   font-family: Arial, sans-serif; /* Change the font */
   margin-right: 15px; /* Add some space between buttons */
-  border-radius:10%;
-  margin-right: 10px;
-  margin-left: 30px;
+  border-radius: 25px;
+    max-width: 150px;
+    min-width: 50px;
 }
 
 .side-panel {
@@ -162,12 +267,19 @@
   margin: 20px;
   border-left: 1px solid #ccc; /* This adds a border to the left side of the sidebar */
 }
+.side-panel p{
 
+  margin-left: 10px;
+}
+.sie-messages {
+
+  margin-left: 20px;
+}
 /* Landing page */
 .App-header {
   background-color: #F4EB27;
   padding: 20px;
-  height: 100px
+  height: 80px
   /* color: white; */
 }
 
@@ -175,6 +287,18 @@
   font-size: 56px;
   font-weight: bold;
   font-style: italic;
+
+}
+
+/* Adjust font size for medium screens */
+@media (max-width: 768px) {
+  .App-header h1  {
+    font-size: 30px; /* Adjust as needed */
+  }
+  .App-header {
+    height: 50px
+
+  }
 }
 
 .landing-page {
@@ -261,9 +385,18 @@
   text-align: left;
 }
 
+
+/* / ******************************************login form************** / */
 .login-form {
   margin-top: 40px;
   margin-left: 20px;
+  /* flex: 3; this will take up 3/4 of the parent div's width */
+  flex-direction: column;
+  flex: 3; /* This will take 3 parts of the available space */
+  margin-right: 20px; 
+  max-width: 290px;
+  /* Optional: Add some spacing between the two components */
+  /* flex-direction: row; */
 
 }
 .login-form select,
@@ -271,7 +404,8 @@
 .login-form button {
   display: block;
   margin-bottom: 20px;
-  border-radius:5%;
+  border-radius:25px;
+  padding: 10px 20px; /* Add some padding */
 }
 
 
@@ -281,10 +415,12 @@
   display: inline-block;
   background-color: green; /* Green background */
   color: black; /* Black text */
-  padding: 10px 20px; /* Add some padding */
+  
   font-family: Arial, sans-serif; /* Change the font */
   margin-right: 15px; /* Add some space between buttons */
-  border-radius:10%;
+  border-radius:25px;
+  padding: 10px 20px; /* Add some padding */
+
 }
 
 .login-form a {
@@ -293,14 +429,24 @@
   display: block;
   margin-top: 10px;
   text-decoration: none; /* Remove the underline */
+
+  /* max-height: 400px; */
+}
+
+.login-form-and-side-panel {
+  display: flex;
+  justify-content: space-between;
+  max-height: 950px;
+
 }
 
 /* end login form */
 /* Side panel*/
+/* @media (max-hight: 800px) { */
 .job-form-and-side-panel {
   display: flex;
 
-  
+  max-height: 950px;
   
 }
 
@@ -322,18 +468,60 @@
 }
 /* Side panel*/
 /* Job Form */
+
+
+
+
+
 .job-form {
-  max-height: 600px;  /* Adjust this as needed */
+  max-height: 500px;  
+
   overflow-y: auto;
   max-width: 600px;
   margin-left: 0px;
-  margin-top: 20px;
+  margin-top: 10px;
   background-color: #ccc;
   border-radius:2%;
   flex: 3; /* this will take up 3/4 of the parent div's width */
+  overflow-y: auto;  /* make it scrollable vertically */
+}
+/* } */
+
+
+.job-form-and-side-panel {
+  display: flex;
+
+  max-height: 850px;
+  
 }
 
+
+.side-panel {
+  flex: 1; /* this will take up 1/4 of the parent div's width */
+}
+
+.side-panel p{
+
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.side-panel h2{
+
+  margin-left: 20px;
+  margin-right: 20px;
+}
+/* Side panel*/
+/* Job Form */
+
+
+
+
+
+
+
 .job-form button {
+  padding: 10px 20px;
   margin-top: 10px;
   display: inline-block;
   background-color: green; /* Green background */
@@ -341,7 +529,7 @@
   padding: 10px 20px; /* Add some padding */
   font-family: Arial, sans-serif; /* Change the font */
   margin-right: 15px; /* Add some space between buttons */
-  border-radius:5%;
+  border-radius:25px;
   margin-left: 15px;
   margin-bottom: 10px;
 }
@@ -357,9 +545,9 @@
   margin-bottom: 20px;
   margin-left: 20px; 
   margin-right: 20px;
-  /* padding: 20px; */
+  /* padding: 5px 10px; */
   align-items: center; /* this will vertically align the items in the center */
-
+  gap: 10px; /* adjust this value to your preference */
 }
 
 .form-row input{
@@ -368,6 +556,16 @@
   height: 20px;
 
   
+}
+.text-field {
+  background-color: white;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 2;
+  margin-right: 10px;
+  height: 20px;
 }
 
 .date-input {
@@ -392,6 +590,7 @@
 /* Footer */
 
 footer {
+
   position: fixed;
   left: 0;
   bottom: 0;
@@ -399,5 +598,10 @@ footer {
   background-color: #f8f8f8;
   color: black;
   text-align: center;
-  padding: 10px;
+  padding: 5px;
+}
+
+footer p{
+
+  font-size: 9px;
 }

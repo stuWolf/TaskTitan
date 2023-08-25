@@ -27,6 +27,9 @@ function Navbar({userStatus}) {
      localStorage.removeItem('userMessage')
      localStorage.removeItem('workerID')
      localStorage.removeItem('workerJobID')
+     localStorage.removeItem('jobsData')
+     localStorage.removeItem('userData')
+     localStorage.removeItem('messages')
       navigate('/landing');
     
   };
@@ -35,15 +38,19 @@ function Navbar({userStatus}) {
     <div className="App">
       <div className="navbar">
         <button onClick={() => handleNavigation('/home')}>Home</button>
-        <button onClick={() => handleNavigation('/quotes')}>Quotes</button>
+        {/* <button onClick={() => handleNavigation('/quotes')}>Quotes</button> */}
         <button onClick={() => handleNavigation('/completed')}>Completed Jobs</button>
         {userStatus === "manager" && 
+        <div>
           <button onClick={() => handleNavigation('/managerWorkers')}>My Workers</button>
-        }
-        <button onClick={() => handleNavigation('/reviews')}>Reviews</button>
-        <div className="navbar-right">
           <button onClick={() => handleNavigation('/search')}>Search</button>
-          <button onClick={() => handleNavigation('/profile')}>Profile</button>
+          </div> 
+        }
+        
+        <div className="navbar-right">
+        <button onClick={() => handleNavigation('/profile')}>Profile</button>
+          <button onClick={() => handleNavigation('/about')}>About</button>
+          
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>

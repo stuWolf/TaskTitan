@@ -18,7 +18,7 @@ import DisplayJobs from "../components/home/displayJob";
 // import JobForm from '../Pages/JobForm';
 import {   useNavigate} from 'react-router-dom';
 
-function Home() {
+function Completed() {
 
   
   let navigate = useNavigate();
@@ -98,62 +98,16 @@ console.log('rerender Home  ')
 
 <JobColumns />
 {/* <h2>Closed Jobs</h2> */}
-{/* <p> {userStatus}   </p> */}
-{userStatus === 'manager' ? (
-        <DisplayJobs 
-          user_id={localStorage.getItem('userId')} 
-          userStatus={userStatus} 
-          jobStatus={'Quoting'} 
-          // onUserMessageChange={handleUserMessageChange} 
-        />
-      ) : null}
-     {(userStatus === 'customer'  )? ( 
+
+
+
 <DisplayJobs 
                 user_id={localStorage.getItem('userId')} 
                 userStatus={userStatus} 
-                jobStatus={'Customer Approval'} 
+                jobStatus={'Closed'} 
                 // onUserMessageChange={handleUserMessageChange} 
             />
 
-            
-
-            ) : null}
-
-{(userStatus === 'customer'  )? ( 
-<DisplayJobs 
-                user_id={localStorage.getItem('userId')} 
-                userStatus={userStatus} 
-                jobStatus={'Customer Review'} 
-                // onUserMessageChange={handleUserMessageChange} 
-            />  
-
-            ) : null}
-        {userStatus === 'manager' ? (    
-<DisplayJobs 
-                user_id={localStorage.getItem('userId')} 
-                userStatus={userStatus} 
-                jobStatus={'Worker Assignment'} 
-                // onUserMessageChange={handleUserMessageChange} 
-            />
-) : null}
-{userStatus === 'worker' ? (
-<DisplayJobs 
-                user_id={localStorage.getItem('userId')} 
-                userStatus={userStatus} 
-                jobStatus={'Job Implementation'} 
-                // onUserMessageChange={handleUserMessageChange} 
-            />
-            ) : null}
-
-{(userStatus === 'customer' || userStatus === 'manager')? (
-<DisplayJobs 
-                user_id={localStorage.getItem('userId')} 
-                userStatus={userStatus} 
-                jobStatus={'!Closed'} 
-                // onUserMessageChange={handleUserMessageChange} 
-                
-            />
-            ) : null}
 
 
         </div>
@@ -178,4 +132,4 @@ console.log('rerender Home  ')
   );
 }
 
-export default Home;
+export default Completed;

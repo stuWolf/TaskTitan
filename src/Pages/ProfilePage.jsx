@@ -4,11 +4,12 @@ import '../App.css';
 import { updateUser, getUser} from "../services/userServices";
 import Header from '../components/header';
 import Footer from '../components/footer';
-
-
-
+import Side from '../components/SidePanel';
+import InputBox from '../components/inputBox';
+import  {validateFields} from '../services/helpFunctions'
 
 const Profile = () => {
+  const [userMessage, setUserMessage] = useState('')
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ const Profile = () => {
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 // additional state variables for worker
 const [dob, setDob] = useState("");
 const [license, setLicense] = useState("");
@@ -29,7 +31,22 @@ const [employedSince, setEmployedSince] = useState("");
   const userStatus = localStorage.getItem('userStatus');
 
 
+// Function to format the date
 
+const formatDate = (dateString) => {
+  if(dateString === 'No Data'){
+  return 'No Data';
+  
+  }else{
+    
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;  // Months are 0-indexed in JavaScript
+    const year = date.getFullYear().toString().slice(-2);  // Last 2 digits of year
+    return `${day}/${month}/${year}`;
+  }
+   
+  }; // end format date
 
 
 
@@ -38,8 +55,10 @@ const [employedSince, setEmployedSince] = useState("");
    const fetchUser = async () => {
     try {
       // const response = await getLoggedInUser();
+      // console.log('userId  '   + localStorage.getItem('userId'))
+      // console.log('token  '   + localStorage.getItem('token'))
       const response = await getUser(localStorage.getItem('userId'))
-      console.log('from fetch user', response); // log the entire response object
+      // console.log('from fetch user', response); // log the entire response object
       setFirstName(response.firstName);
       setLastName(response.lastName);
       setEmail(response.email);
@@ -49,20 +68,25 @@ const [employedSince, setEmployedSince] = useState("");
       // note that the property is 'contactNumber' in your response, not 'phone'
       // if user is a worker, set additional fields
     if (userStatus === 'worker') {
-      setDob(response.dob);
+      setDob(formatDate(response.dob));
       setLicense(response.license);
       setLicenseNo(response.licenseNo);
-      setEmployedSince(response.employedSince);
+      setEmployedSince(formatDate(response.employedSince));
     }
     } catch (error) {
       console.error('Failed to fetch user:', error);
     }
   };
+  console.log('fetch user called')
   fetchUser();
-  }, [userStatus]);
+  }, []);
 
   
   const handleUpdate = async () => {
+    const { isFormSubmitted, errorMessage } = validateFields(firstName, lastName,email,password,confirmPassword);
+    setIsFormSubmitted(isFormSubmitted);
+    
+    if(!errorMessage){
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match");
       return;
@@ -74,6 +98,12 @@ const [employedSince, setEmployedSince] = useState("");
     setErrorMessage("Please enter a valid email address");
     return;
   }
+
+}else{
+
+  setErrorMessage(errorMessage);
+  return;
+}
     const data = {
       firstName,
       lastName,
@@ -93,6 +123,7 @@ const [employedSince, setEmployedSince] = useState("");
       const response = await updateUser(data);
       // console.log('response email  ' + response.email)
       if (response.email) {
+        setUserMessage("Profile data updated");
         setErrorMessage("Your update was sucessful. Please login again.");
         // Redirect to the login page
         setTimeout(() => {
@@ -121,43 +152,127 @@ const [employedSince, setEmployedSince] = useState("");
   return (
     <div className="App">
        <Header/>
+       <div className="login-form-and-side-panel">
        <div className="login-form">
 
-         
       <p>You are logged in as: {userStatus}</p>
+      <h2>Update your profile here</h2>
 
-     
-        <h2>Update your profile here</h2>
-       <input type="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" />
-       <input type="fastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" />
-          <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" />
-          <input type="text" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
-          <input type="text" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm Password" />
-          <input type="address" value={address} onChange={e => setAddress(e.target.value)} placeholder="Address" />
-          <input type="contactNumber" value={contactNumber} onChange={e => setContactNumber(e.target.value)} placeholder="Contact Number" />
+      <InputBox 
+        id="firstNameInput" 
+        label="First Name" 
+        setValue={firstName}
+        isDisabled={false}
+        isSubmitted={isFormSubmitted}
+        onChange={(value) => { setFirstName(value); }}
+      />
+{/* {firstName && <p>{firstName}</p>} */}
+      <InputBox 
+        id="lastNameInput" 
+        label="Last Name" 
+        setValue={lastName}
+        isDisabled={false}
+        isSubmitted={isFormSubmitted}
+        onChange={(value) => { setLastName(value); }}
+      />
+{/* {lastName && <p>{lastName}</p>} */}
+      <InputBox 
+        id="emailInput" 
+        label="Email address" 
+        setValue={email}
+        isDisabled={false}
+        isSubmitted={isFormSubmitted}
+        onChange={(value) => { setEmail(value); }}
+      />
 
-          {/* additional input fields for worker */}
-        {userStatus === 'worker' && (
-          <>
-            <input type="date" value={dob} onChange={e => setDob(e.target.value)} placeholder="Date of Birth" />
-            <input type="text" value={license} onChange={e => setLicense(e.target.value)} placeholder="License" />
-            <input type="text" value={licenseNo} onChange={e => setLicenseNo(e.target.value)} placeholder="License Number" />
-            <input type="date" value={employedSince} onChange={e => setEmployedSince(e.target.value)} placeholder="Employed Since" />
-          </>
-        )}
-          {/* <input type="status" value={status} onChange={e => setStatus(e.target.value)} placeholder="Status" /> */}
+      <InputBox 
+        id="passwordInput" 
+        label="Password" 
+        setValue={password}
+        isDisabled={false}
+        isSubmitted={isFormSubmitted}
+        onChange={(value) => { setPassword(value); }}
+      />
+
+      <InputBox 
+        id="confirmPasswordInput" 
+        label="Confirm Password" 
+        setValue={confirmPassword}
+        isDisabled={false}
+        isSubmitted={isFormSubmitted}
+        onChange={(value) => { setConfirmPassword(value); }}
+      />
+
+      <InputBox 
+        id="addressInput" 
+        label="Address" 
+        setValue={address}
+        isDisabled={false}
+        isSubmitted={isFormSubmitted}
+        onChange={(value) => { setAddress(value); }}
+      />
+
+      <InputBox 
+        id="contactNumberInput" 
+        label="Contact Number" 
+        setValue={contactNumber}
+        isDisabled={false}
+        isSubmitted={isFormSubmitted}
+        onChange={(value) => { setContactNumber(value); }}
+      />
+
+      {userStatus === 'worker' && (
+        <>
+          <InputBox 
+            id="dobInput" 
+            label="Date of Birth" 
+            setValue={dob}
+            isDisabled={false}
+            isSubmitted={isFormSubmitted}
+            onChange={(value) => { setDob(value); }}
+          />
+
+          <InputBox 
+            id="licenseInput" 
+            label="License" 
+            setValue={license}
+            isDisabled={false}
+            isSubmitted={isFormSubmitted}
+            onChange={(value) => { setLicense(value); }}
+          />
+
+          <InputBox 
+            id="licenseNoInput" 
+            label="License Number" 
+            setValue={licenseNo}
+            isDisabled={false}
+            isSubmitted={isFormSubmitted}
+            onChange={(value) => { setLicenseNo(value); }}
+            
+          />
+{/* {licenseNo && <p>{licenseNo}</p>} */}
+          <InputBox 
+            id="employedSinceInput" 
+            label="Employed Since" 
+            setValue={employedSince}
+            isDisabled={false}
+            isSubmitted={isFormSubmitted}
+            onChange={(value) => { setEmployedSince(value); }}
+          />
+        </>
+      )}
+
+      <button onClick={handleUpdate}>Update</button>
+      <button onClick={handleCancel}>Cancel</button>
       
-          {errorMessage && <p>{errorMessage}</p>}
-          <button onClick={handleUpdate}>Update</button>
-          <button onClick={handleCancel}>Cancel</button>
-        
-          
       </div>
-
+      <Side userMessage={userMessage} />
+      </div>
+      {errorMessage && <p>{errorMessage}</p>}
       <Footer/>
     </div> 
-    
-  );
+);
+
 };
 
 export default Profile;

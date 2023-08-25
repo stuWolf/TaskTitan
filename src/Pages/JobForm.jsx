@@ -117,7 +117,7 @@ const fetchUser = async (customerId) => {
 const fetchReview = async (reviewId) => {
   try {
     const reviewData = await getReview(reviewId);
-    console.log('review from fetch review:', reviewData);
+    // console.log('review from fetch review:', reviewData);
     if (reviewData.hasOwnProperty('message404')){
       setReview('no review yet')
 
@@ -181,7 +181,7 @@ const fetchJob = async () => {
 
     if (reviewId) {
       fetchReview(jobData.reviewId);
-      console.log('fetchReview(jobData.reviewId)' + reviewId)
+      // console.log('fetchReview(jobData.reviewId)' + reviewId)
     }
   } catch (error) {
     console.error('Failed to fetch job:', error);
@@ -253,7 +253,7 @@ useEffect(() => {
        
       setEditability (calculateEditability(jobStatus, userStatus, userId, customerId));
       setVisibility(calculateVisibility(jobStatus, userStatus,userId, customerId));
-      console.log('editVisability set')
+      // console.log('editVisability set')
     }
   }
   // console.log('userId  ' + userId + 'customerId  ' + customerId)
@@ -393,15 +393,18 @@ const incrementJobStatus = (steps = 1) => {
 const createNewReview = async (reviewData, jobId, newStatus) => {
   try {
     const reviewResponse = await createReview(reviewData); 
+
+    // console.log("reviewData", reviewData.endDate);
     console.log("Review id:", reviewResponse._id);
+    // console.log("Review response  endDate:", reviewResponse.endDate);
     const jobData ={
       jobStatus: newStatus,
       reviewId: reviewResponse._id
     }
 
-console.log('reviewResponse' , reviewResponse)
+// console.log('reviewResponse' , reviewResponse)
     const newJob = await updateJob(jobId, jobData); 
-    console.log("Job updated with new review:", newJob);
+    // console.log("Job updated with new review:", newJob);
 
     return { reviewId: reviewResponse._id, updatedJob: newJob };
   } catch (error) {
@@ -621,14 +624,15 @@ console.log('newStatus', newStatus)
         // incrementJobStatus();
       } else {
     
-      
-        setErrorMessage("Compliance box must be checked first");
-        return;
+  
+         return;
       }
       const newMessage = " Job Completed";
       setUserMessage(newMessage);
     } else{
-
+      // setTimeout(() => {
+        setErrorMessage("Compliance box must be checked first");
+      // }, 2000);
       return;
     } ; // end validate fields
 
@@ -641,7 +645,7 @@ console.log('newStatus', newStatus)
     setErrorMessage(errorMessage);
     if(!errorMessage){
       const newStatus = incrementJobStatus();
-
+// const newStatus = 'Customer Review'
         // greate new review with 
         const reviewData = {
           jobId,
@@ -654,7 +658,7 @@ console.log('newStatus', newStatus)
 
 
         }
-
+//  console.log('today', today,  reviewData.endDate   )
 
          createNewReview (reviewData, jobId,newStatus)
 
@@ -897,8 +901,13 @@ console.log('newStatus', newStatus)
     
  
           
-        {dateQuoted && !isNaN(new Date(dateQuoted).getTime()) && <p>Date Quoted by manager: {dateQuoted} </p>}
-
+        {
+  dateQuoted 
+    ? (!isNaN(new Date(dateQuoted).getTime()) 
+        ? <p>Date Quoted: {dateQuoted} </p>
+        : <p>Date Quoted: {'No Data'} </p>)
+    : null
+}
      
         {/* <input className="date-input" type="date" value={dateQuoted} onChange={e => setDateQuoted(e.target.value)} placeholder="Date Quoted" disabled={(jobStatus !== "Quoting"||userStatus !== 'manager' )} /> */}
         </div>
@@ -942,7 +951,7 @@ console.log('newStatus', newStatus)
         isSubmitted={isFormSubmitted}
         onChange={(value) => { setLicenseNr(value); }}
     />
-    
+
     {(editability.assignEditable) && <SelectWorker onWorkerSelected={handleWorkerSelected} />}
 
     {(!editability.assignEditable) && 
@@ -1039,7 +1048,8 @@ console.log('newStatus', newStatus)
           <div className="form-row">
           {workStarted &&  <p>Date work started {workStarted}</p>}
          
-          {dateQuoted  && <p>Date Quoted: {dateQuoted} </p>} 
+          { dateQuoted && (isNaN(new Date(dateQuoted).getTime()) ? <p>Date Quoted: No Data</p> : <p>Date Quoted: {dateQuoted}</p>) }
+
 
           {/* <input type="date" value={workStarted} onChange={e => setStartDate(e.target.value)} placeholder="Start Date" disabled={jobStatus !== "Customer Review"} /> */}
           </div>

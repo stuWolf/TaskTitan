@@ -8,7 +8,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
   
     const [errorMessage, setErrorMessage] = useState("");
      const [previousJobCount, setPreviousJobCount] = useState(0); // Add this state variable at the top of your component
-     const [pollingInterval, setPollingInterval] = useState(10000); // Start with 5 seconds
+     const [pollingInterval, setPollingInterval] = useState(5000); // Start with 5 seconds
     //  const pollingIntervalRef = useRef(10000);
      
      const [noChangeCount, setNoChangeCount] = useState(0); // Count how many times no change is detected
@@ -115,7 +115,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
            
             if (currentCount > previousJobCount) {
                 // Reset the polling interval and no change count when a change is detected
-                setPollingInterval(10000);
+                setPollingInterval(5000);
                 setNoChangeCount(0);
                 fetchJobs('2nd');
                 setPreviousJobCount(currentCount);

@@ -9,6 +9,7 @@ function Side({ userMessage, updateUserMessage }) {
   const storedMessages = localStorage.getItem('messages');
   const [previousJobCounts, setPreviousJobCounts] = useState(() => {
     // Retrieve from localStorage when initializing the state
+    
     const savedCounts = localStorage.getItem('previousJobCounts');
     return savedCounts ? JSON.parse(savedCounts) : {};
 });  
@@ -21,7 +22,7 @@ const userStatus = localStorage.getItem('userStatus');
      const [noChangeCount, setNoChangeCount] = useState(0); // Count how many times no change is detected
   
   
-     const messageMapping = {
+     
 
 
 
@@ -34,28 +35,31 @@ const userStatus = localStorage.getItem('userStatus');
           //                      Manager	    Another job has been completed, time to write an invoice
           // Closed		        Manager	    Another job closed
       
-      
-        "Quoting": {
-            "manager": "You have a new job for quoting"
-        },
-        "Customer Approval": {
-            "customer": "Your quote just arrived"
-        },
-        "Worker Assignment": {
-            "manager": "Your quote was approved, Please assign a worker"
-        },
-        "Job Implementation": {
-            "worker": "You received a new job for processing"
-        },
-        "Customer Review": {
-            "customer": "Your job has been completed, please write a review"
-            // "manager": "Another job has been completed, time to write an invoice"
-            // only works for 1 message
-        },
-        "Closed": {
-            "manager": "Another job closed"
-        }
-      };
+          let messageMapping = {};
+
+switch (userStatus) {
+    case "manager":
+        messageMapping = {
+            "Quoting": "You have a new job for quoting",
+            "Worker Assignment": "Your quote was approved, Please assign a worker",
+            "Customer Review": "Another job has been completed, time to write an invoice",
+            "Closed": "Another job closed"
+        };
+        break;
+    case "customer":
+        messageMapping = {
+            "Customer Approval": "Your quote just arrived",
+            "Customer Review": "Your job has been completed, please write a review"
+        };
+        break;
+    case "worker":
+        messageMapping = {
+            "Job Implementation": "You received a new job for processing"
+        };
+        break;
+    default:
+        break;
+}
       // const jobStatuses = ["Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"];
       let jobStatuses = [];
       // this defines the jobs of what status are momnitored, this are also the jobs that are displayed
@@ -69,7 +73,10 @@ const userStatus = localStorage.getItem('userStatus');
           // const [previousJobCounts, setPreviousJobCounts] = useState({});
       
           useEffect(() => {
-
+            // const message = messageMapping[status];
+            // if (message) {
+            //     updateUserMessage(message);
+            // }
 
             //console.log('pollingInterval side ' + pollingInterval )
             
@@ -100,8 +107,8 @@ const userStatus = localStorage.getItem('userStatus');
       
                     if (!initializationPhase && currentCount > previousCount) {
                         changeDetected = true;
-                        const message = messageMapping[status] && messageMapping[status][userStatus];
-                       
+                        // const message = messageMapping[status] && messageMapping[status][userStatus];
+                        const message = messageMapping[status];  // Here, get the message directly
                         if (message) {
                           //console.log('message', message)
                           updateUserMessage(message);

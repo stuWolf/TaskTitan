@@ -66,11 +66,16 @@ export default function About() {
       <Navbar userStatus = {userStatus} />
 
       <div className="main-content">
-        <h2>What we are planing to do here</h2>
-        <p>Release notes</p>
-        <p>Planned features</p>
-       
-
+        <h2>Release notes:</h2>
+        <p>V 1.4 24/08/23:</p>
+        <p>* Move Message matrix and job count function to SideBar </p>
+        <p>* Display jobs of different cathegories in functional elements</p>
+        <p>* Add review handling</p>
+        <p>V 1.5 27/08/23:</p>
+        <p>* Integrate new text fields into job form, check all fields if cmpleted </p>
+        <h3>Planned features:</h3>
+        <p>* Introduce emailing service</p>
+        <p>* change update mechanism from polling based to event/ SSE element based</p>
 
       </div>
        {/* end main -content */}

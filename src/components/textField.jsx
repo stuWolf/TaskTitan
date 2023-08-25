@@ -1,26 +1,25 @@
-
-// In this version, the box sends out it's typed value from on change
-// hasError acts as a flag to set the boarder red
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import '../Search.css';
-function InputBox({ id, label,  setValue, initialValue = "", isDisabled, onChange, isSubmitted  }) {  // Added onChange to the destructured props
-    // const [value, setValue] = useState(initialValue);
+
+function TextField({ 
+    id, 
+    label,  
+    setValue, 
+    initialValue = "", 
+    isDisabled, 
+    onChange, 
+    isSubmitted  
+}) {
     const [hasError, setHasError] = useState(false);
-    const inputType = id === "completionDate" ? "date" : "text"; // Determine the input type
     const [internalValue, setInternalValue] = useState(initialValue  || "");
-    const inputRef = useRef(null);  // Reference to the input element
-   // needs to be permanently monitored, not just on change
+    const inputRef = useRef(null);  // Reference to the input (textarea) element
+
     useEffect(() => {
         if (isSubmitted && !internalValue) {
             setHasError(true);
         } else {
-            // setHasError(false);
-            setInternalValue(setValue)
-            
+            setInternalValue(setValue);
         }
-        // setInternalValue()
     }, [isSubmitted]);
 
     useEffect(() => {
@@ -28,7 +27,6 @@ function InputBox({ id, label,  setValue, initialValue = "", isDisabled, onChang
     }, [setValue]);
 
     useEffect(() => {
-        // Toggle the class based on the internalValue
         if (internalValue && inputRef.current) {
             inputRef.current.parentNode.classList.add('has-value');
         } else if (inputRef.current) {
@@ -36,15 +34,9 @@ function InputBox({ id, label,  setValue, initialValue = "", isDisabled, onChang
         }
     }, [internalValue]);
 
-
-
     const handleChange = (e) => {
-        // const inputValue = e.target.value;
         setInternalValue(e.target.value);
-// console.log('inputvalue    '  + internalValue)
-       // You can set your error conditions here. 
-        
-        // this is needed for the style element
+
         if (isSubmitted && !e.target.value) {
             setHasError(true);
         } else {
@@ -61,22 +53,21 @@ function InputBox({ id, label,  setValue, initialValue = "", isDisabled, onChang
             e.target.parentNode.classList.remove('has-value');
         }
     };
-// console.log('haserror from input box  ' + hasError)
+
     return (
-        <div className="input-wrapper">
-            <input 
-                ref={inputRef}  // Attach the reference to the input element
+        <div className="textField-wrapper">
+            <textarea   // Changed this from <input> to <textarea>
+                ref={inputRef}  
                 id={id}
-                type={inputType}
                 value={internalValue}
                 onChange={handleChange}
                 style={hasError ? {border: '1px solid red'} : {}}
                 disabled={isDisabled}
-                // submitted={isSubmitted}
+                rows={4}  // Example value, adjust as needed
             />
             <label htmlFor={id}>{label}</label>
         </div>
     );
 }
 
-export default InputBox;
+export default TextField;

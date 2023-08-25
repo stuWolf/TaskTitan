@@ -16,12 +16,12 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
     // State to hold the jobs
     const [jobs, setJobs] = useState([]);
   
-//  console.log('display jobs called')
+ //console.log('display jobs mounts')
 
     const fetchJobs = useCallback(async (flag) => {
         try {
           if (flag === 'first'){
-            // console.log(flag)
+            //console.log(flag)
             setErrorMessage('Fetching your Jobs...');
           }
           
@@ -106,12 +106,13 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
       
       
       useEffect(() => {
+        //console.log('pollingInterval display ' + pollingInterval )
         const fetchAndUpdateJobs = async () => {
             const response = await getCountOfJobs(user_id, userStatus, jobStatus);
             const currentCount = response.totalJobs;
             // console.log('jobStatus ' + jobStatus)
             // console.log('currentCount ' + currentCount)
-            console.log('pollingInterval display ' + pollingInterval )
+           
             if (currentCount > previousJobCount) {
                 // Reset the polling interval and no change count when a change is detected
                 setPollingInterval(10000);
@@ -121,7 +122,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
             } else {
                 // Increase the no change count
                 setNoChangeCount(prevCount => prevCount + 1);
-
+// console.log('noChangeCount display'  ,noChangeCount)
                 // If no changes are detected for 3 consecutive polls, double the polling interval
                 if (noChangeCount >= 3) {
                     setPollingInterval(prevInterval => prevInterval * 2);
@@ -131,16 +132,16 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
         };
 
         fetchJobs('first');
-        // console.log('  fetchJobs(first); called')
+        //console.log('  fetchJobs(first); called')
 // fetch jobs the first time
         const interval = setInterval(() => {
             fetchAndUpdateJobs();
-            // console.log('// fetch jobs and update counter')
+            //console.log('// fetch jobs and update counter')
    // fetch jobs and update counter
         }, pollingInterval);
 
         return () => clearInterval(interval);
-    }, [previousJobCount]);
+    }, [previousJobCount,jobStatus,pollingInterval]);
     
 //[previousJobCount, userStatus, jobStatus, pollingInterval, noChangeCount]
       
@@ -164,7 +165,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
       // console.log('username  ' + localStorage.getItem('userName'))
       // console.log('jobStatus  '+jobStatus)
         // console.log('jobs  ' + jobs)
-        // console.log('polling interval ' + pollingInterval)
+        //console.log('polling interval Display ' + pollingInterval)
   
     return (
     <div className="App">

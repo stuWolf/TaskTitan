@@ -550,6 +550,18 @@
   gap: 10px; /* adjust this value to your preference */
 }
 
+
+
+
+
+
+.form-row .SelectWorker {
+  /* flex: 2; */
+  margin-right: 10px;
+  height: 20px;
+  min-width: 50px;
+  
+}
 .form-row input{
   flex: 2;
   margin-right: 10px;
@@ -572,7 +584,7 @@
   width: 10px; /* adjust the value as needed */
 }
 
-.form-row textarea {
+.form-row .textField {
   height: 100px;
   flex: 2;
   margin-right: 10px;

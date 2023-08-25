@@ -8,6 +8,7 @@ import Side from '../components/SidePanel';
 import SelectWorker from '../components/jobForm/selectWorker';
 import ProgressBar from '../components/jobForm/progressBar';
 import InputBox from '../components/inputBox';
+import TextField from '../components/textField';
 import SSEComponent from '../components/home/SSEC';
 import  {validateFields} from '../services/helpFunctions'
 // import WorkerColumns from '../components/workerColumns';
@@ -35,7 +36,7 @@ function Search() {
   
   const [name, setName] = useState("fritz");
   const [surname, setSurname] = useState("");
-  // const [surname, setSurname] = useState("");
+  const [review, setReview] = useState("");
   // const [nameError, setNameError] = useState(false);
   // const [surnameError, setSurnameError] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -80,6 +81,7 @@ function Search() {
     <div className="App">
       <Header />
       <Navbar userStatus = {userStatus} />
+       <div className="main-content">
       <h2>What we are planning to do here</h2>
       <p>Search all reviews from a customer</p>
       <p>Search all reviews about a worker</p>
@@ -112,6 +114,8 @@ function Search() {
              
 
             />
+
+<h2>  </h2>
             <InputBox 
                 id="surnameInput" 
                 label="Surname" 
@@ -120,7 +124,17 @@ function Search() {
                 isSubmitted = {isFormSubmitted}
                 onChange={(value) => { setSurname(value); }}
             />
-         
+         <h2>  </h2>
+         <TextField 
+                id="reviewInput" 
+                label="Review" 
+                setValue={review}
+                isDisabled={false}  // This will make the input box non-editable
+                isSubmitted = {isFormSubmitted}
+                onChange={(value) => { setReview(value); }}
+            />
+
+
 <SSEComponent/>
 
 
@@ -136,13 +150,16 @@ function Search() {
 
       <h2>  </h2>
       <ProgressBar jobStatus = {selectedStatus} />
-      
+      <h2>  </h2>
        {/* end main -content */}
 
       
       </div>
       <Side userMessage={userMessage} updateUserMessage={setUserMessage}/>
       </div>
+
+          </div>
+      {/* end main content */}
       <Footer/> 
     </div>
   );

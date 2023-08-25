@@ -1,3 +1,0 @@
-I have the following statuses: "Draft", "Quoting", "Customer Approval", "Worker Assignment", "Job Implementation", "Customer Review", "Closed"
-implement a selection with this values and a progress bar consisting of 1 field each status
-when draft is selected make the first field green, when quoting the  first and the second field and so on.

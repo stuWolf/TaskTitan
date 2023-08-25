@@ -3,6 +3,8 @@ import '../App.css';
 import {getCountOfJobs } from "../services/jobsServices";
 
 function Side({ userMessage, updateUserMessage }) {
+
+  //console.log('side panel mount '  )
   // Get messages from local storage or initialize as an empty array
   const storedMessages = localStorage.getItem('messages');
   const [previousJobCounts, setPreviousJobCounts] = useState(() => {
@@ -69,7 +71,7 @@ const userStatus = localStorage.getItem('userStatus');
           useEffect(() => {
 
 
-
+            //console.log('pollingInterval side ' + pollingInterval )
             
             //console.log('side use effect')
             const countJobs = async () => {
@@ -121,9 +123,9 @@ const userStatus = localStorage.getItem('userStatus');
                     setNoChangeCount(prevCount => prevCount + 1);
       
                     // If no changes are detected for 3 consecutive polls, double the polling interval
-                    if (noChangeCount >= 3) {
+                    if (noChangeCount >= 5) {
                       //console.log('pollingInterval side ' + pollingInterval )
-                        setPollingInterval(prevInterval => prevInterval * 2);
+                        setPollingInterval(prevInterval => prevInterval * 1.5);
                         setNoChangeCount(0); // Reset the no change count
                     }
                 }

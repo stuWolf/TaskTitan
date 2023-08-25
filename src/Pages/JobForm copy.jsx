@@ -4,8 +4,7 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-import InputBox from '../components/inputBox';
-import TextField from '../components/textField';
+
 import {  useNavigate,useParams} from 'react-router-dom';
 import {getJob,createJob, updateJob} from "../services/jobsServices"
 import {  getUser } from "../services/userServices";
@@ -16,7 +15,6 @@ import SelectWorker from '../components/jobForm/selectWorker';
 import ProgressBar from '../components/jobForm/progressBar';
 
 
-import  {validateFields} from '../services/helpFunctions'
 
   
   function JobForm() {
@@ -28,7 +26,7 @@ const { jobId } = useParams();
   const [LastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
   const [address, setAddress] = useState("");
   const [addressOfInstallation, setaddressOfInstallation] = useState("");
   const [scopeOfWork, setScopeOfWork] = useState("");
@@ -374,19 +372,20 @@ const decrementJobStatus = () => {
 };
 
 
-const incrementJobStatus = (steps = 1) => {
-  let currentIndex = jobStatuses.indexOf(jobStatus);
-  let finalIndex = currentIndex + steps;
-
-  if (finalIndex > jobStatuses.length - 1) {
-    console.log("Job status is already at the final state");
-    setJobStatus("Draft");
-    return "Draft";
-  } else {
-    const newStatus = jobStatuses[finalIndex];
+const incrementJobStatus = () => {
+  const currentIndex = jobStatuses.indexOf(jobStatus);
+  if (currentIndex < jobStatuses.length - 1) {
+    const newStatus = jobStatuses[currentIndex + 1];
     setJobStatus(newStatus);
-    console.log("jobStatus incremented, new status is: " + newStatus);
-    return newStatus;
+
+    console.log("jobStatus incremented, new status is: "+ newStatus);
+    return newStatus
+  } else {
+
+    console.log("Job status is already at the final state");
+   setJobStatus("Draft");
+   return "Draft"
+   
   }
 };
 
@@ -417,7 +416,6 @@ const createNewJob = async (jobData) => {
   try {
     const newJob = await createJob(jobData); 
     console.log("New job created:", newJob);
-     
   } catch (error) {
     console.error("Failed to create new job:", error );
   }
@@ -460,22 +458,7 @@ const handleWorkerSelected = (workerId, firstName, license) => {
     // console.log('setToday  ' +  new Date().toISOString())
     if (jobStatus === "Draft") {
       
-      const { isFormSubmitted, errorMessage } = validateFields(scopeOfWork, addressOfInstallation,preferredJobCompletionDate);
-      // dummy proof form, test if all fields filled
-      setIsFormSubmitted(isFormSubmitted);
-      setErrorMessage(errorMessage);
-      if(!errorMessage){
-
-
-      let newStatus 
-
-      if (userStatus === 'manager') {
-        newStatus = incrementJobStatus(3); // increment by 2 for a manager
-      } else {
-        newStatus = incrementJobStatus(); // increment by 1 by default
-      }
-
-console.log('newStatus', newStatus)
+      const newStatus = incrementJobStatus();
       if (jobId === 'New'){
         
       const jobData = {
@@ -492,37 +475,24 @@ console.log('newStatus', newStatus)
   // console.log('usermessage', userMessage)
     createNewJob(jobData);
     }else{
-      // job already exists  for potential save button, or close does a save of the draft job
       const jobData = {
         jobStatus: newStatus,
         dateCreated: today
       }
       updateJobFormData(jobId, jobData); // update with new status
 
-    };
-    const newMessage = 'New job Created';
-    setUserMessage(newMessage);
-//  setTimeout(() => {
-//       navigate('/home', { state: { userStatus } });
-//     }, 1000); // 2000 milliseconds = 2 seconds
-  } else{
-
-    return;
-  } ; // end validate fields
+    }
+      
       // sendEmail('manager@example.com', 'New Quote Request', 'A new quote request has arrived');
  
 
-
+      const newMessage = 'New job Created';
+      setUserMessage(newMessage);
  
       // console.log('usermessage', newMessage)
       // console.log('handle Submit next status  ' + newStatus);
      
     } else if (jobStatus === "Quoting") {
-      const { isFormSubmitted, errorMessage } = validateFields(amountQuoted);
-      // dummy proof form, test if all fields filled
-      setIsFormSubmitted(isFormSubmitted);
-      setErrorMessage(errorMessage);
-      if(!errorMessage){
 
       const newStatus = incrementJobStatus();
       
@@ -543,10 +513,7 @@ console.log('newStatus', newStatus)
       console.log('handle Submit next status  ' + jobData.jobStatus);
 
       updateJobFormData(jobId, jobData);
-      setTimeout(() => {
-      navigate('/home', { state: { userStatus } });
-    }, 1000); // 2000 milliseconds = 2 seconds
-  } ; // end validate
+      
 
       // update job with form data
   
@@ -567,11 +534,7 @@ console.log('newStatus', newStatus)
       // incrementJobStatus();
       // ************************************************  Customer Approval *****************************
     } else if (jobStatus === "Worker Assignment") {
-      const { isFormSubmitted, errorMessage } = validateFields(workerId);
-      // dummy proof form, test if all fields filled
-      setIsFormSubmitted(isFormSubmitted);
-      setErrorMessage(errorMessage);
-      if(!errorMessage){
+      
       const newStatus = incrementJobStatus();
       const jobData = {
         jobStatus: newStatus,
@@ -584,24 +547,12 @@ console.log('newStatus', newStatus)
 
       const newMessage = " Worker Assigned";
       setUserMessage(newMessage);
-    } else{
 
-      return;
-    } ; 
     // ************************************************ END Worker Assignment *******************
     } else if (jobStatus === "Job Implementation") {
       //} else if (userStatus === "Worker" && jobStatus === "Job Implementation") {
-        
-      if (isChecked) {
-
-        const { isFormSubmitted, errorMessage } = validateFields(maximumDemandInAmps,consumerMainsCapacity,
-          electricalRetailer, energyDistributor, mainsPhases);
-      // dummy proof form, test if all fields filled
-      setIsFormSubmitted(isFormSubmitted);
-      setErrorMessage(errorMessage);
-      if(!errorMessage){
         const newStatus = incrementJobStatus();
-
+      if (isChecked) {
         const jobData = {
         jobStatus: newStatus,
         // workStarted: today,   // today's date when worker accept job  in handleAcceptJob
@@ -625,21 +576,13 @@ console.log('newStatus', newStatus)
         setErrorMessage("Compliance box must be checked first");
         return;
       }
-      const newMessage = " Job Completed";
+      const newMessage = " Job Comp[leted";
       setUserMessage(newMessage);
-    } else{
 
-      return;
-    } ; // end validate fields
 
 
 // ******************************************** END Job implementation ********************************
     } else if (jobStatus === "Customer Review") {
-      const { isFormSubmitted, errorMessage } = validateFields(reviewStars,review);
-    // dummy proof form, test if all fields filled
-    setIsFormSubmitted(isFormSubmitted);
-    setErrorMessage(errorMessage);
-    if(!errorMessage){
       const newStatus = incrementJobStatus();
 
         // greate new review with 
@@ -669,23 +612,20 @@ console.log('newStatus', newStatus)
 
       const newMessage = " Review submitted";
       setUserMessage(newMessage);
-    } else{
 
-      return;
-    } ;// end validate fields
       // return;
     } // end if jobstatus = customer review
 
 
     // allways increment, gets decremented when customer rejects quote or worker rejects job
 
-    // console.log('End handle Submit next status  ' + jobStatus)  // this is not updated yet
+    console.log('End handle Submit next status  ' + jobStatus)  // this is not updated yet
       
 
     setTimeout(() => {
       navigate('/home', { state: { userStatus } });
     }, 1000); // 2000 milliseconds = 2 seconds
-    // needs to be done individual for each state
+    
     
   }; // end handle submit
   
@@ -779,110 +719,66 @@ console.log('newStatus', newStatus)
 {/* this form will always displayed but when Job status is not Draft, the fields will be grayed out */}
       
 {/***************************  Job Status DRAFT ******************************888*/}
-<h1> </h1>
-<div className="form-row">
-    <InputBox 
-        id="FirstName" 
-        label="First Name" 
-        setValue={FirstName} 
-        isDisabled={jobStatus !== "Draft"} 
-        isSubmitted={isFormSubmitted} 
-        onChange={(value) => { setFirstName(value); }} 
-    />
 
-    <InputBox 
-        id="LastName" 
-        label="Last Name" 
-        setValue={LastName} 
-        isDisabled={jobStatus !== "Draft"} 
-        isSubmitted={isFormSubmitted} 
-        onChange={(value) => { setLastName(value); }} 
-    />
-</div>
-
-<div className="form-row">
-    <InputBox 
-        id="phone" 
-        label="Phone" 
-        setValue={phone} 
-        isDisabled={jobStatus !== "Draft"} 
-        isSubmitted={isFormSubmitted} 
-        onChange={(value) => { setPhone(value); }} 
-    />
-
-    <InputBox 
-        id="email" 
-        label="Email address" 
-        setValue={email} 
-        isDisabled={jobStatus !== "Draft"} 
-        isSubmitted={isFormSubmitted} 
-        onChange={(value) => { setEmail(value); }} 
-    />
-</div>
-
-<div className="form-row">
-    <InputBox 
-        id="address" 
-        label="Address" 
-        setValue={address} 
-        isDisabled={jobStatus !== "Draft"} 
-        isSubmitted={isFormSubmitted} 
-        onChange={(value) => { setAddress(value); }} 
-    />
-</div>
-
-<div className="form-row">
-    <InputBox 
-        id="addressOfInstallation" 
-        label="Installation Address" 
-        setValue={addressOfInstallation} 
-        isDisabled={jobStatus !== "Draft"} 
-        isSubmitted={isFormSubmitted} 
-        onChange={(value) => { setaddressOfInstallation(value); }} 
-    />
-    {(editability.draftEditable) && <button disabled={jobStatus !== "Draft"} onClick={handleCustomerData}>Copy from Customer</button>}
-</div>
-
-<p>Scope of Work: </p> 
-<div className="form-row">
-    <TextField 
-        id="reviewInput" 
-        label="" 
-        setValue={scopeOfWork} 
-        isDisabled={jobStatus !== "Draft"} 
-        isSubmitted={isFormSubmitted} 
-        onChange={(value) => { setScopeOfWork(value); }} 
-    />
-</div>
-
-{!editability.draftEditable ? (
-    <div>
-        <div className="form-row">
-            <p>Prefered completion date: {preferredJobCompletionDate}</p> 
-        </div>
+  <div className="form-row">
+            {/*allways be displayed  */}
+          <p>Customer Details:</p> 
+          {/* {(visibility.assignVisable) &&<button disabled={jobStatus !== "Draft"} onClick={copyUserData}>Copy from profile</button>} */}
+          {/* <p>Job status: {jobStatus}</p> */}
     </div>
-) : (
-    <div>
-      <h1> </h1>
-      <h1> </h1>
-      <p> </p>
+        
+  <div className="form-row">
+         
+         <input type="FirstName" value={FirstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" disabled={jobStatus !== "Draft"} />
+         <input type="LastName" value={LastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" disabled={jobStatus !== "Draft"} />
+     </div>
+
+
+     <div className="form-row">
+         <input type="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Phone" disabled={jobStatus !== "Draft"} />
+         <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" disabled={jobStatus !== "Draft"} />
+         </div>
+
+         
+     <div className="form-row" >
+         <input type="address" value={address} onChange={e => setAddress(e.target.value)} placeholder="Address" disabled={jobStatus !== "Draft"} />
+         </div>
+         
+         <div className="form-row">
+       
+         <input type="addressOfInstallation" value={addressOfInstallation} onChange={e => setaddressOfInstallation(e.target.value)} placeholder="Installation Address" disabled={jobStatus !== "Draft"} />
+         {(editability.draftEditable)&&<button disabled={jobStatus !== "Draft"} onClick={handleCustomerData}>Copy from Customer</button>}
+     {/* <p>draftEditable {editability.draftEditable } </p>      */}
+     </div>
+
+
+     <p>Scope of Work: </p> 
         <div className="form-row">
-            {/* <p>Prefered completion date:</p>  */}
-            <InputBox 
-                id="completionDate" 
-                label="Prefered Completion Date" 
-                setValue={preferredJobCompletionDate} 
-                isDisabled={jobStatus !== "Draft"} 
-                isSubmitted={isFormSubmitted} 
-                onChange={(value) => { setpreferredJobCompletionDate(value); }} 
-            />
-        </div>
-    </div>
-)}
+            <textarea value={scopeOfWork} onChange={e => setScopeOfWork(e.target.value)} placeholder="Scope of Work" disabled={jobStatus !== "Draft"} />
+            </div>
+            
+           
 
-{errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
-</div>
+            {!editability.draftEditable? (
+          <div>
+            <div className="form-row">
+            <p>Prefered completion date:     {preferredJobCompletionDate}</p> 
+            </div>
+            </div>
 
+              ) : (
+            <div>
+            <div className="form-row">
+            <p>Prefered completion date:</p> 
+            <input type="date" value={preferredJobCompletionDate} onChange={e => setpreferredJobCompletionDate(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} />
+            </div>
+           
+            </div>
+        )}  
+        {/* end preferredJobCompletionDate */}
+            
+            {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
+            </div> 
             
       )} 
       {/* end isform visible */}
@@ -904,16 +800,11 @@ console.log('newStatus', newStatus)
         </div>
       
         <div className="form-row">
-    <InputBox 
-        id="quoteAmmount"
-        label="Ammount Quoted AUD"
-        setValue={amountQuoted}
-        isDisabled={jobStatus !== "Quoting"}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setQuoteAmmount(value); }}
-    />
-    <a href={quoteAttachment} target="_blank" rel="noopener noreferrer">Quote attached</a>
-</div>
+        <p>Ammount Quoted AUD </p>
+        <input type="quoteAmmount" value={amountQuoted} onChange={e => setQuoteAmmount(e.target.value)} placeholder="Quote Ammount" disabled={jobStatus !== "Quoting"} />
+        <a href={quoteAttachment}target="_blank"rel="noopener noreferrer">Quote attached</a>
+
+        </div>
         {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
         {/* <input type="date" value={completion} onChange={e => setCompletion(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} /> */}
         </div> }
@@ -932,30 +823,13 @@ console.log('newStatus', newStatus)
         {(visibility.assignVisable) &&
           <div className="job-form">
             <p>Your Electrical Worker </p>
-            <h1> </h1>
-            <div className="form-row">
-    <InputBox 
-        id="licenseNr"
-        label="License Number"
-        setValue={licenseNr}
-        isDisabled={true}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setLicenseNr(value); }}
-    />
-    
-    {(editability.assignEditable) && <SelectWorker onWorkerSelected={handleWorkerSelected} />}
-
-    {(!editability.assignEditable) && 
-        <InputBox 
-            id="workerName"
-            label="Worker Name"
-            setValue={workerName}
-            isDisabled={true}
-            isSubmitted={isFormSubmitted}
-            onChange={(value) => { setWorkerName(value); }}
-        />
-    }
-
+          <div className="form-row">
+          
+          <input type="licenseNr" value={licenseNr} onChange={e => setLicenseNr(e.target.value)} placeholder="License Number" disabled={true} />
+         
+          {(editability.assignEditable)&&<SelectWorker onWorkerSelected={handleWorkerSelected} />}
+          {(!editability.assignEditable)&&<input type="workerName" value={workerName} onChange={e => setWorkerName(e.target.value)} placeholder="Worker Name" disabled={true} />}
+         
           </div>
           {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
           </div>} 
@@ -973,55 +847,24 @@ console.log('newStatus', newStatus)
           {(editability.implementEditable)&&<button disabled={jobStatus !== "Job Implementation"} onClick={handleRejectJob}>Reject Job</button>}
           </div>
          
+         <div className="form-row">
+          <input type="maximumDemand" value={maximumDemandInAmps} onChange={e => setMaximumDemandInAmps(e.target.value)} placeholder="Maximum Demand in Amp" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
+          <input type="consumerMains" value={consumerMainsCapacity} onChange={e => setConsumerMains(e.target.value)} placeholder="Consumer Mains" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
+          </div>
+
           <div className="form-row">
-    <InputBox 
-        id="maximumDemand"
-        label="Maximum Demand in Amp"
-        setValue={maximumDemandInAmps}
-        isDisabled={jobStatus !== "Job Implementation" || userStatus !== "worker"}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setMaximumDemandInAmps(value); }}
-    />
-    <InputBox 
-        id="consumerMains"
-        label="Consumer Mains"
-        setValue={consumerMainsCapacity}
-        isDisabled={jobStatus !== "Job Implementation" || userStatus !== "worker"}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setConsumerMains(value); }}
-    />
-</div>
+          <input type="ectricalRetailer" value={electricalRetailer} onChange={e => setEctricalRetailer(e.target.value)} placeholder="Electrical Retailer" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
+          <input type="string" value={energyDistributor} onChange={e => setErgyDistributor(e.target.value)} placeholder="Energy Distributor" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
+          </div>
 
-<div className="form-row">
-    <InputBox 
-        id="ectricalRetailer"
-        label="Electrical Retailer"
-        setValue={electricalRetailer}
-        isDisabled={jobStatus !== "Job Implementation" || userStatus !== "worker"}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setEctricalRetailer(value); }}
-    />
-    <InputBox 
-        id="energyDistributor"
-        label="Energy Distributor"
-        setValue={energyDistributor}
-        isDisabled={jobStatus !== "Job Implementation" || userStatus !== "worker"}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setErgyDistributor(value); }}
-    />
-</div>
-
-<div className="form-row">
-    <InputBox 
-        id="phasesMains"
-        label="Phases Mains"
-        setValue={mainsPhases}
-        isDisabled={jobStatus !== "Job Implementation" || userStatus !== "worker"}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setPhasesMains(value); }}
-    />
-</div>
-
+          <div className="form-row">
+          <input type="phasesMains" value={mainsPhases} onChange={e => setPhasesMains(e.target.value)} placeholder="Phases Mains" 
+          disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")} />
+          </div>
 
          
           <input type="checkbox"checked={isChecked}onChange={handleOnChange}disabled={(jobStatus !== "Job Implementation"||userStatus !== "worker")}/>
@@ -1058,22 +901,16 @@ console.log('newStatus', newStatus)
 
 
           </div>
-        ) : ( <p>Review Stars: {reviewStars}</p>    )}
+        ) : ( <p>Review: {reviewStars}</p>    )}
 
 
 
 
-          {/* <p>Review </p>  */}
-          <div className="form-row">
-    <TextField 
-        id="reviewInput"
-        label="Review"
-        setValue={review}
-        isDisabled={!editability.reviewEditable}
-        isSubmitted={isFormSubmitted}
-        onChange={(value) => { setReview(value); }}
-    />
-</div>
+          <p>Review </p> 
+            <div className="form-row">
+            {/* <textarea value={review} onChange={e => setReview(e.target.value)} placeholder="Please write a review" disabled={(jobStatus !== "Customer Review"|| userStatus === "manager")} /> */}
+            <textarea value={review} onChange={e => setReview(e.target.value)} placeholder="Please write a review" disabled={!editability.reviewEditable} /> 
+            </div>
 
 
           <div className="form-row">

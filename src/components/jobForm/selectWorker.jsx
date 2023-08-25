@@ -58,7 +58,7 @@ export default function SelectWorker(props){
 
       return (
 
-        <div className="App">
+        <div className="workerSelect">
             
             {errorMessage && <p>{errorMessage}</p>}
     {/* Dropdown for selecting a worker */}

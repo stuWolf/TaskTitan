@@ -11,6 +11,7 @@ export default function JobColumns() {
         <p>Date in</p>
         <p>Quoted</p>
         <p>Started</p>
+        {/* <p>Completed</p> */}
         <p>Status</p>
         {/* <p>Notifications</p> */}
       </div>

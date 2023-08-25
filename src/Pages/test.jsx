@@ -1,102 +1,47 @@
-let usersCache = {}; // Cache for user data
-
-const fetchJobs = useCallback(async () => {
-  try {
-    let numberOfJobs;
-
-    // Check the number of jobs based on userStatus
-    if (userStatus === "manager") {
-      numberOfJobs = await getCountOfJobs();
-    } else if (userStatus === "customer") {
-      numberOfJobs = await getCountOfJobs(customerId);
-    } else if (userStatus === "worker") {
-      numberOfJobs = await getCountOfJobsWorker(workerId);
-    }
-
-    let jobsData = JSON.parse(localStorage.getItem('jobsData') || 'null');
-
-    // If the number of jobs has increased or jobsData doesn't exist in localStorage, fetch the data
-    if (!jobsData || numberOfJobs > (jobsData.length || 0)) {
-      if (userStatus === "manager") {
-        jobsData = await getOpenJobs();
-      } else if (userStatus === "customer") {
-        jobsData = await getMyJobsOpen();
-      } else if (userStatus === "worker") {
-        jobsData = await getAllJobsOpenWorker();
-      }
-      localStorage.setItem('jobsData', JSON.stringify(jobsData)); // Save to localStorage
-    }
-
-      // Cache the fetched jobsData
-    //   jobsDataCache = jobsData;
-    
-
-    // Handle 'message404, not found'
-    if (jobsData.hasOwnProperty('message404')) {
-      handleErrorMessage(userStatus);
-      return;
-    }
-
-    // Fetch user data in parallel
-    const customerPromises = jobsData.map(job => {
-      if (!usersCache[job.customerId]) {
-        return getUser(job.customerId).then(data => {
-          usersCache[job.customerId] = data.firstName || 'No Name';
-          job.customer = usersCache[job.customerId];
-        });
-      } else {
-        job.customer = usersCache[job.customerId];
-        return Promise.resolve();
-      }
-    });
-
-    const workerPromises = jobsData.map(job => {
-      if (job.workerId) {
-        if (!usersCache[job.workerId]) {
-          return getUser(job.workerId).then(data => {
-            usersCache[job.workerId] = data.firstName || 'No Name';
-            job.workerId = usersCache[job.workerId];
-          });
-        } else {
-          job.workerId = usersCache[job.workerId];
-          return Promise.resolve();
-        }
-      } else {
-        job.workerId = 'No Data';
-        return Promise.resolve();
-      }
-    });
-
-    await Promise.all([...customerPromises, ...workerPromises]);
-
-    // Filter out the required fields
-    const filteredJobs = jobsData.map((job) => ({
-        _id: job._id || 'No Data',  // Last 4 digits of _id
-        workerName: job.workerId || 'No Data',
-      // extract this dataset out of each job in jobs.data
-        //  customerName: job.workerId
-        customerName: job.customer,
-        addressOfInstallation: job.addressOfInstallation|| 'No Data',
-        dateIn: job.dateCreated || 'No Data',
-        dateQuoted: job.dateQuoted || 'No Data',
-        workStart: job.workStarted || 'No Data',
-        jobStatus: job.jobStatus || 'No Data',
+return (
+  <div className="App">
+     <Header/>
+     <div className="login-form">
+      {/* swap to new input fields: id = type; label= placeholder;setValue= value isSubmitted = {isFormSubmitted}; setFunction(value) */}
+     <input type="FirstName" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="First Name" />
+     <input type="LastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last Name" />
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email address" />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+        <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm Password" />
         
-      }));
+        <button onClick={handleRegister}>Register</button>
+        <button onClick={handleCancel}>Cancel</button>
+        {errorMessage && <p>{errorMessage}</p>}
+        <input type="checkbox" checked={termsAgreed} onChange={e => setTermsAgreed(e.target.checked)} /> I agree with the terms and conditions
+        <Link to="/login">Already registered? Login here</Link>
+    </div>
+    {/* use the side bar here to track registration, but don't show */}
+    <div style={{ position: 'absolute', left: '-9999px' }}>
+    <Side userMessage={userMessage} />
+  </div>
+    <Footer/>
+  </div> 
+  
+);
+};
+i need to have all input fields replaced with the following:
+<InputBox 
+              id="nameInput"   // type= ..
+              label="Name"     // placeholder
+              setValue={name}  //value= ...
+              isDisabled={false}  // disabled=...  string
+              isSubmitted = {isFormSubmitted} // submit button pushed, triggers the check if all values present
+              onChange={(value) => { setName(value); }}  // output for manual entry
+swap to new input fields: id = type; label= placeholder;   setValue= value isSubmitted = {isFormSubmitted}; setFunction(value) ; isDisabled={disabled=... }  
 
-    setJobs(filteredJobs);
-  } catch (error) {
-    console.error('Failed to fetch jobs:', error);
-    setErrorMessage("could not fetch jobs");
-  }
-}, []);
 
-function handleErrorMessage(userStatus) {
-  if (userStatus === "worker") {
-    setErrorMessage("There are no jobs for you at the moment");
-  } else if (userStatus === "customer") {
-    setErrorMessage("No Jobs yet. Lodge your first job by clicking 'Create New Job'");
-  } else {
-    setErrorMessage("No jobs recorded yet");
-  }
-}
+the textarea in the same manner with:
+
+<TextField 
+id="reviewInput" 
+label="Review" 
+setValue={review}
+isDisabled={false}  // This will make the input box non-editable
+isSubmitted = {isFormSubmitted}
+onChange={(value) => { setReview(value); }}
+/>

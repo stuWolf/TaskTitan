@@ -5,17 +5,11 @@ import Header from '../components/header';
 import Footer from '../components/footer';
 import  Navbar from '../components/navbar';
 import Side from '../components/SidePanel';
-// import {getCountOfJobs } from "../services/jobsServices";
-// import {getStatusJobs  } from "../services/jobsServices";
-// import {getCountOfJobs  } from "../services/jobsServices";
-// import {getUser} from '../services/userServices';
+
 import JobColumns from '../components/home/jobColumns';
-// import { Link } from 'react-router-dom';
+
 import DisplayJobs from "../components/home/displayJob";
-// import {useUserMessaging} from "../services/userMessaging.js";
 
-
-// import JobForm from '../Pages/JobForm';
 import {   useNavigate} from 'react-router-dom';
 
 function Home() {

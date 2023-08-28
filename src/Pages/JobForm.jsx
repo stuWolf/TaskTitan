@@ -895,17 +895,19 @@ console.log('newStatus', newStatus)
 {/***************************  Job Status Quoting ******************************888*/}
 {(visibility.quotingVisable)&& <div className="job-form">
       <div className="form-row">
-        <p>Date Created by customer:    {dateCreated} </p>
-    
+        <p>Date Created by     customer:    {dateCreated} </p>
+        <p>  dateQuoted</p>
         {/* <input className="date-input" type="date" value={preferredJobCompletionDate} onChange={e => setpreferredJobCompletionDate(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} /> */}
     
  
           
         {
+          
   dateQuoted 
     ? (!isNaN(new Date(dateQuoted).getTime()) 
         ? <p>Date Quoted: {dateQuoted} </p>
         : <p>Date Quoted: {'No Data'} </p>)
+
     : null
 }
      

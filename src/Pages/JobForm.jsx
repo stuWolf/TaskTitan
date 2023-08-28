@@ -895,21 +895,21 @@ console.log('newStatus', newStatus)
 {/***************************  Job Status Quoting ******************************888*/}
 {(visibility.quotingVisable)&& <div className="job-form">
       <div className="form-row">
-        <p>Date Created by     customer:    {dateCreated} </p>
-        <p>  dateQuoted</p>
+        <p>Date Created by customer:    {dateCreated} </p>
+        {/* <p>  dateQuoted {dateQuoted}</p> */}
         {/* <input className="date-input" type="date" value={preferredJobCompletionDate} onChange={e => setpreferredJobCompletionDate(e.target.value)} placeholder="Prefered Completion Date" disabled={jobStatus !== "Draft"} /> */}
     
  
           
         {
-          
   dateQuoted 
-    ? (!isNaN(new Date(dateQuoted).getTime()) 
-        ? <p>Date Quoted: {dateQuoted} </p>
-        : <p>Date Quoted: {'No Data'} </p>)
+    ? (dateQuoted === "NaN/NaN/aN"
+        ? <p>Date Quoted: {'No Data'} </p>
+        : <p>Date Quoted: {dateQuoted} </p>)
 
     : null
 }
+
      
         {/* <input className="date-input" type="date" value={dateQuoted} onChange={e => setDateQuoted(e.target.value)} placeholder="Date Quoted" disabled={(jobStatus !== "Quoting"||userStatus !== 'manager' )} /> */}
         </div>
@@ -1050,8 +1050,15 @@ console.log('newStatus', newStatus)
           <div className="form-row">
           {workStarted &&  <p>Date work started {workStarted}</p>}
          
-          { dateQuoted && (isNaN(new Date(dateQuoted).getTime()) ? <p>Date Quoted: No Data</p> : <p>Date Quoted: {dateQuoted}</p>) }
+          {/* { dateQuoted && (isNaN(new Date(dateQuoted).getTime()) ? <p>Date Quoted: No Data</p> : <p>Date Quoted: {dateQuoted}</p>) } */}
+          {
+  dateQuoted 
+    ? (dateQuoted === "NaN/NaN/aN"
+        ? <p>Date Quoted: {'No Data'} </p>
+        : <p>Date Quoted: {dateQuoted} </p>)
 
+    : null
+}
 
           {/* <input type="date" value={workStarted} onChange={e => setStartDate(e.target.value)} placeholder="Start Date" disabled={jobStatus !== "Customer Review"} /> */}
           </div>

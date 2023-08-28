@@ -113,7 +113,7 @@ export default function DisplayJobs({user_id, userStatus, jobStatus}) {
             // console.log('jobStatus ' + jobStatus)
             // console.log('currentCount ' + currentCount)
            
-            if (currentCount > previousJobCount) {
+            if (currentCount !== previousJobCount) {
                 // Reset the polling interval and no change count when a change is detected
                 setPollingInterval(5000);
                 setNoChangeCount(0);

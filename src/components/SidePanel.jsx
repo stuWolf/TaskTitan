@@ -105,7 +105,7 @@ switch (userStatus) {
              
                     //console.log('previousCount ' + previousCount)
       
-                    if (!initializationPhase && currentCount > previousCount) {
+                    if (!initializationPhase && currentCount !== previousCount) {
                         changeDetected = true;
                         // const message = messageMapping[status] && messageMapping[status][userStatus];
                         const message = messageMapping[status];  // Here, get the message directly
